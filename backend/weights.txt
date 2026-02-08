@@ -1,0 +1,11 @@
+
+=== Final Aggregated Feature Weights (%) ===
+             feature  weightage
+0          avg_score      36.74
+3    attendance_rate      28.99
+1      marks_std_dev      17.33
+4     total_absences       8.54
+6  consistency_score       3.25
+5   improvement_rate       2.04
+7   current_semester       1.94
+2      subject_count       1.17
