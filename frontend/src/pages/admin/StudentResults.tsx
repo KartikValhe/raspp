@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { getBranches, type Branch } from '../../services/subjectService';
 import { Trophy, TrendingUp, Users, Download } from 'lucide-react';
+import { PageHeader } from '../../components/PageHeader';
 
 interface MeritListItem {
     rank: number;
@@ -59,59 +60,50 @@ const StudentResults: React.FC = () => {
     };
 
     return (
-        <div className="h-full flex flex-col space-y-6 overflow-hidden p-6">
-            <div className="flex-none space-y-6">
-                {/* Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-indigo-500/10 rounded-xl text-indigo-600 dark:text-indigo-400">
-                            <Trophy size={32} />
+        <div className="h-full flex flex-col space-y-5 overflow-hidden p-6">
+            <div className="flex-none">
+                {/* Standardized Page Header */}
+                <PageHeader
+                    icon={Trophy}
+                    title="Student Results & Merit List"
+                    subtitle="Analyze performance across semesters and branches"
+                    iconClass="bg-amber-500"
+                    actions={
+                        <div className="flex flex-wrap gap-2">
+                            <select
+                                value={selectedSemester}
+                                onChange={(e) => setSelectedSemester(parseInt(e.target.value))}
+                                className="bg-white dark:bg-white/5 border text-sm border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500/20 outline-none"
+                            >
+                                <option value={0}>All Semesters</option>
+                                {[1, 2, 3, 4, 5, 6, 7, 8].map(s => (
+                                    <option key={s} value={s}>Semester {s}</option>
+                                ))}
+                            </select>
+                            <select
+                                value={selectedBranch}
+                                onChange={(e) => setSelectedBranch(parseInt(e.target.value))}
+                                className="bg-white dark:bg-white/5 border text-sm border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500/20 outline-none"
+                            >
+                                <option value={0}>All Branches</option>
+                                {branches.map(b => (
+                                    <option key={b.id} value={b.id}>{b.name}</option>
+                                ))}
+                            </select>
+                            <select
+                                value={limit}
+                                onChange={(e) => setLimit(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
+                                className="bg-white dark:bg-white/5 border text-sm border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary-500/20 outline-none"
+                            >
+                                <option value="all">All Students</option>
+                                <option value={3}>Top 3</option>
+                                <option value={5}>Top 5</option>
+                                <option value={10}>Top 10</option>
+                                <option value={20}>Top 20</option>
+                            </select>
                         </div>
-                        <div>
-                            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-                                Student Results & Merit List
-                            </h1>
-                            <p className="text-slate-500 dark:text-slate-400 mt-1">Analyze performance across semesters and branches</p>
-                        </div>
-                    </div>
-
-                    {/* Global Filters */}
-                    <div className="flex flex-wrap gap-3">
-                        <select
-                            value={selectedSemester}
-                            onChange={(e) => setSelectedSemester(parseInt(e.target.value))}
-                            className="bg-white dark:bg-white/5 border text-sm border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500/20 outline-none"
-                        >
-                            <option value={0}>All Semesters</option>
-                            {[1, 2, 3, 4, 5, 6, 7, 8].map(s => (
-                                <option key={s} value={s}>Semester {s}</option>
-                            ))}
-                        </select>
-
-                        <select
-                            value={selectedBranch}
-                            onChange={(e) => setSelectedBranch(parseInt(e.target.value))}
-                            className="bg-white dark:bg-white/5 border text-sm border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500/20 outline-none"
-                        >
-                            <option value={0}>All Branches</option>
-                            {branches.map(b => (
-                                <option key={b.id} value={b.id}>{b.name}</option>
-                            ))}
-                        </select>
-
-                        <select
-                            value={limit}
-                            onChange={(e) => setLimit(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
-                            className="bg-white dark:bg-white/5 border text-sm border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500/20 outline-none"
-                        >
-                            <option value="all">All Students</option>
-                            <option value={3}>Top 3</option>
-                            <option value={5}>Top 5</option>
-                            <option value={10}>Top 10</option>
-                            <option value={20}>Top 20</option>
-                        </select>
-                    </div>
-                </div>
+                    }
+                />
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

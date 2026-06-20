@@ -2,7 +2,8 @@ import React from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { TrendingUp, BookOpen, Clock, AlertCircle, Calendar, Trophy, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-
+import { PageHeader } from '../../components/PageHeader';
+import { StatsCard } from '../../components/StatsCard';
 import { AttendanceHeatmap } from '../../components/charts/Heatmap';
 
 export const StudentDashboard: React.FC = () => {
@@ -40,111 +41,64 @@ export const StudentDashboard: React.FC = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="h-full overflow-y-auto p-8 space-y-8"
+            className="h-full overflow-y-auto p-6 space-y-6"
         >
-            {/* Hero Section */}
-            <motion.div variants={itemVariants} className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div className="flex items-center gap-4">
-                    <div className="p-3 bg-violet-500/10 rounded-xl text-violet-600 dark:text-violet-400">
-                        <LayoutDashboard size={32} />
+            <PageHeader
+                icon={LayoutDashboard}
+                title="Student Dashboard"
+                subtitle={`Welcome back, ${user?.email?.split('@')[0] || 'Student'}! Here is your academic overview.`}
+                iconClass="bg-violet-500"
+                actions={
+                    <div className="text-right hidden md:block">
+                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</p>
+                        <p className="text-xs text-slate-400">Fall Semester 2024</p>
                     </div>
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
-                            Student Dashboard
-                        </h1>
-                        <p className="text-slate-500 dark:text-slate-400 mt-1">
-                            Welcome back, <span className="font-semibold text-violet-600 dark:text-violet-400">{user?.email?.split('@')[0] || 'Student'}</span>! Here is your daily academic overview.
-                        </p>
-                    </div>
-                </div>
+                }
+            />
 
-
-                <div className="text-right hidden md:block">
-                    <p className="text-gray-900 dark:text-white font-medium">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                    <p className="text-gray-500 text-sm">Fall Semester 2024</p>
-                </div>
-            </motion.div>
-
-            {/* Stats Grid */}
+            {/* Stats Grid using shared StatsCard component */}
             <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-                {/* Attendance Card */}
-                <motion.div
-                    variants={itemVariants}
-                    className="p-6 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm relative overflow-hidden group hover:bg-gray-50 dark:hover:bg-white/10 transition-colors shadow-sm dark:shadow-none"
-                >
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <Clock size={60} />
-                    </div>
-                    <div className="relative z-10">
-                        <p className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Attendance</p>
-                        <div className="flex items-end gap-2">
-                            <h3 className={`text-4xl font-bold ${stats.attendance >= 75 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                                {stats.attendance}%
-                            </h3>
-                            <span className="text-gray-500 text-xs mb-2">overall</span>
-                        </div>
-                        <div className="mt-4 w-full bg-gray-700/50 rounded-full h-1.5">
-                            <div
-                                className={`h-1.5 rounded-full ${stats.attendance >= 75 ? 'bg-emerald-500' : 'bg-rose-500'}`}
-                                style={{ width: `${stats.attendance}%` }}
-                            />
-                        </div>
-                    </div>
+                <motion.div variants={itemVariants}>
+                    <StatsCard
+                        label="Attendance"
+                        value={`${stats.attendance}%`}
+                        icon={Clock}
+                        iconBg="bg-emerald-50 dark:bg-emerald-500/10"
+                        iconColor="text-emerald-600 dark:text-emerald-400"
+                        watermarkColor="text-emerald-500"
+                        trend={{ value: 3, isPositive: true }}
+                    />
                 </motion.div>
-
-                {/* CGPA Card */}
-                <motion.div
-                    variants={itemVariants}
-                    className="p-6 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm relative overflow-hidden group hover:bg-gray-50 dark:hover:bg-white/10 transition-colors shadow-sm dark:shadow-none"
-                >
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <TrendingUp size={60} />
-                    </div>
-                    <div className="relative z-10">
-                        <p className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">CGPA</p>
-                        <div className="flex items-end gap-2">
-                            <h3 className="text-4xl font-bold text-violet-400">{stats.cgpa}</h3>
-                            <span className="text-emerald-400 text-xs mb-2 flex items-center gap-0.5">
-                                <TrendingUp size={12} /> +0.2
-                            </span>
-                        </div>
-                        <p className="text-xs text-gray-500 mt-4">Last semester: 8.2</p>
-                    </div>
+                <motion.div variants={itemVariants}>
+                    <StatsCard
+                        label="CGPA"
+                        value={stats.cgpa}
+                        icon={TrendingUp}
+                        iconBg="bg-violet-50 dark:bg-violet-500/10"
+                        iconColor="text-violet-600 dark:text-violet-400"
+                        watermarkColor="text-violet-500"
+                        trend={{ value: 2, isPositive: true }}
+                    />
                 </motion.div>
-
-                {/* Backlogs Card */}
-                <motion.div
-                    variants={itemVariants}
-                    className="p-6 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm relative overflow-hidden group hover:bg-gray-50 dark:hover:bg-white/10 transition-colors shadow-sm dark:shadow-none"
-                >
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <AlertCircle size={60} />
-                    </div>
-                    <div className="relative z-10">
-                        <p className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Active Backlogs</p>
-                        <h3 className={`text-4xl font-bold ${stats.backlogs === 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                            {stats.backlogs}
-                        </h3>
-                        <p className="text-xs text-gray-500 mt-4">
-                            {stats.backlogs === 0 ? "You're all clear! 🎉" : "Action required"}
-                        </p>
-                    </div>
+                <motion.div variants={itemVariants}>
+                    <StatsCard
+                        label="Active Backlogs"
+                        value={stats.backlogs}
+                        icon={AlertCircle}
+                        iconBg="bg-red-50 dark:bg-red-500/10"
+                        iconColor="text-red-600 dark:text-red-400"
+                        watermarkColor="text-red-500"
+                    />
                 </motion.div>
-
-                {/* Credits Card */}
-                <motion.div
-                    variants={itemVariants}
-                    className="p-6 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm relative overflow-hidden group hover:bg-gray-50 dark:hover:bg-white/10 transition-colors shadow-sm dark:shadow-none"
-                >
-                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                        <BookOpen size={60} />
-                    </div>
-                    <div className="relative z-10">
-                        <p className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Total Credits</p>
-                        <h3 className="text-4xl font-bold text-blue-400">{stats.credits}</h3>
-                        <p className="text-xs text-gray-500 mt-4">160 required for graduation</p>
-                    </div>
+                <motion.div variants={itemVariants}>
+                    <StatsCard
+                        label="Total Credits"
+                        value={stats.credits}
+                        icon={BookOpen}
+                        iconBg="bg-blue-50 dark:bg-blue-500/10"
+                        iconColor="text-blue-600 dark:text-blue-400"
+                        watermarkColor="text-blue-500"
+                    />
                 </motion.div>
             </motion.div>
 

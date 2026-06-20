@@ -65,13 +65,13 @@ def create_test_users():
                 print(f"Password updated for {email}.")
 
         # 2. Create Admin
-        create_user_if_not_exists("admin@test.com", "admin123", "admin", "Admin User")
+        create_user_if_not_exists("admin@example.com", "admin123", "admin", "Admin User")
 
         # 3. Create Teacher
-        create_user_if_not_exists("teacher@test.com", "teacher123", "teacher", "Test Teacher")
+        create_user_if_not_exists("teacher@example.com", "teacher123", "teacher", "Test Teacher")
 
         # 4. Create Student
-        create_user_if_not_exists("student@test.com", "student123", "student", "Test Student", student_id="CSE21001")
+        create_user_if_not_exists("student@example.com", "student123", "student", "Test Student", student_id="CSE21001")
 
     except Exception as e:
         print(f"Error creating users: {e}")

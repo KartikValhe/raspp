@@ -3,6 +3,7 @@ import api from '../../services/api';
 import { getSubjects, type Subject } from '../../services/subjectService';
 import { Search, Save, BookOpen, Edit, X, PenTool } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PageHeader } from '../../components/PageHeader';
 
 interface Student {
     id: number;
@@ -211,36 +212,29 @@ export const MarksEntry: React.FC = () => {
     );
 
     return (
-        <div className="h-full flex flex-col p-8 space-y-6 overflow-hidden">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div className="flex items-center gap-4">
-                    <div className="p-3 bg-blue-600 rounded-xl shadow-lg shadow-blue-600/20 text-white">
-                        <PenTool size={32} />
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                            Marks Entry System
-                        </h1>
-                        <p className="text-slate-500 dark:text-slate-400 mt-1">Select a student to enter their marks</p>
-                    </div>
-                </div>
-                <div className="flex gap-3">
+        <div className="h-full flex flex-col p-6 space-y-5 overflow-hidden">
+
+            <PageHeader
+                icon={PenTool}
+                title="Marks Entry System"
+                subtitle="Select a student to enter their marks"
+                iconClass="bg-primary-500"
+                actions={
                     <div className="flex items-center gap-2 bg-white dark:bg-white/5 px-3 py-2 rounded-xl border border-slate-200 dark:border-white/10">
-                        <BookOpen size={18} className="text-blue-500 dark:text-blue-400" />
+                        <BookOpen size={16} className="text-primary-500" />
                         <select
                             value={selectedSemester}
                             onChange={(e) => setSelectedSemester(parseInt(e.target.value))}
                             className="bg-transparent border-none focus:ring-0 text-sm font-medium text-slate-700 dark:text-slate-200 cursor-pointer focus:outline-none"
                         >
-                            <option value={0} className="dark:bg-slate-900">All Semesters</option>
+                            <option value={0}>All Semesters</option>
                             {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
                                 <option key={sem} value={sem} className="dark:bg-slate-900">Semester {sem}</option>
                             ))}
                         </select>
                     </div>
-                </div>
-            </div>
+                }
+            />
 
             {/* Search Bar */}
             <div className="relative">

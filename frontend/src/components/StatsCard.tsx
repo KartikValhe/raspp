@@ -1,6 +1,6 @@
 import React from 'react';
 import type { LucideIcon } from 'lucide-react';
-import { clsx } from 'clsx';
+import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface StatsCardProps {
@@ -11,43 +11,59 @@ interface StatsCardProps {
         value: number;
         isPositive: boolean;
     };
-    color: 'blue' | 'green' | 'red' | 'purple';
+    /** Icon background class e.g. "bg-primary-50 dark:bg-primary-500/10" */
+    iconBg?: string;
+    /** Icon color class e.g. "text-primary-600 dark:text-primary-400" */
+    iconColor?: string;
+    /** Watermark color class e.g. "text-primary-500" */
+    watermarkColor?: string;
     delay?: number;
 }
 
-const colorMap = {
-    blue: "bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20",
-    green: "bg-green-50 text-green-600 border-green-100 dark:bg-green-500/10 dark:text-green-400 dark:border-green-500/20",
-    red: "bg-red-50 text-red-600 border-red-100 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20",
-    purple: "bg-purple-50 text-purple-600 border-purple-100 dark:bg-purple-500/10 dark:text-purple-400 dark:border-purple-500/20",
-};
+export const StatsCard: React.FC<StatsCardProps> = ({
+    label, value, icon: Icon, trend,
+    iconBg = 'bg-primary-50 dark:bg-primary-500/10',
+    iconColor = 'text-primary-600 dark:text-primary-400',
+    watermarkColor = 'text-primary-500',
+    delay = 0,
+}) => (
+    <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2, delay }}
+        className="stat-card group"
+    >
+        {/* Watermark — class-based only */}
+        <div className={`absolute -right-2 -top-2 ${watermarkColor} opacity-[0.06] group-hover:opacity-[0.1] transition-opacity duration-200`}>
+            <Icon size={68} strokeWidth={1} />
+        </div>
 
-export const StatsCard: React.FC<StatsCardProps> = ({ label, value, icon: Icon, trend, color, delay = 0 }) => {
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay }}
-            className="bg-white dark:bg-white/5 p-6 rounded-xl border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-md transition-shadow"
-        >
-            <div className="flex items-start justify-between">
-                <div>
-                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{label}</p>
-                    <h3 className="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">{value}</h3>
-                </div>
-                <div className={clsx("p-3 rounded-lg", colorMap[color])}>
-                    <Icon size={20} strokeWidth={2.5} />
-                </div>
+        <div className="relative z-10">
+            <div className={`stat-card-icon ${iconBg} ${iconColor}`}>
+                <Icon size={20} strokeWidth={2} />
+            </div>
+
+            <p className="stat-card-label">{label}</p>
+
+            <div className="flex items-baseline gap-2 mt-0.5">
+                <span className="stat-card-value">{value}</span>
+                {trend && (
+                    <span className={`text-xs font-bold flex items-center ${trend.isPositive
+                            ? 'text-success-600 dark:text-success-500'
+                            : 'text-danger-500'
+                        }`}>
+                        {trend.isPositive
+                            ? <ArrowUpRight size={11} />
+                            : <ArrowDownRight size={11} />
+                        }
+                        {trend.isPositive ? '+' : ''}{trend.value}%
+                    </span>
+                )}
             </div>
 
             {trend && (
-                <div className="mt-4 flex items-center gap-2 text-xs font-medium">
-                    <span className={trend.isPositive ? "text-green-600" : "text-red-600"}>
-                        {trend.isPositive ? "+" : ""}{trend.value}%
-                    </span>
-                    <span className="text-slate-400">vs last month</span>
-                </div>
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">vs last month</p>
             )}
-        </motion.div>
-    );
-};
+        </div>
+    </motion.div>
+);

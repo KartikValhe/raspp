@@ -5,6 +5,7 @@ import { DataTable, type Column } from '../../components/Table/DataTable';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import { useAuth } from '../../context/AuthContext';
+import { PageHeader } from '../../components/PageHeader';
 
 interface Student {
     id: number;
@@ -25,7 +26,7 @@ interface PredictionResult {
 }
 
 export const TeacherPredictions: React.FC = () => {
-    const { user } = useAuth();
+    useAuth();
     const [students, setStudents] = useState<Student[]>([]);
     const [loading, setLoading] = useState(true);
     const [teacherBranchId, setTeacherBranchId] = useState<number | null>(null);
@@ -173,25 +174,19 @@ export const TeacherPredictions: React.FC = () => {
     }
 
     return (
-        <div className="p-6 lg:p-10 space-y-8 max-w-[1600px] mx-auto animate-fade-in-up">
-            {/* Header Section */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
-                    <div className="p-3 bg-violet-500/10 rounded-xl text-violet-600 dark:text-violet-400">
-                        <Brain size={32} />
-                    </div>
-                    <div>
-                        <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 bg-clip-text text-transparent">My Class Predictions</h1>
-                        <p className="text-slate-500 dark:text-gray-400 mt-1">AI-powered insights for your students.</p>
-                    </div>
-                </div>
+        <div className="h-full overflow-y-auto p-6 space-y-6 max-w-[1600px] mx-auto">
 
-                <div className="flex items-center gap-3">
-                    <div className="px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl flex items-center gap-2 shadow-sm">
+            <PageHeader
+                icon={Brain}
+                title="My Class Predictions"
+                subtitle="AI-powered performance insights for your students"
+                iconClass="bg-violet-500"
+                actions={
+                    <div className="px-4 py-2 glass-card rounded-xl flex items-center gap-2">
                         <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Model Active</span>
                     </div>
-                </div>
-            </div>
+                }
+            />
 
             {/* Filters Bar */}
             <div className="bg-white dark:bg-black/20 backdrop-blur-md p-4 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">

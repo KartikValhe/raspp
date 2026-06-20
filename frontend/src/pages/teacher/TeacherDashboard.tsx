@@ -6,6 +6,7 @@ import { DataTable, type Column } from '../../components/Table/DataTable';
 import { Users, AlertTriangle, TrendingUp, CheckCircle, Table, Calendar, LayoutDashboard } from 'lucide-react';
 import { clsx } from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
+import { PageHeader } from '../../components/PageHeader';
 
 export const TeacherDashboard: React.FC = () => {
     // const { user } = useAuth();
@@ -35,36 +36,33 @@ export const TeacherDashboard: React.FC = () => {
     ];
 
     return (
-        <div className="h-full overflow-y-auto p-8 space-y-8">
-            {/* Header Section */}
-            <div className="flex justify-between items-end">
-                <div className="flex items-center gap-4">
-                    <div className="p-3 bg-blue-500/10 rounded-xl text-blue-600 dark:text-blue-400">
-                        <LayoutDashboard size={32} />
+        <div className="h-full overflow-y-auto p-6 space-y-6">
+
+            {/* Standardized Page Header with tab switcher in actions */}
+            <PageHeader
+                icon={LayoutDashboard}
+                title="Teacher Dashboard"
+                subtitle="Manage your classes, track performance, and grade assignments"
+                iconClass="bg-primary-500"
+                actions={
+                    <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+                        {(['overview', 'gradebook', 'attendance'] as const).map((tab) => (
+                            <button
+                                key={tab}
+                                onClick={() => setActiveTab(tab)}
+                                className={clsx(
+                                    'px-4 py-2 text-sm font-medium rounded-md transition-all capitalize',
+                                    activeTab === tab
+                                        ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-white shadow-sm'
+                                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+                                )}
+                            >
+                                {tab}
+                            </button>
+                        ))}
                     </div>
-                    <div>
-                        <h1 className="text-3xl font-bold text-slate-800 dark:text-white">Teacher Dashboard</h1>
-                        <p className="text-slate-500 dark:text-slate-400">Manage your classes, track performance, and grade assignments.</p>
-                    </div>
-                </div>
-                {/* Tabs */}
-                <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
-                    {['overview', 'gradebook', 'attendance'].map((tab) => (
-                        <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab as any)}
-                            className={clsx(
-                                "px-4 py-2 text-sm font-medium rounded-md transition-all capitalize",
-                                activeTab === tab
-                                    ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-white shadow-sm"
-                                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
-                            )}
-                        >
-                            {tab}
-                        </button>
-                    ))}
-                </div>
-            </div>
+                }
+            />
 
             <AnimatePresence mode="wait">
                 {activeTab === 'overview' && (
@@ -77,10 +75,10 @@ export const TeacherDashboard: React.FC = () => {
                     >
                         {/* Stats Cards Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <StatsCard label="Total Students" value="42" icon={Users} color="blue" trend={{ value: 12, isPositive: true }} delay={0} />
-                            <StatsCard label="Avg Class Attendance" value="85%" icon={CheckCircle} color="green" trend={{ value: 5, isPositive: true }} delay={0.1} />
-                            <StatsCard label="At Risk Students" value="3" icon={AlertTriangle} color="red" trend={{ value: 2, isPositive: false }} delay={0.2} />
-                            <StatsCard label="Class Performance" value="Good" icon={TrendingUp} color="purple" delay={0.3} />
+                            <StatsCard label="Total Students" value="42" icon={Users} iconBg="bg-blue-50 dark:bg-blue-500/10" iconColor="text-blue-600 dark:text-blue-400" watermarkColor="text-blue-500" trend={{ value: 12, isPositive: true }} delay={0} />
+                            <StatsCard label="Avg Class Attendance" value="85%" icon={CheckCircle} iconBg="bg-emerald-50 dark:bg-emerald-500/10" iconColor="text-emerald-600 dark:text-emerald-400" watermarkColor="text-emerald-500" trend={{ value: 5, isPositive: true }} delay={0.1} />
+                            <StatsCard label="At Risk Students" value="3" icon={AlertTriangle} iconBg="bg-red-50 dark:bg-red-500/10" iconColor="text-red-600 dark:text-red-400" watermarkColor="text-red-500" trend={{ value: 2, isPositive: false }} delay={0.2} />
+                            <StatsCard label="Class Performance" value="Good" icon={TrendingUp} iconBg="bg-purple-50 dark:bg-purple-500/10" iconColor="text-purple-600 dark:text-purple-400" watermarkColor="text-purple-500" delay={0.3} />
                         </div>
 
                         {/* Charts Section */}

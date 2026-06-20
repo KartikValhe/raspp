@@ -6,6 +6,7 @@ import {
     BarChart as RechartsBar, Bar, Legend, AreaChart, Area
 } from 'recharts';
 import { motion } from 'framer-motion';
+import { PageHeader } from '../../components/PageHeader';
 
 export const AnalyticsDashboard: React.FC = () => {
     const [stats, setStats] = useState<any>(null);
@@ -72,21 +73,14 @@ export const AnalyticsDashboard: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-8 space-y-8">
-            <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                className="flex items-center gap-4"
-            >
-                <div className="p-3 bg-blue-500/10 rounded-xl text-blue-600 dark:text-blue-400">
-                    <TrendingUp size={32} />
-                </div>
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Institutional Analytics</h1>
-                    <p className="text-slate-500 dark:text-slate-400">Global insights into student performance and attendance.</p>
-                </div>
-            </motion.div>
+        <div className="h-full overflow-y-auto p-6 space-y-6">
+
+            <PageHeader
+                icon={TrendingUp}
+                title="Institutional Analytics"
+                subtitle="Global insights into student performance and attendance"
+                iconClass="bg-primary-500"
+            />
 
             {/* Stats Overview */}
             <motion.div

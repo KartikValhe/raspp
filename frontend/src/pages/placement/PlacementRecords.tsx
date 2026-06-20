@@ -4,14 +4,12 @@ import {
     FileText,
     Plus,
     Search,
-    Filter,
     Download,
-    CheckCircle,
     X,
-    Edit,
     ExternalLink
 } from 'lucide-react';
 import api from '../../services/api';
+import { PageHeader } from '../../components/PageHeader';
 
 interface PlacementRecord {
     id: number;
@@ -91,27 +89,30 @@ const PlacementRecords: React.FC = () => {
     };
 
     return (
-        <div className="p-8 min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white">
-            <div className="max-w-7xl mx-auto">
-                <div className="flex justify-between items-center mb-8">
-                    <div>
-                        <h1 className="text-3xl font-bold mb-2">Placement Records</h1>
-                        <p className="text-slate-500 dark:text-slate-400">Comprehensive list of all student placements</p>
-                    </div>
-                    <div className="flex gap-3">
-                        <button className="px-4 py-3 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:bg-slate-50 dark:hover:bg-white/10 flex items-center gap-2">
-                            <Download size={20} />
-                            Export CSV
-                        </button>
-                        <button
-                            onClick={() => setShowModal(true)}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium shadow-lg shadow-blue-500/30"
-                        >
-                            <Plus size={20} />
-                            Add Record
-                        </button>
-                    </div>
-                </div>
+        <div className="h-full overflow-y-auto p-6">
+            <div className="max-w-7xl mx-auto space-y-6">
+
+                <PageHeader
+                    icon={FileText}
+                    title="Placement Records"
+                    subtitle="Comprehensive list of all student placements"
+                    iconClass="bg-emerald-500"
+                    actions={
+                        <div className="flex gap-3">
+                            <button className="btn-outline flex items-center gap-2">
+                                <Download size={16} />
+                                Export CSV
+                            </button>
+                            <button
+                                onClick={() => setShowModal(true)}
+                                className="btn-primary flex items-center gap-2"
+                            >
+                                <Plus size={16} />
+                                Add Record
+                            </button>
+                        </div>
+                    }
+                />
 
                 {/* Filters */}
                 <div className="bg-white dark:bg-white/5 p-4 rounded-2xl border border-slate-200 dark:border-white/10 mb-6 flex gap-4">
@@ -181,8 +182,8 @@ const PlacementRecords: React.FC = () => {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${record.status === 'placed'
-                                                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400'
-                                                        : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400'
+                                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400'
+                                                    : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400'
                                                     }`}>
                                                     {record.status}
                                                 </span>
