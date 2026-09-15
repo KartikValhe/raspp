@@ -5,6 +5,7 @@ import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     BarChart, Bar
 } from 'recharts';
+import { PageHeader } from '../../components/PageHeader';
 
 export const TeacherAnalytics: React.FC = () => {
     // Mock Data for Teacher View
@@ -45,30 +46,22 @@ export const TeacherAnalytics: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-8 space-y-8">
-            <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="flex items-center justify-between"
-            >
-                <div className="flex items-center gap-4">
-                    <div className="p-3 bg-blue-500/10 rounded-xl text-blue-600 dark:text-blue-400">
-                        <TrendingUp size={32} />
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Class Analytics</h1>
-                        <p className="text-slate-500 dark:text-slate-400">Detailed insights into your classes performance.</p>
-                    </div>
-                </div>
-                <div className="flex gap-2">
-                    <select className="bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-lg px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <div className="h-full overflow-y-auto p-6 space-y-6">
+
+            <PageHeader
+                icon={TrendingUp}
+                title="Class Analytics"
+                subtitle="Detailed insights into your class performance"
+                iconClass="bg-primary-500"
+                actions={
+                    <select className="bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-lg px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary-500">
                         <option>All Classes</option>
                         <option>CSA - Sem 4</option>
                         <option>CSA - Sem 6</option>
                         <option>ECE - Sem 2</option>
                     </select>
-                </div>
-            </motion.div>
+                }
+            />
 
             {/* Stats Grid */}
             <motion.div

@@ -3,6 +3,7 @@ import { Plus, Pencil, Trash2, BookOpen, Filter, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getSubjects, deleteSubject, getBranches, type Subject, type Branch } from '../../services/subjectService';
 import SubjectForm from './SubjectForm';
+import { PageHeader } from '../../components/PageHeader';
 
 const SubjectList = () => {
     const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -94,33 +95,24 @@ const SubjectList = () => {
     };
 
     return (
-        <div className="h-full flex flex-col p-6 min-h-0 overflow-hidden bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
-            {/* Header */}
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex-none mb-8"
-            >
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                        <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl">
-                            <BookOpen className="w-6 h-6 text-white" />
-                        </div>
-                        <div>
-                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Subject Management</h1>
-                            <p className="text-gray-600 dark:text-purple-200">Manage all subjects and course curriculum</p>
-                        </div>
-                    </div>
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={handleAdd}
-                        className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold flex items-center gap-2 shadow-lg hover:shadow-purple-500/50 transition-all"
-                    >
-                        <Plus className="w-5 h-5" />
+        <div className="h-full flex flex-col p-6 min-h-0 overflow-hidden">
+
+            {/* Standardized Page Header */}
+            <PageHeader
+                icon={BookOpen}
+                title="Subject Management"
+                subtitle="Manage all subjects and course curriculum"
+                iconClass="bg-violet-500"
+                actions={
+                    <button onClick={handleAdd} className="btn-primary">
+                        <Plus size={14} />
                         Add Subject
-                    </motion.button>
-                </div>
+                    </button>
+                }
+            />
+
+            {/* Stats + Filters wrapper */}
+            <div className="flex-none space-y-4 mb-4">
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -190,7 +182,7 @@ const SubjectList = () => {
                         </select>
                     </div>
                 </div>
-            </motion.div>
+            </div>  {/* end stats+filters wrapper */}
 
             {/* Subject List */}
             {loading ? (

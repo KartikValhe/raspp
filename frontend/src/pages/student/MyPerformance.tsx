@@ -4,8 +4,8 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
 import { Trophy, TrendingUp, Download, ChevronDown, ChevronUp, FileText } from 'lucide-react';
-
 import { useNavigate } from 'react-router-dom';
+import { PageHeader } from '../../components/PageHeader';
 
 export const MyPerformance: React.FC = () => {
     const navigate = useNavigate();
@@ -54,33 +54,27 @@ export const MyPerformance: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-8">
+        <div className="h-full overflow-y-auto p-6">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="space-y-8 max-w-7xl mx-auto"
+                className="space-y-6 max-w-7xl mx-auto"
             >
-                {/* Header */}
-                <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-yellow-500/10 rounded-xl text-yellow-600 dark:text-yellow-400">
-                            <Trophy size={32} />
-                        </div>
-                        <div>
-                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
-                                Academic Performance
-                            </h1>
-                            <p className="text-gray-600 dark:text-gray-400 mt-2">Track your academic progress and detailed semester results.</p>
-                        </div>
-                    </div>
-                    <button
-                        onClick={() => navigate('/student/transcript')}
-                        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors font-medium text-sm"
-                    >
-                        <Download size={18} />
-                        Download Transcript
-                    </button>
-                </div>
+                <PageHeader
+                    icon={Trophy}
+                    title="Academic Performance"
+                    subtitle="Track your academic progress and detailed semester results"
+                    iconClass="bg-amber-500"
+                    actions={
+                        <button
+                            onClick={() => navigate('/student/transcript')}
+                            className="btn-primary flex items-center gap-2"
+                        >
+                            <Download size={16} />
+                            Download Transcript
+                        </button>
+                    }
+                />
 
                 {/* Analytics Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -157,15 +151,15 @@ export const MyPerformance: React.FC = () => {
                         </div>
 
                         <div className="p-6 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm shadow-sm dark:shadow-none">
-                            <h3 className="text-gray-900 dark:text-white font-bold mb-4">Credits Overview</h3>
+                            <h3 className="text-slate-800 dark:text-white font-bold mb-4">Credits Overview</h3>
                             <div className="space-y-4">
                                 <div>
                                     <div className="flex justify-between text-sm mb-1">
                                         <span className="text-gray-500 dark:text-gray-400">Earned</span>
                                         <span className="text-gray-900 dark:text-white font-bold">92</span>
                                     </div>
-                                    <div className="w-full bg-gray-700/50 rounded-full h-2">
-                                        <div className="h-2 rounded-full bg-emerald-500" style={{ width: '65%' }} />
+                                    <div className="w-full bg-gray-200 dark:bg-gray-700/50 rounded-full h-2">
+                                        <div className="h-2 rounded-full bg-emerald-500 w-[65%]" />
                                     </div>
                                 </div>
                                 <div>

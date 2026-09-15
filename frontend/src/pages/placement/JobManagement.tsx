@@ -7,14 +7,13 @@ import {
     Filter,
     Calendar,
     DollarSign,
-    CheckCircle,
     X,
     Edit,
     Trash2,
     Building2,
-    Clock
 } from 'lucide-react';
 import api from '../../services/api';
+import { PageHeader } from '../../components/PageHeader';
 
 interface JobPosting {
     id: number;
@@ -134,21 +133,24 @@ const JobManagement: React.FC = () => {
     };
 
     return (
-        <div className="p-8 min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white">
-            <div className="max-w-7xl mx-auto">
-                <div className="flex justify-between items-center mb-8">
-                    <div>
-                        <h1 className="text-3xl font-bold mb-2">Job Postings</h1>
-                        <p className="text-slate-500 dark:text-slate-400">Manage placement opportunities for students</p>
-                    </div>
-                    <button
-                        onClick={() => { resetForm(); setShowModal(true); }}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl flex items-center gap-2 font-medium transition-all shadow-lg shadow-blue-500/30"
-                    >
-                        <Plus size={20} />
-                        Post New Job
-                    </button>
-                </div>
+        <div className="h-full overflow-y-auto p-6">
+            <div className="max-w-7xl mx-auto space-y-6">
+
+                <PageHeader
+                    icon={Briefcase}
+                    title="Job Postings"
+                    subtitle="Manage placement opportunities for students"
+                    iconClass="bg-blue-500"
+                    actions={
+                        <button
+                            onClick={() => { resetForm(); setShowModal(true); }}
+                            className="btn-primary flex items-center gap-2"
+                        >
+                            <Plus size={16} />
+                            Post New Job
+                        </button>
+                    }
+                />
 
                 {/* Filters */}
                 <div className="flex gap-4 mb-8">

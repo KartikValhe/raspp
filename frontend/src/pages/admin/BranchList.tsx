@@ -3,6 +3,7 @@ import api from '../../services/api';
 import { Button } from '../../components/Button';
 import { Plus, Trash2, BookOpen, Users, GitBranch } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { PageHeader } from '../../components/PageHeader';
 
 interface Branch {
     id: number;
@@ -68,21 +69,19 @@ export const BranchList: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-8 space-y-8">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 dark:bg-blue-500/10 rounded-lg text-blue-600 dark:text-blue-400">
-                        <GitBranch size={24} />
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Branch Management</h1>
-                        <p className="text-slate-500 dark:text-slate-400">Manage academic branches and departments.</p>
-                    </div>
-                </div>
-                <Button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2 shadow-lg shadow-blue-500/20">
-                    <Plus size={16} /> Add Branch
-                </Button>
-            </div>
+        <div className="h-full overflow-y-auto p-6 space-y-6">
+
+            <PageHeader
+                icon={GitBranch}
+                title="Branch Management"
+                subtitle="Manage academic branches and departments"
+                iconClass="bg-primary-500"
+                actions={
+                    <Button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2">
+                        <Plus size={14} /> Add Branch
+                    </Button>
+                }
+            />
 
             {/* Stats Summary */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -10,12 +10,11 @@ import {
     Calendar,
     ArrowUpRight,
     ArrowRight,
-    Sun,
-    Moon
+    LayoutDashboard
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
-import { useTheme } from '../../context/ThemeContext';
+import { PageHeader } from '../../components/PageHeader';
 
 const StatCard = ({ title, value, icon: Icon, color, trend }: any) => (
     <motion.div
@@ -61,7 +60,6 @@ const QuickActionCard = ({ title, description, icon: Icon, to, color }: any) => 
 );
 
 const CoordinatorDashboard: React.FC = () => {
-    const { theme, toggleTheme } = useTheme();
     const [stats, setStats] = useState({
         total_students: 0,
         total_placed: 0,
@@ -71,7 +69,6 @@ const CoordinatorDashboard: React.FC = () => {
         total_companies: 0,
         active_jobs: 0
     });
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchStats();
@@ -83,8 +80,6 @@ const CoordinatorDashboard: React.FC = () => {
             setStats(response.data);
         } catch (error) {
             console.error('Error fetching stats:', error);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -98,47 +93,26 @@ const CoordinatorDashboard: React.FC = () => {
         }
     };
 
-    const itemVariants = {
-        hidden: { y: 20, opacity: 0 },
-        visible: {
-            y: 0,
-            opacity: 1
-        }
-    };
-
     return (
-        <div className="p-8 min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white font-sans">
+        <div className="h-full overflow-y-auto p-6">
             <motion.div
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="max-w-7xl mx-auto space-y-8"
+                className="max-w-7xl mx-auto space-y-6"
             >
-                {/* Header */}
-                <div className="flex justify-between items-end">
-                    <div>
-                        <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent mb-2">
-                            Placement Overview
-                        </h1>
-                        <p className="text-slate-500 dark:text-slate-400 text-lg">
-                            Track and manage campus placements effectively.
-                        </p>
-                    </div>
-
-                    <div className="flex flex-col items-end gap-2">
+                <PageHeader
+                    icon={LayoutDashboard}
+                    title="Placement Overview"
+                    subtitle="Track and manage campus placements effectively"
+                    iconClass="bg-primary-500"
+                    actions={
                         <div className="text-right hidden md:block">
-                            <p className="text-sm font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">Current Session</p>
-                            <p className="text-xl font-bold">2025-2026</p>
+                            <p className="text-xs text-slate-400 uppercase tracking-wider font-medium">Current Session</p>
+                            <p className="text-md font-bold text-slate-800 dark:text-white">2025-2026</p>
                         </div>
-                        <button
-                            onClick={toggleTheme}
-                            className="p-2 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-white/20 transition-colors"
-                            aria-label="Toggle Theme"
-                        >
-                            {theme === 'dark' ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} />}
-                        </button>
-                    </div>
-                </div>
+                    }
+                />
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

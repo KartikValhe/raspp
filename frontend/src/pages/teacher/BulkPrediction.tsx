@@ -5,6 +5,7 @@ import {
     TrendingUp, Minus, Award, Search
 } from 'lucide-react';
 import api from '../../services/api';
+import { PageHeader } from '../../components/PageHeader';
 
 interface Prediction {
     student_id: string;
@@ -139,13 +140,14 @@ const BulkPrediction: React.FC = () => {
     };
 
     return (
-        <div className="p-6 space-y-6">
-            <div>
-                <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Bulk Performance Prediction</h1>
-                <p className="text-slate-600 dark:text-slate-400 mt-2">
-                    Upload CSV file with student data to get batch predictions
-                </p>
-            </div>
+        <div className="h-full overflow-y-auto p-6 space-y-6">
+
+            <PageHeader
+                icon={Upload}
+                title="Bulk Performance Prediction"
+                subtitle="Upload a CSV file with student data to get batch predictions"
+                iconClass="bg-violet-500"
+            />
 
             {!results && (
                 <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 border border-slate-200 dark:border-slate-700">

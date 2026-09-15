@@ -3,6 +3,7 @@ import api from '../../services/api';
 import { Search, Filter, FileDown, GraduationCap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { PageHeader } from '../../components/PageHeader';
 
 interface Student {
     id: number;
@@ -71,25 +72,20 @@ export const MyStudents: React.FC = () => {
     };
 
     return (
-        <div className="h-full flex flex-col p-8 space-y-6 overflow-hidden">
-            {/* Header */}
-            <div className="flex-none flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div className="flex items-center gap-4">
-                    <div className="p-3 bg-blue-500/10 rounded-xl text-blue-600 dark:text-blue-400">
-                        <GraduationCap size={32} />
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-bold text-slate-800 dark:text-white">My Students</h1>
-                        <p className="text-slate-500 dark:text-slate-400">View students in your department.</p>
-                    </div>
-                </div>
-                <div className="flex gap-3">
-                    <button className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-white/10 transition-colors text-sm font-medium">
+        <div className="h-full flex flex-col p-6 space-y-5 overflow-hidden">
+
+            <PageHeader
+                icon={GraduationCap}
+                title="My Students"
+                subtitle="View and manage students in your department"
+                iconClass="bg-primary-500"
+                actions={
+                    <button className="btn-outline flex items-center gap-2">
                         <FileDown size={16} />
                         Export CSV
                     </button>
-                </div>
-            </div>
+                }
+            />
 
             {/* Filters Bar */}
             <div className="bg-white dark:bg-white/5 p-4 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm flex flex-col md:flex-row gap-4">

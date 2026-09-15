@@ -6,6 +6,7 @@ export default {
     ],
     darkMode: 'class',
     theme: {
+<<<<<<< HEAD
         // ─── GLOBAL FONT FAMILY ───────────────────────────────────────────
         fontFamily: {
             sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
@@ -29,19 +30,48 @@ export default {
             // ─── BRAND COLOR PALETTE ─────────────────────────────────────────
             colors: {
                 // Primary — Deep Indigo/Blue (main brand)
+=======
+        // ─── STANDARDIZED FONT FAMILY ────────────────────────────────────
+        fontFamily: {
+            sans: ['Plus Jakarta Sans', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        },
+
+        // ─── FIXED FONT SIZE SCALE ───────────────────────────────────────
+        // Strictly limited to 8 sizes — consistent across the entire app
+        fontSize: {
+            'xs': ['11px', { lineHeight: '16px', letterSpacing: '0.02em' }],  // tags, labels
+            'sm': ['12px', { lineHeight: '18px', letterSpacing: '0.01em' }],  // captions, helper text
+            'base': ['13px', { lineHeight: '20px', letterSpacing: '0em' }],  // body text
+            'md': ['14px', { lineHeight: '22px', letterSpacing: '-0.005em' }],  // default UI text
+            'lg': ['16px', { lineHeight: '24px', letterSpacing: '-0.01em' }],  // sub-headings
+            'xl': ['18px', { lineHeight: '28px', letterSpacing: '-0.02em' }],  // card titles
+            '2xl': ['22px', { lineHeight: '32px', letterSpacing: '-0.025em' }],  // page headings
+            '3xl': ['28px', { lineHeight: '36px', letterSpacing: '-0.03em' }],  // hero / stat numbers
+        },
+
+        extend: {
+            // ─── BRAND COLORS ─────────────────────────────────────────────
+            colors: {
+>>>>>>> 00b89d956b0fe40e965478a45ecaea6d4c89e69e
                 primary: {
                     50: '#eef2ff',
                     100: '#e0e7ff',
                     200: '#c7d2fe',
                     300: '#a5b4fc',
                     400: '#818cf8',
+<<<<<<< HEAD
                     500: '#6366f1',  // Base primary
+=======
+                    500: '#6366f1',
+>>>>>>> 00b89d956b0fe40e965478a45ecaea6d4c89e69e
                     600: '#4f46e5',
                     700: '#4338ca',
                     800: '#3730a3',
                     900: '#312e81',
                     950: '#1e1b4b',
                 },
+<<<<<<< HEAD
                 // Accent — Cyan/Teal for highlights
                 accent: {
                     50: '#ecfeff',
@@ -59,10 +89,20 @@ export default {
                 success: {
                     50: '#f0fdf4',
                     100: '#dcfce7',
+=======
+                accent: {
+                    400: '#22d3ee',
+                    500: '#06b6d4',
+                    600: '#0891b2',
+                },
+                success: {
+                    50: '#f0fdf4',
+>>>>>>> 00b89d956b0fe40e965478a45ecaea6d4c89e69e
                     500: '#22c55e',
                     600: '#16a34a',
                     700: '#15803d',
                 },
+<<<<<<< HEAD
                 // Warning
                 warning: {
                     50: '#fffbeb',
@@ -78,10 +118,24 @@ export default {
                     600: '#dc2626',
                 },
                 // Surface — app backgrounds, cards
+=======
+                warning: {
+                    50: '#fffbeb',
+                    500: '#f59e0b',
+                    600: '#d97706',
+                },
+                danger: {
+                    50: '#fef2f2',
+                    500: '#ef4444',
+                    600: '#dc2626',
+                },
+                // App surface backgrounds
+>>>>>>> 00b89d956b0fe40e965478a45ecaea6d4c89e69e
                 surface: {
                     50: '#f8fafc',
                     100: '#f1f5f9',
                     200: '#e2e8f0',
+<<<<<<< HEAD
                     700: '#334155',
                     800: '#1e293b',
                     900: '#0f172a',
@@ -162,6 +216,70 @@ export default {
                 'fade-in': 'fadeIn 0.25s ease-out',
                 'slide-in-left': 'slideInLeft 0.3s ease-out',
                 'pulse-soft': 'pulse_soft 2s ease-in-out infinite',
+=======
+                    800: '#1e293b',
+                    900: '#0f172a',
+                    950: '#070c18',
+                },
+            },
+
+            // ─── BORDER RADIUS ────────────────────────────────────────────
+            borderRadius: {
+                'sm': '6px',
+                DEFAULT: '8px',
+                'md': '10px',
+                'lg': '12px',
+                'xl': '14px',
+                '2xl': '16px',
+                '3xl': '20px',
+                'full': '9999px',
+            },
+
+            // ─── LIGHTWEIGHT SHADOWS ──────────────────────────────────────
+            boxShadow: {
+                'xs': '0 1px 2px 0 rgb(0 0 0 / 0.04)',
+                'sm': '0 2px 4px 0 rgb(0 0 0 / 0.06)',
+                'card': '0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.04)',
+                'card-md': '0 4px 12px -2px rgb(0 0 0 / 0.08)',
+                'primary': '0 4px 14px -2px rgb(99 102 241 / 0.30)',
+                'glow': '0 0 16px rgb(99 102 241 / 0.12)',
+                'glass': '0 4px 24px -4px rgb(0 0 0 / 0.08), inset 0 1px 0 rgb(255 255 255 / 0.10)',
+                'none': 'none',
+            },
+
+            // ─── SPACING EXTRAS ───────────────────────────────────────────
+            spacing: {
+                '4.5': '18px',
+                '18': '72px',
+            },
+
+            // ─── TRANSITIONS ──────────────────────────────────────────────
+            transitionDuration: {
+                DEFAULT: '150ms',
+                '200': '200ms',
+                '300': '300ms',
+            },
+
+            // ─── LIGHTWEIGHT ANIMATIONS ───────────────────────────────────
+            keyframes: {
+                fadeUp: {
+                    from: { opacity: '0', transform: 'translateY(8px)' },
+                    to: { opacity: '1', transform: 'translateY(0)' },
+                },
+                fadeIn: {
+                    from: { opacity: '0' },
+                    to: { opacity: '1' },
+                },
+                pulseSoft: {
+                    '0%, 100%': { opacity: '1' },
+                    '50%': { opacity: '0.5' },
+                },
+            },
+            animation: {
+                'fade-up': 'fadeUp 0.25s ease-out both',
+                'fade-in': 'fadeIn 0.2s ease-out both',
+                'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+>>>>>>> 00b89d956b0fe40e965478a45ecaea6d4c89e69e
             },
         },
     },

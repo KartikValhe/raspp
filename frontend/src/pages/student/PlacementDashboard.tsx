@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Briefcase, Target, TrendingUp, ArrowRight, CheckCircle, XCircle } from 'lucide-react';
+import { Briefcase, Target, TrendingUp, ArrowRight, CheckCircle, XCircle, LayoutDashboard } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
+import { PageHeader } from '../../components/PageHeader';
 
 const StatCard = ({ title, value, icon: Icon, color, index }: any) => (
     <motion.div
@@ -79,35 +80,21 @@ const PlacementDashboard: React.FC = () => {
     }, []);
 
     return (
-        <div className="p-8 min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white font-sans">
-            <div className="max-w-7xl mx-auto space-y-12">
+        <div className="h-full overflow-y-auto p-6">
+            <div className="max-w-7xl mx-auto space-y-6">
 
-                {/* Hero Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-violet-600 to-indigo-600 p-8 md:p-12 text-white shadow-2xl"
-                >
-                    <div className="relative z-10 max-w-2xl">
-                        <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
-                            Your Future Starts Here 🚀
-                        </h1>
-                        <p className="text-lg text-violet-100 mb-8 leading-relaxed">
-                            Explore opportunities, track your progress, and get AI-powered insights to crack your dream job.
-                        </p>
-                        <div className="flex gap-4">
-                            <Link to="/student/placement/jobs" className="px-6 py-3 bg-white text-violet-600 font-bold rounded-xl shadow-lg hover:shadow-xl hover:bg-violet-50 transition-all transform hover:-translate-y-1">
-                                Browse Jobs
-                            </Link>
-                            <Link to="/student/placement/prediction" className="px-6 py-3 bg-violet-800/50 backdrop-blur-md border border-white/20 text-white font-bold rounded-xl hover:bg-violet-800/70 transition-all">
-                                Check Prediction
-                            </Link>
+                <PageHeader
+                    icon={LayoutDashboard}
+                    title="Placement Dashboard"
+                    subtitle="Explore opportunities, track your progress, and get AI-powered insights"
+                    iconClass="bg-violet-500"
+                    actions={
+                        <div className="flex gap-3">
+                            <Link to="/student/placement/jobs" className="btn-primary">Browse Jobs</Link>
+                            <Link to="/student/placement/prediction" className="btn-outline">Check Prediction</Link>
                         </div>
-                    </div>
-                    {/* Decorative Background Elements */}
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
-                    <div className="absolute bottom-0 left-0 w-72 h-72 bg-black/10 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
-                </motion.div>
+                    }
+                />
 
                 {/* Prediction Teaser */}
                 {prediction && (

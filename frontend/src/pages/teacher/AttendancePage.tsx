@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Users, CheckCircle, XCircle, Clock, Save, Filter } from 'lucide-react';
 import api from '../../services/api';
+import { PageHeader } from '../../components/PageHeader';
 
 interface Student {
     id: number;
@@ -76,16 +77,14 @@ export const AttendancePage: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-8 space-y-8">
-            <div className="flex items-center gap-4">
-                <div className="p-3 bg-purple-500/10 rounded-xl text-purple-600 dark:text-purple-400">
-                    <Calendar size={32} />
-                </div>
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-white">Attendance Management</h1>
-                    <p className="text-slate-500 dark:text-slate-400">Mark and manage daily attendance for your classes.</p>
-                </div>
-            </div>
+        <div className="h-full overflow-y-auto p-6 space-y-6">
+
+            <PageHeader
+                icon={Calendar}
+                title="Attendance Management"
+                subtitle="Mark and manage daily attendance for your classes"
+                iconClass="bg-purple-500"
+            />
 
             {/* Controls Bar */}
             <div className="bg-white dark:bg-white/5 p-4 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm flex flex-col md:flex-row items-center gap-4 justify-between">

@@ -8,6 +8,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import api from '../../services/api';
+import { PageHeader } from '../../components/PageHeader';
 
 interface ResumeData {
     full_name: string;
@@ -119,48 +120,31 @@ const ResumeBuilder: React.FC = () => {
     return (
         <div className="h-full overflow-y-auto p-6 scroll-smooth">
             <div className="max-w-7xl mx-auto pb-12">
-                {/* Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mb-8"
-                >
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className={`text-4xl font-bold flex items-center gap-3 ${theme === 'dark' ? 'text-white' : 'text-slate-900'
-                                }`}>
-                                <Sparkles className={theme === 'dark' ? 'text-yellow-400' : 'text-amber-500'} size={36} />
-                                Resume Builder
-                            </h1>
-                            <p className={theme === 'dark' ? 'text-slate-300 mt-2' : 'text-slate-600 mt-2'}>
-                                Create your professional resume in minutes
-                            </p>
-                        </div>
+
+                <PageHeader
+                    icon={Sparkles}
+                    title="Resume Builder"
+                    subtitle="Create your professional resume in minutes"
+                    iconClass="bg-violet-500"
+                    actions={
                         <div className="flex gap-3">
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
+                            <button
                                 onClick={() => setShowPreview(!showPreview)}
-                                className={`px-6 py-3 backdrop-blur-lg border rounded-xl font-medium flex items-center gap-2 transition-all ${theme === 'dark'
-                                    ? 'bg-white/10 border-white/20 text-white hover:bg-white/20'
-                                    : 'bg-white border-slate-300 text-slate-700 hover:bg-slate-50 shadow-md'
-                                    }`}
+                                className="btn-outline flex items-center gap-2"
                             >
-                                <Eye size={20} />
+                                <Eye size={16} />
                                 {showPreview ? 'Hide' : 'Show'} Preview
-                            </motion.button>
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
+                            </button>
+                            <button
                                 onClick={handleDownloadPDF}
-                                className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl text-white font-medium flex items-center gap-2 shadow-lg shadow-green-500/30 hover:shadow-green-500/50 transition-all"
+                                className="btn-primary flex items-center gap-2"
                             >
-                                <Download size={20} />
+                                <Download size={16} />
                                 Download PDF
-                            </motion.button>
+                            </button>
                         </div>
-                    </div>
-                </motion.div>
+                    }
+                />
 
                 <div className="grid grid-cols-12 gap-6">
                     {/* Main Content */}

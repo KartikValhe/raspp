@@ -3,6 +3,7 @@ import api from '../../services/api';
 import { Search, Filter, FileDown, Plus, Pencil, Trash2, Users, GraduationCap, Activity, CheckCircle } from 'lucide-react';
 import { DataTable, type Column } from '../../components/Table/DataTable';
 import { motion } from 'framer-motion';
+import { PageHeader } from '../../components/PageHeader';
 
 interface Student {
     id: number;
@@ -208,43 +209,28 @@ export const StudentList: React.FC = () => {
     ];
 
     return (
-        <div className="h-full flex flex-col p-8 space-y-6 overflow-hidden">
-            {/* Header */}
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex-none"
-            >
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                    <div className="flex items-center gap-3">
-                        <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl shadow-lg shadow-blue-500/20">
-                            <GraduationCap className="w-8 h-8 text-white" />
+        <div className="h-full flex flex-col p-6 space-y-5 overflow-hidden">
+
+            {/* Standardized Page Header */}
+            <div className="flex-none">
+                <PageHeader
+                    icon={GraduationCap}
+                    title="Student Directory"
+                    subtitle="Manage student records and academic progress"
+                    iconClass="bg-primary-500"
+                    actions={
+                        <div className="flex items-center gap-2">
+                            <button className="btn-outline">
+                                <FileDown size={14} />
+                                Export CSV
+                            </button>
+                            <button onClick={handleAddClick} className="btn-primary">
+                                <Plus size={14} />
+                                Add Student
+                            </button>
                         </div>
-                        <div>
-                            <h1 className="text-3xl font-bold text-slate-800 dark:text-white">Student Directory</h1>
-                            <p className="text-slate-500 dark:text-slate-400">Manage student records and academic progress.</p>
-                        </div>
-                    </div>
-                    <div className="flex gap-3">
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="flex items-center gap-2 px-4 py-3 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-white/10 transition-colors text-sm font-medium shadow-sm"
-                        >
-                            <FileDown size={18} />
-                            Export CSV
-                        </motion.button>
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={handleAddClick}
-                            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-xl hover:shadow-lg hover:shadow-blue-500/30 transition-all text-sm font-bold"
-                        >
-                            <Plus size={18} />
-                            Add Student
-                        </motion.button>
-                    </div>
-                </div>
+                    }
+                />
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -273,7 +259,7 @@ export const StudentList: React.FC = () => {
                         </motion.div>
                     ))}
                 </div>
-            </motion.div>
+            </div>
 
             {/* Filters Bar */}
             <div className="bg-white dark:bg-white/5 p-4 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm flex flex-col md:flex-row gap-4">

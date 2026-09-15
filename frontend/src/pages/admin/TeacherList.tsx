@@ -3,6 +3,7 @@ import api from '../../services/api';
 import { Search, Plus, Mail, User, BookOpen, X, Phone, GraduationCap, Pencil, Trash2, Users, School } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DataTable, type Column } from '../../components/Table/DataTable';
+import { PageHeader } from '../../components/PageHeader';
 
 interface Teacher {
     id: number;
@@ -170,33 +171,25 @@ export const TeacherList: React.FC = () => {
     ];
 
     return (
-        <div className="h-full flex flex-col p-8 space-y-6 overflow-hidden">
-            {/* Header */}
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex-none"
-            >
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                    <div className="flex items-center gap-3">
-                        <div className="p-3 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-xl shadow-lg shadow-indigo-500/20">
-                            <School size={32} className="text-white" />
-                        </div>
-                        <div>
-                            <h1 className="text-3xl font-bold text-slate-800 dark:text-white">Faculty Directory</h1>
-                            <p className="text-slate-500 dark:text-slate-400">Manage teachers and department assignments.</p>
-                        </div>
-                    </div>
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={handleAddClick}
-                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl hover:shadow-lg hover:shadow-indigo-500/30 transition-all text-sm font-bold"
-                    >
-                        <Plus size={18} />
-                        Add Teacher
-                    </motion.button>
-                </div>
+        <div className="h-full flex flex-col p-6 space-y-5 overflow-hidden">
+
+            {/* Standardized Page Header */}
+            <div className="flex-none">
+                <PageHeader
+                    icon={School}
+                    title="Faculty Directory"
+                    subtitle="Manage teachers and department assignments"
+                    iconClass="bg-violet-500"
+                    actions={
+                        <button
+                            onClick={handleAddClick}
+                            className="btn-primary"
+                        >
+                            <Plus size={15} />
+                            Add Teacher
+                        </button>
+                    }
+                />
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -225,7 +218,7 @@ export const TeacherList: React.FC = () => {
                         </motion.div>
                     ))}
                 </div>
-            </motion.div>
+            </div>
 
             {/* Search Bar */}
             <div className="bg-white dark:bg-white/5 p-4 rounded-xl border border-slate-200 dark:border-white/10 shadow-sm flex flex-col md:flex-row gap-4">
