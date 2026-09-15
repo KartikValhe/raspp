@@ -1,6 +1,6 @@
 import React from 'react';
 import type { LucideIcon } from 'lucide-react';
-import { clsx } from 'clsx';
+import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface StatsCardProps {
@@ -11,43 +11,61 @@ interface StatsCardProps {
         value: number;
         isPositive: boolean;
     };
-    color: 'blue' | 'green' | 'red' | 'purple';
+    /** tailwind text-color + dark variant, e.g. "text-primary-600 dark:text-primary-400" */
+    colorClass?: string;
     delay?: number;
 }
 
-const colorMap = {
-    blue: "bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20",
-    green: "bg-green-50 text-green-600 border-green-100 dark:bg-green-500/10 dark:text-green-400 dark:border-green-500/20",
-    red: "bg-red-50 text-red-600 border-red-100 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20",
-    purple: "bg-purple-50 text-purple-600 border-purple-100 dark:bg-purple-500/10 dark:text-purple-400 dark:border-purple-500/20",
-};
-
-export const StatsCard: React.FC<StatsCardProps> = ({ label, value, icon: Icon, trend, color, delay = 0 }) => {
+export const StatsCard: React.FC<StatsCardProps> = ({
+    label,
+    value,
+    icon: Icon,
+    trend,
+    colorClass = 'text-primary-600 dark:text-primary-400',
+    delay = 0,
+}) => {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay }}
-            className="bg-white dark:bg-white/5 p-6 rounded-xl border border-slate-100 dark:border-white/10 shadow-sm hover:shadow-md transition-shadow"
+            transition={{ duration: 0.35, delay }}
+            className="stat-card group hover:-translate-y-0.5 hover:shadow-md transition-all duration-200"
         >
-            <div className="flex items-start justify-between">
-                <div>
-                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{label}</p>
-                    <h3 className="text-2xl font-bold text-slate-800 dark:text-white tracking-tight">{value}</h3>
-                </div>
-                <div className={clsx("p-3 rounded-lg", colorMap[color])}>
-                    <Icon size={20} strokeWidth={2.5} />
-                </div>
+            {/* Watermark icon */}
+            <div className={`absolute top-0 right-0 p-4 opacity-[0.07] group-hover:opacity-[0.12] group-hover:scale-110 transition-all duration-300 ${colorClass}`}>
+                <Icon size={60} strokeWidth={1.5} />
             </div>
 
-            {trend && (
-                <div className="mt-4 flex items-center gap-2 text-xs font-medium">
-                    <span className={trend.isPositive ? "text-green-600" : "text-red-600"}>
-                        {trend.isPositive ? "+" : ""}{trend.value}%
-                    </span>
-                    <span className="text-slate-400">vs last month</span>
+            <div className="relative z-10">
+                {/* Icon badge */}
+                <div className={`stat-card-icon ${colorClass}`}>
+                    <Icon size={22} strokeWidth={2} />
                 </div>
-            )}
+
+                <p className="stat-card-label">{label}</p>
+
+                <div className="flex items-baseline gap-2 mt-1">
+                    <h3 className="stat-card-value">{value}</h3>
+                    {trend && (
+                        <span className={`text-xs font-semibold flex items-center gap-0.5 ${trend.isPositive
+                                ? 'text-success-600 dark:text-success-500'
+                                : 'text-danger-500 dark:text-danger-400'
+                            }`}>
+                            {trend.isPositive
+                                ? <ArrowUpRight size={12} />
+                                : <ArrowDownRight size={12} />
+                            }
+                            {trend.isPositive ? '+' : ''}{trend.value}%
+                        </span>
+                    )}
+                </div>
+
+                {trend && (
+                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1.5">
+                        vs last month
+                    </p>
+                )}
+            </div>
         </motion.div>
     );
 };

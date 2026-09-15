@@ -3,13 +3,10 @@ import { Sidebar } from './Sidebar';
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
-        <div className="flex h-screen bg-gray-50 dark:bg-slate-950 overflow-hidden transition-colors duration-300">
-            {/* Sidebar is fixed width */}
+        <div className="flex h-screen bg-surface-50 dark:bg-surface-950 overflow-hidden transition-colors duration-300">
             <Sidebar />
-
-            {/* Main content area */}
             <main className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
-                <div className="absolute inset-0 w-full h-full overflow-y-auto custom-scrollbar">
+                <div className="absolute inset-0 w-full h-full overflow-y-auto scrollbar-thin">
                     {children}
                 </div>
             </main>

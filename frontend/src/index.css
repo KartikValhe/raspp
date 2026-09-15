@@ -2,114 +2,355 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 dark:bg-slate-700 rounded-full hover:bg-slate-400 dark:hover:bg-slate-600 border-2 border-transparent bg-clip-content;
-}
-
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: theme('colors.slate.300') transparent;
-}
-
-.dark * {
-  scrollbar-color: theme('colors.slate.700') transparent;
-}
-
+/* ═══════════════════════════════════════════════════════════════
+   BASE LAYER — Global resets & typography defaults
+   ═══════════════════════════════════════════════════════════════ */
 @layer base {
 
-  /* Fix for combobox/select dropdown options visibility in dark mode */
-  select option {
-    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-white;
-  }
-
-  /* Ensure select elements have proper backgrounds */
-  select {
-    @apply dark:bg-slate-800 dark:text-white;
-  }
-
-  /* Performance: GPU acceleration for animations */
-  * {
+  *,
+  *::before,
+  *::after {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans text-base text-slate-800 dark:text-slate-100 bg-surface-50 dark:bg-surface-950;
+  }
+
+  /* Heading defaults — consistent across whole app */
+  h1 {
+    @apply text-3xl font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply text-2xl font-bold tracking-tight;
+  }
+
+  h3 {
+    @apply text-xl font-semibold tracking-tight;
+  }
+
+  h4 {
+    @apply text-lg font-semibold;
+  }
+
+  h5 {
+    @apply text-base font-semibold;
+  }
+
+  h6 {
+    @apply text-sm font-semibold;
+  }
+
+  p {
+    @apply text-base leading-relaxed;
+  }
+
+  /* Form element defaults */
+  select option {
+    @apply bg-white dark:bg-surface-900 text-slate-900 dark:text-white;
+  }
+
+  select {
+    @apply dark:bg-surface-800 dark:text-white;
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   COMPONENT LAYER — Reusable class utilities
+   ═══════════════════════════════════════════════════════════════ */
+@layer components {
+
+  /* ── CARDS ──────────────────────────────────────────────────── */
+  .card {
+    @apply bg-white dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.07] rounded-2xl shadow-card transition-all duration-200;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+
+  .card-p {
+    @apply card p-6;
+  }
+
+  /* ── STATS CARD ─────────────────────────────────────────────── */
+  .stat-card {
+    @apply card-p relative overflow-hidden group;
+  }
+
+  .stat-card-icon {
+    @apply w-12 h-12 rounded-xl flex items-center justify-center mb-4;
+  }
+
+  .stat-card-label {
+    @apply text-sm font-medium text-slate-500 dark:text-slate-400;
+  }
+
+  .stat-card-value {
+    @apply text-2xl font-bold text-slate-900 dark:text-white tracking-tight;
+  }
+
+  /* ── PAGE HEADER ────────────────────────────────────────────── */
+  .page-header {
+    @apply flex items-center justify-between mb-8;
+  }
+
+  .page-title-group {
+    @apply flex items-center gap-4;
+  }
+
+  .page-icon {
+    @apply w-12 h-12 rounded-2xl flex items-center justify-center bg-primary-500 text-white shadow-primary-sm;
+  }
+
+  .page-title {
+    @apply text-2xl font-bold text-slate-900 dark:text-white;
+  }
+
+  .page-subtitle {
+    @apply text-sm text-slate-500 dark:text-slate-400 mt-0.5;
+  }
+
+  /* ── SECTION HEADER (within page) ──────────────────────────── */
+  .section-header {
+    @apply flex items-center justify-between mb-5;
+  }
+
+  .section-title {
+    @apply text-base font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2;
+  }
+
+  /* ── BUTTONS ────────────────────────────────────────────────── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 font-medium rounded-xl transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-sm {
+    @apply btn text-xs px-3 py-1.5;
+  }
+
+  .btn-md {
+    @apply btn text-sm px-4 py-2.5;
+  }
+
+  .btn-lg {
+    @apply btn text-base px-6 py-3;
+  }
+
+  .btn-primary {
+    @apply btn-md bg-primary-500 hover:bg-primary-600 active:bg-primary-700 text-white shadow-primary-sm hover:shadow-primary focus:ring-primary-400;
+  }
+
+  .btn-secondary {
+    @apply btn-md bg-slate-100 hover:bg-slate-200 dark:bg-white/10 dark:hover:bg-white/20 text-slate-700 dark:text-slate-200 focus:ring-slate-300;
+  }
+
+  .btn-ghost {
+    @apply btn-md bg-transparent hover:bg-slate-100 dark:hover:bg-white/10 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white;
+  }
+
+  .btn-danger {
+    @apply btn-md bg-danger-500 hover:bg-danger-600 text-white focus:ring-danger-500/40;
+  }
+
+  .btn-outline {
+    @apply btn-md bg-transparent border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 text-slate-700 dark:text-slate-300 focus:ring-slate-300;
+  }
+
+  /* Link-style button */
+  .btn-link {
+    @apply text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 underline-offset-2 hover:underline;
+  }
+
+  /* ── BADGES ─────────────────────────────────────────────────── */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+  }
+
+  .badge-primary {
+    @apply badge bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300;
+  }
+
+  .badge-success {
+    @apply badge bg-success-50 dark:bg-success-500/15 text-success-700 dark:text-success-500;
+  }
+
+  .badge-warning {
+    @apply badge bg-warning-50 dark:bg-warning-500/15 text-warning-700 dark:text-warning-500;
+  }
+
+  .badge-danger {
+    @apply badge bg-danger-50 dark:bg-danger-500/15 text-danger-700 dark:text-danger-500;
+  }
+
+  .badge-neutral {
+    @apply badge bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300;
+  }
+
+  .badge-dot {
+    @apply w-1.5 h-1.5 rounded-full bg-current;
+  }
+
+  /* ── FORM INPUTS ─────────────────────────────────────────────── */
+  .input {
+    @apply w-full px-4 py-2.5 rounded-xl text-sm font-medium bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent transition-all duration-200;
+  }
+
+  .input-label {
+    @apply block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5;
+  }
+
+  .input-error {
+    @apply text-xs text-danger-500 mt-1;
+  }
+
+  /* ── TABLE ───────────────────────────────────────────────────── */
+  .table-container {
+    @apply card overflow-hidden;
+  }
+
+  .table-base {
+    @apply w-full text-sm text-left;
+  }
+
+  .table-th {
+    @apply px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-white/[0.02] border-b border-slate-200 dark:border-white/[0.06];
+  }
+
+  .table-td {
+    @apply px-6 py-4 text-slate-700 dark:text-slate-300 border-b border-slate-100 dark:border-white/[0.04];
+  }
+
+  .table-tr {
+    @apply hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors duration-150;
+  }
+
+  /* ── STATUS DOT ─────────────────────────────────────────────── */
+  .status-dot {
+    @apply w-2 h-2 rounded-full shrink-0;
+  }
+
+  .status-online {
+    @apply status-dot bg-success-500 animate-pulse;
+  }
+
+  .status-offline {
+    @apply status-dot bg-danger-500;
+  }
+
+  .status-pending {
+    @apply status-dot bg-warning-500 animate-pulse-soft;
+  }
+
+  /* ── DIVIDER ─────────────────────────────────────────────────── */
+  .divider {
+    @apply border-t border-slate-100 dark:border-white/[0.06];
+  }
+
+  /* ── ACTIVITY ITEM ───────────────────────────────────────────── */
+  .activity-item {
+    @apply flex items-center gap-4 p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-white/[0.03] border border-transparent hover:border-slate-100 dark:hover:border-white/[0.05] transition-all duration-150;
+  }
+
+  .activity-icon {
+    @apply w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center shrink-0 text-slate-500 dark:text-slate-400;
+  }
+
+  /* ── QUICK ACTION BUTTON ─────────────────────────────────────── */
+  .quick-action {
+    @apply w-full py-3 px-4 rounded-xl text-left text-sm font-medium flex items-center gap-3 bg-slate-50 hover:bg-slate-100 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-200 border border-transparent hover:border-slate-200 dark:hover:border-white/[0.08] transition-all duration-200;
+  }
+
+  .quick-action-icon {
+    @apply w-8 h-8 rounded-lg flex items-center justify-center shrink-0;
+  }
+
+  /* ── SIDEBAR NAV ─────────────────────────────────────────────── */
+  .sidebar-nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 relative overflow-hidden;
+  }
+
+  .sidebar-nav-item-default {
+    @apply sidebar-nav-item text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06];
+  }
+
+  .sidebar-nav-item-active {
+    @apply sidebar-nav-item bg-primary-50 dark:bg-primary-500/[0.12] text-primary-700 dark:text-primary-300 border border-primary-100 dark:border-primary-500/20;
+  }
+
+  /* ── SECTION LABEL (sidebar / page sub-label) ───────────────── */
+  .section-label {
+    @apply text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500;
+  }
+
+  /* ── INFO PILL (status indicators) ──────────────────────────── */
+  .info-pill {
+    @apply flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.08] shadow-xs text-sm font-medium text-slate-600 dark:text-slate-300;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   UTILITIES LAYER — Custom scrollbar, helpers
+   ═══════════════════════════════════════════════════════════════ */
 @layer utilities {
 
-  /* Custom scrollbar for better performance */
-  .custom-scrollbar::-webkit-scrollbar {
+  /* Scrollbar — webkit */
+  ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
 
-  .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-transparent;
+  ::-webkit-scrollbar-track {
+    background: transparent;
   }
 
-  .custom-scrollbar::-webkit-scrollbar-thumb {
+  ::-webkit-scrollbar-thumb {
     @apply bg-slate-300 dark:bg-slate-600 rounded-full;
   }
 
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  ::-webkit-scrollbar-thumb:hover {
     @apply bg-slate-400 dark:bg-slate-500;
   }
 
-  /* Fade-in animation for better perceived performance */
-  .animate-fade-in-up {
-    animation: fadeInUp 0.4s ease-out;
+  /* Scrollbar — firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.slate.300') transparent;
   }
 
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .dark * {
+    scrollbar-color: theme('colors.slate.600') transparent;
   }
 
-  /* Blob animation for decorative elements */
-  .animate-blob {
-    animation: blob 7s infinite;
+  /* Thin scrollbar variant */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
   }
 
-  .animation-delay-2000 {
-    animation-delay: 2s;
+  /* Text gradient helpers */
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary-600 to-accent-500 bg-clip-text text-transparent;
   }
 
-  .animation-delay-4000 {
-    animation-delay: 4s;
+  .text-gradient-dark {
+    @apply bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent;
   }
 
-  @keyframes blob {
-    0% {
-      transform: translate(0px, 0px) scale(1);
-    }
+  /* Glass effect */
+  .glass {
+    @apply backdrop-blur-xl bg-white/80 dark:bg-surface-900/80;
+  }
 
-    33% {
-      transform: translate(30px, -50px) scale(1.1);
-    }
-
-    66% {
-      transform: translate(-20px, 20px) scale(0.9);
-    }
-
-    100% {
-      transform: translate(0px, 0px) scale(1);
-    }
+  .glass-border {
+    @apply border border-white/60 dark:border-white/10;
   }
 }
