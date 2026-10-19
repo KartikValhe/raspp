@@ -25,6 +25,9 @@ origins = [
     "http://localhost:3000",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:3000",
+    # Docker / production (Nginx frontend on port 80)
+    "http://localhost",
+    "http://127.0.0.1",
 ]
 
 app.add_middleware(
@@ -42,7 +45,14 @@ app.include_router(api_router, prefix="/api/v1")
 async def root():
     return {"message": "Welcome to RASPP API"}
 
+from app.core.redis import redis_cache
+
 @app.get("/health")
 @app.get("/test_debug")
 def test_debug():
-    return {"message": "You are hitting the correct server!"}
+    redis_status = "connected" if redis_cache.is_healthy() else "disconnected (fallback to DB)"
+    return {
+        "status": "healthy",
+        "message": "You are hitting the correct server!",
+        "redis": redis_status
+    }

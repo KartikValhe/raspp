@@ -27,3 +27,7 @@ api_router.include_router(results.router, prefix="/results", tags=["results"])
 # Add placement router  
 from app.api.endpoints import placement
 api_router.include_router(placement.router)
+
+# Add AI Advisor router
+from app.api.endpoints import advisor
+api_router.include_router(advisor.router, prefix="/advisor", tags=["advisor"])

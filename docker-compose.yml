@@ -1,0 +1,73 @@
+services:
+  # ── FastAPI Backend ────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: raspp-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env          # reads DB creds, SECRET_KEY, GEMINI_API_KEY, etc.
+    environment:
+      # Override the SSL CA path to the in-container location.
+      DB_SSL_CA: /run/secrets/db_ssl_ca.pem
+      # Point Redis to the Docker compose service name
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    volumes:
+      # Mount the TiDB SSL certificate into the container.
+      - ${DB_SSL_CA_HOST_PATH:-./certs/isrgrootx1.pem}:/run/secrets/db_ssl_ca.pem:ro
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - raspp-net
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  # ── Redis Cache ────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: raspp-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - raspp-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  # ── React Frontend (Nginx) ─────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: raspp-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - raspp-net
+
+networks:
+  raspp-net:
+    driver: bridge
+
+volumes:
+  redis-data:
+

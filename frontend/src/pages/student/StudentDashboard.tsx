@@ -1,13 +1,15 @@
 import React from 'react';
 import { motion, type Variants } from 'framer-motion';
-import { TrendingUp, BookOpen, Clock, AlertCircle, Calendar, Trophy, LayoutDashboard } from 'lucide-react';
+import { TrendingUp, BookOpen, Clock, AlertCircle, Calendar, Trophy, LayoutDashboard, Bot, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { PageHeader } from '../../components/PageHeader';
 import { StatsCard } from '../../components/StatsCard';
 import { AttendanceHeatmap } from '../../components/charts/Heatmap';
+import { AICareerAdvisor } from '../../components/AICareerAdvisor';
 
 export const StudentDashboard: React.FC = () => {
     const { user } = useAuth();
+    const [isAdvisorOpen, setIsAdvisorOpen] = React.useState(false);
 
     // Mock Data (Replace with API later)
     const stats = {
@@ -222,7 +224,42 @@ export const StudentDashboard: React.FC = () => {
                         <Trophy size={100} />
                     </div>
                 </motion.div>
+                
+                {/* AI Advisor Card */}
+                <motion.div
+                    variants={itemVariants}
+                    className="lg:col-span-3 p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 border border-indigo-500/30 shadow-xl relative overflow-hidden"
+                >
+                    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="flex items-center gap-6">
+                            <div className="p-4 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-2xl shadow-lg shadow-violet-500/20">
+                                <Sparkles size={32} className="text-white" />
+                            </div>
+                            <div>
+                                <h2 className="text-2xl font-bold text-white mb-2">Personalized Career Plan</h2>
+                                <p className="text-indigo-200">Leverage our ML engine and AI to get a tailored roadmap for your placements.</p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => setIsAdvisorOpen(true)}
+                            className="whitespace-nowrap px-8 py-4 bg-white text-indigo-900 font-bold rounded-xl hover:bg-indigo-50 transition-transform hover:scale-105 shadow-lg flex items-center gap-2"
+                        >
+                            <Bot size={20} />
+                            Generate AI Plan
+                        </button>
+                    </div>
+                    {/* Decorative Elements */}
+                    <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-fuchsia-500/20 blur-[120px] rounded-full pointer-events-none" />
+                    <div className="absolute -top-32 -right-32 w-64 h-64 bg-violet-500/20 blur-[120px] rounded-full pointer-events-none" />
+                </motion.div>
             </div>
+
+            {/* AI Advisor Modal */}
+            <AICareerAdvisor 
+                isOpen={isAdvisorOpen} 
+                onClose={() => setIsAdvisorOpen(false)} 
+                studentId="CSE21001" // Using test student ID for now
+            />
         </motion.div >
     );
 };

@@ -1,9 +1,10 @@
 from typing import Any, List, Optional
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func, desc
 from app.api import deps
 from app.core.database import get_db
+from app.core.redis import redis_cache
 from app.models import models
 from pydantic import BaseModel
 
@@ -37,14 +38,19 @@ def get_merit_list(
     limit: int = 50
 ) -> Any:
     """
-    Get merit list sorted by total marks percentage
+    Get merit list sorted by total marks percentage (cached with Redis).
     """
-    # Base query for students
+    cache_key = f"results:merit_list:{semester}:{branch_id}:{academic_year}:{limit}"
+    cached = redis_cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    # Base query for students with eagerly loaded branch
     query = db.query(
         models.Student,
         func.sum(models.Mark.marks_obtained).label('total_obtained'),
         func.sum(models.Mark.max_marks).label('total_max')
-    ).join(models.Mark, models.Student.student_id == models.Mark.student_id)
+    ).options(joinedload(models.Student.branch)).join(models.Mark, models.Student.student_id == models.Mark.student_id)
 
     # Apply filters
     if semester:
@@ -97,4 +103,7 @@ def get_merit_list(
             status=item['status']
         ))
         
+    # Cache formatted merit list for 5 minutes (300s)
+    merit_list_dicts = [item.model_dump() for item in merit_list]
+    redis_cache.set(cache_key, merit_list_dicts, ttl=300)
     return merit_list

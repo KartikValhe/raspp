@@ -60,32 +60,13 @@ export const Sidebar: React.FC = () => {
         ] : []),
     ];
 
-<<<<<<< HEAD
-    const userInitial = user?.email?.[0]?.toUpperCase() ?? 'U';
-=======
     const initial = user?.email?.[0]?.toUpperCase() ?? 'U';
->>>>>>> 00b89d956b0fe40e965478a45ecaea6d4c89e69e
     const userName = user?.email?.split('@')[0] ?? 'User';
 
     return (
         <motion.div
             initial={{ x: -16, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-<<<<<<< HEAD
-            transition={{ duration: 0.3 }}
-            className="bg-white dark:bg-surface-900 text-slate-800 dark:text-white w-64 min-h-screen flex flex-col
-                       border-r border-slate-200 dark:border-white/[0.07] transition-colors duration-300"
-        >
-            {/* ── Logo / Brand ─────────────────────────────── */}
-            <div className="px-5 py-5 border-b border-slate-200 dark:border-white/[0.07] flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-primary-500 flex items-center justify-center shadow-primary-sm">
-                        <LayoutDashboard size={18} className="text-white" />
-                    </div>
-                    <div>
-                        <h1 className="text-base font-bold tracking-tight text-gradient-dark">RASPP</h1>
-                        <p className="text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wide">
-=======
             transition={{ duration: 0.25 }}
             className="sidebar-root"
         >
@@ -98,7 +79,6 @@ export const Sidebar: React.FC = () => {
                     <div>
                         <p className="text-md font-bold text-gradient-dark leading-tight">RASPP</p>
                         <p className="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider">
->>>>>>> 00b89d956b0fe40e965478a45ecaea6d4c89e69e
                             {user?.role} Portal
                         </p>
                     </div>
@@ -110,28 +90,16 @@ export const Sidebar: React.FC = () => {
                     aria-label="Toggle Theme"
                 >
                     {theme === 'dark'
-<<<<<<< HEAD
-                        ? <Sun size={16} className="text-amber-400" />
-                        : <Moon size={16} />
-=======
                         ? <Sun size={15} className="text-amber-400" />
                         : <Moon size={15} />
->>>>>>> 00b89d956b0fe40e965478a45ecaea6d4c89e69e
                     }
                 </button>
             </div>
 
-<<<<<<< HEAD
-            {/* ── Navigation ───────────────────────────────── */}
-            <div className="px-3 py-5 flex-1 overflow-y-auto scrollbar-thin">
-                <p className="section-label px-2 mb-3">Menu</p>
-                <nav className="space-y-0.5">
-=======
             {/* Nav */}
             <nav className="px-3 py-4 flex-1 overflow-y-auto scrollbar-none">
                 <p className="section-label px-2 mb-2">Menu</p>
                 <div className="space-y-0.5">
->>>>>>> 00b89d956b0fe40e965478a45ecaea6d4c89e69e
                     {links.map((link) => (
                         <NavLink
                             key={link.to}
@@ -146,19 +114,6 @@ export const Sidebar: React.FC = () => {
                                 <>
                                     {isActive && (
                                         <motion.div
-<<<<<<< HEAD
-                                            layoutId="sidebar-active-pill"
-                                            className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary-500 rounded-r-full"
-                                        />
-                                    )}
-                                    <link.icon
-                                        size={17}
-                                        strokeWidth={isActive ? 2.2 : 1.8}
-                                        className={`relative z-10 transition-colors duration-200 shrink-0
-                                            ${isActive ? 'text-primary-600 dark:text-primary-400' : ''}`}
-                                    />
-                                    <span className="relative z-10 font-medium">{link.label}</span>
-=======
                                             layoutId="sidebar-pill"
                                             className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-primary-500 rounded-r-full"
                                         />
@@ -169,7 +124,6 @@ export const Sidebar: React.FC = () => {
                                         className={`relative z-10 shrink-0 ${isActive ? 'text-primary-600 dark:text-primary-400' : ''}`}
                                     />
                                     <span className="relative z-10">{link.label}</span>
->>>>>>> 00b89d956b0fe40e965478a45ecaea6d4c89e69e
                                 </>
                             )}
                         </NavLink>
@@ -177,20 +131,6 @@ export const Sidebar: React.FC = () => {
                 </div>
             </nav>
 
-<<<<<<< HEAD
-            {/* ── User Footer ──────────────────────────────── */}
-            <div className="p-3 border-t border-slate-200 dark:border-white/[0.07]">
-                <div className="flex items-center gap-3 px-2 mb-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-accent-500
-                                    flex items-center justify-center text-xs font-bold text-white shrink-0
-                                    ring-2 ring-white dark:ring-surface-900 shadow-sm">
-                        {userInitial}
-                    </div>
-                    <div className="overflow-hidden flex-1">
-                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 truncate leading-tight">
-                            {userName}
-                        </p>
-=======
             {/* User Footer */}
             <div className="px-3 py-3 border-t border-slate-200 dark:border-white/[0.07]">
                 <div className="flex items-center gap-2.5 px-2 mb-2.5">
@@ -201,23 +141,12 @@ export const Sidebar: React.FC = () => {
                     </div>
                     <div className="flex-1 overflow-hidden">
                         <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 truncate">{userName}</p>
->>>>>>> 00b89d956b0fe40e965478a45ecaea6d4c89e69e
                         <p className="text-xs text-slate-400 dark:text-slate-500 capitalize">{user?.role}</p>
                     </div>
                 </div>
 
                 <button
                     onClick={logout}
-<<<<<<< HEAD
-                    className="flex items-center gap-2 w-full px-3 py-2 rounded-xl text-sm font-medium
-                               text-danger-500 dark:text-danger-400
-                               hover:bg-danger-50 dark:hover:bg-danger-500/10
-                               hover:text-danger-600 dark:hover:text-danger-300
-                               transition-all duration-200"
-                >
-                    <LogOut size={15} />
-                    <span>Sign Out</span>
-=======
                     className="flex items-center gap-2 w-full px-3 py-2 rounded-xl
                                text-sm font-medium text-danger-500 dark:text-danger-400
                                hover:bg-danger-50 dark:hover:bg-danger-500/10
@@ -226,7 +155,6 @@ export const Sidebar: React.FC = () => {
                 >
                     <LogOut size={14} />
                     Sign Out
->>>>>>> 00b89d956b0fe40e965478a45ecaea6d4c89e69e
                 </button>
             </div>
         </motion.div>

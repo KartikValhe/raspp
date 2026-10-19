@@ -9,6 +9,8 @@ from app.core.database import get_db
 from app.models import models
 from app.schemas import schemas
 
+from app.core.redis import redis_cache
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/login")
 
 def get_current_user(
@@ -29,9 +31,29 @@ def get_current_user(
     except JWTError:
         raise credentials_exception
     
+    # Check Redis cache first to avoid 100ms TiDB round-trip on EVERY request
+    cache_key = f"auth:user:{token_data.email}"
+    cached_user = redis_cache.get(cache_key)
+    if cached_user:
+        user = models.User(
+            id=cached_user["id"],
+            email=cached_user["email"],
+            role=cached_user["role"],
+            is_active=cached_user["is_active"]
+        )
+        return user
+
     user = db.query(models.User).filter(models.User.email == token_data.email).first()
     if user is None:
         raise credentials_exception
+
+    # Cache user for 10 minutes (600s)
+    redis_cache.set(cache_key, {
+        "id": user.id,
+        "email": user.email,
+        "role": user.role,
+        "is_active": user.is_active
+    }, ttl=600)
     return user
 
 def get_current_active_user(

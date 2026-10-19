@@ -5,6 +5,8 @@ from app.core.database import get_db
 from app.models import models
 from app.schemas import schemas
 
+from app.core.redis import redis_cache
+
 router = APIRouter()
 
 # Subject CRUD endpoints
@@ -17,7 +19,12 @@ def get_subjects(
     is_active: Optional[bool] = None,
     db: Session = Depends(get_db)
 ):
-    """Get list of subjects with optional filters"""
+    """Get list of subjects with optional filters (cached with Redis)"""
+    cache_key = f"subjects:list:{skip}:{limit}:{semester}:{branch_id}:{is_active}"
+    cached = redis_cache.get(cache_key)
+    if cached is not None:
+        return cached
+
     query = db.query(models.Subject)
     
     if semester is not None:
@@ -30,7 +37,23 @@ def get_subjects(
     if is_active is not None:
         query = query.filter(models.Subject.is_active == is_active)
     
-    return query.offset(skip).limit(limit).all()
+    subjects = query.offset(skip).limit(limit).all()
+    # Cache for 10 minutes (600s)
+    subject_dicts = [
+        {
+            "id": s.id,
+            "code": s.code,
+            "name": s.name,
+            "semester": s.semester,
+            "branch_id": s.branch_id,
+            "credits": s.credits,
+            "is_active": s.is_active,
+            "description": s.description
+        }
+        for s in subjects
+    ]
+    redis_cache.set(cache_key, subject_dicts, ttl=600)
+    return subjects
 
 @router.get("/{subject_id}", response_model=schemas.Subject)
 def get_subject(subject_id: int, db: Session = Depends(get_db)):
@@ -52,6 +75,7 @@ def create_subject(subject: schemas.SubjectCreate, db: Session = Depends(get_db)
     db.add(db_subject)
     db.commit()
     db.refresh(db_subject)
+    redis_cache.delete_pattern("subjects:*")
     return db_subject
 
 @router.put("/{subject_id}", response_model=schemas.Subject)
@@ -78,6 +102,7 @@ def update_subject(
     
     db.commit()
     db.refresh(db_subject)
+    redis_cache.delete_pattern("subjects:*")
     return db_subject
 
 @router.delete("/{subject_id}")
@@ -89,6 +114,7 @@ def delete_subject(subject_id: int, db: Session = Depends(get_db)):
     
     db.delete(db_subject)
     db.commit()
+    redis_cache.delete_pattern("subjects:*")
     return {"message": "Subject deleted successfully"}
 
 # Teacher Subject Assignment endpoints
