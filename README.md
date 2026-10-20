@@ -1,369 +1,195 @@
-<div align="center">
+# Result Analysis & Student Performance Predictor (RASPP)
 
-# 🎓 RASPP — Result Analysis & Student Performance Predictor
+Phase 1 (Academic Analytics) + Phase 2 (Placement Intelligence) — desktop research demonstration portal.
 
-### *Empowering Academic Excellence & Campus Recruitment with Explainable Machine Learning*
-
-[![React](https://img.shields.io/badge/React-19.2-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.109-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.4-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
-[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-
-<br />
-
-[Explore Features](#-key-features) •
-[System Architecture](#-system-architecture) •
-[Machine Learning Models](#-machine-learning--explainable-ai-xai) •
-[Installation Guide](#-getting-started) •
-[Demo Credentials](#-default-test-credentials) •
-[API Documentation](#-api-documentation)
-
-</div>
+Clone this repository, run one command, and open the web portal on your PC. This is not a hosted cloud product.
 
 ---
 
-## 📌 Overview
-
-**RASPP (Result Analysis & Student Performance Predictor)** is an enterprise-grade academic management and predictive analytics platform. It bridges the gap between everyday classroom performance and long-term career outcomes by combining **institutional record management**, **early academic risk intervention**, and **placement recruitment intelligence**.
-
-Equipped with an **Explainable AI (XAI)** ensemble, RASPP identifies at-risk students semesters in advance, provides faculty with actionable interventions, assists placement cells with recruitment probability estimations, and empowers students with real-time academic tracking and an ATS-friendly resume builder.
-
----
-
-## 🚀 Key Features
-
-<table>
-  <tr>
-    <td width="50%">
-      <h3>🎓 Student Portal</h3>
-      <ul>
-        <li><strong>Academic Dashboard:</strong> Real-time CGPA, SGPA, attendance telemetry, and credit counters.</li>
-        <li><strong>Result Analysis:</strong> Multi-semester performance visualizer with interactive charts (Recharts).</li>
-        <li><strong>ATS Resume Builder:</strong> Integrated tool to generate recruiter-ready, ATS-optimized resumes.</li>
-        <li><strong>Placement Cell:</strong> Curated campus job openings and placement readiness simulations.</li>
-        <li><strong>Academic Transcript:</strong> Instant preview and downloadable official A4 PDF transcripts.</li>
-      </ul>
-    </td>
-    <td width="50%">
-      <h3>👩‍🏫 Teacher Portal</h3>
-      <ul>
-        <li><strong>Streamlined Marks Entry:</strong> Rapid grade submission interface with automated SGPA recalculation.</li>
-        <li><strong>Batch CSV Predictions:</strong> Upload batch CSV spreadsheets to predict student outcomes at scale.</li>
-        <li><strong>Student Academic Profiler:</strong> Individualized student drilldowns with exam method breakdowns.</li>
-        <li><strong>Attendance Tracking:</strong> Section-wise attendance recording and threshold violation alerts.</li>
-        <li><strong>Early Warning System:</strong> Identifies students requiring remediation before final exams.</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td width="50%">
-      <h3>💼 Placement Portal</h3>
-      <ul>
-        <li><strong>Coordinator Dashboard:</strong> Placement rate, highest package, average CTC, and drive stats.</li>
-        <li><strong>Job Drive Manager:</strong> Create, publish, and manage company recruitment listings.</li>
-        <li><strong>AI Placement Probability:</strong> Multi-parameter ML scoring (DSA, CGPA, projects, internships).</li>
-        <li><strong>Placement Records:</strong> Historical offer archive with verified offer letter attachments.</li>
-        <li><strong>Batch Eligibility Screener:</strong> Filter eligible candidates based on company recruitment criteria.</li>
-      </ul>
-    </td>
-    <td width="50%">
-      <h3>🛠️ Admin Portal</h3>
-      <ul>
-        <li><strong>Institutional Analytics:</strong> Global pass rates, department performance, and risk distribution.</li>
-        <li><strong>Role-Based Access Control (RBAC):</strong> Admin, Faculty, Student, and Placement Officer permissions.</li>
-        <li><strong>Curriculum Management:</strong> Academic branches, semester curricula, subjects, and credits.</li>
-        <li><strong>Faculty & Student Directory:</strong> Searchable, sortable, and exportable master registries.</li>
-        <li><strong>System Auditing:</strong> Comprehensive data governance and log tracking.</li>
-      </ul>
-    </td>
-  </tr>
-</table>
-
-### 🤖 RASPP Assistant (Hybrid AI Chatbot)
-- **Multi-Model Google Gemini Integration:** Powered by Google Gemini 2.5 Flash / Flash-Lite / Pro models for intelligent student advisory and FAQ handling.
-- **Resilient Offline Fallback:** If internet access is constrained or API quotas expire, an embedded keyword-indexed educational knowledge base seamlessly takes over without service interruption.
-- **Context-Aware Insights:** Answers questions regarding grading policies, exam schedules, placement preparation, and portal navigation.
-
----
-
-## 🧠 Machine Learning & Explainable AI (XAI)
-
-RASPP incorporates production-ready scikit-learn and XGBoost pipelines saved via `joblib`:
-
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        RASPP ML Inference Engine                       │
-├──────────────────────────────────┬─────────────────────────────────────┤
-│ 1. Academic Performance Predictor│ 2. Campus Placement Predictor       │
-│    • Model: Ensemble Classifier  │    • Model: Random Forest Classifier│
-│      (Random Forest + XGBoost)   │    • Accuracy: ~95% Validated       │
-│    • Output: High / Avg / At Risk│    • Output: Placed / Not Placed    │
-│    • Key Features: Attendance %, │    • Key Features: CGPA, DSA Skills,│
-│      internal marks, consistency │      internships, live projects     │
-└──────────────────────────────────┴─────────────────────────────────────┘
-```
-
-- **Explainability Layer:** Features integrated SHAP (SHapley Additive exPlanations) and LIME support to ensure faculty and students understand *why* a particular prediction was generated, preventing black-box bias.
-
----
-
-## 📱 Mobile-First Responsive Design
-
-- **Dynamic Table-to-Card Transformation:** All dense tabular views automatically morph into touch-friendly cards on mobile screens (`< 768px`), preserving rich data density without horizontal page overflow.
-- **Fluid Viewport Mechanics:** Built on `100dvh` viewport standards to eliminate mobile browser navigation bar jumpiness.
-- **Momentum Touch Scrolling:** Native `-webkit-overflow-scrolling: touch` integration across all dashboards.
-- **Dark & Light Themes:** Instant toggle with persistent local preferences and harmonious Tailwind palettes.
-
----
-
-## 🏗️ System Architecture
-
-```mermaid
-graph TD
-    User([User Browser / Mobile]) <-->|HTTPS / REST| Nginx[Frontend Nginx / Vite Dev Server]
-    Nginx <-->|JSON Requests| FastAPI[FastAPI Backend Engine]
-    
-    subgraph "Backend Services"
-        FastAPI <--> Auth[JWT & OAuth2 Security]
-        FastAPI <--> ORM[SQLAlchemy ORM 2.0]
-        FastAPI <--> MLEngine[ML Inference Engine: Joblib / Scikit-Learn]
-        FastAPI <--> GeminiAI[Google Gemini 2.5 API]
-        FastAPI <--> RedisCache[(Redis Session Cache)]
-    end
-
-    ORM <--> Database[(MySQL / TiDB Database)]
-    MLEngine -.-> Models[(Trained Ensemble Models)]
-```
-
----
-
-## 💻 Tech Stack
-
-| Domain | Technology | Description |
-| :--- | :--- | :--- |
-| **Frontend UI** | **React 19, TypeScript** | Modern type-safe component architecture |
-| **Styling & Motion** | **Tailwind CSS 3.4, Framer Motion** | Utility-first CSS, fluid micro-interactions, dark mode |
-| **Build Tool** | **Vite 7** | Lightning-fast HMR and optimized production bundles |
-| **Visualization** | **Recharts, Lucide Icons** | Interactive charts, analytics gauges, modern iconography |
-| **PDF Generation** | **jsPDF, html2canvas** | Client-side academic transcript generation |
-| **Backend API** | **FastAPI (Python 3.10+)** | High-performance asynchronous REST API framework |
-| **Database & ORM** | **SQLAlchemy 2.0, MySQL / TiDB** | Relational data persistence with SSL CA support |
-| **Caching** | **Redis 7** | Sub-millisecond response caching for analytics & sessions |
-| **Machine Learning**| **Scikit-Learn, XGBoost, Pandas** | Model training, ensemble pipelines, statistical inference |
-| **AI Advisory** | **Google GenAI / Gemini 2.5** | Conversational academic assistant with offline fallback |
-| **Containerization**| **Docker, Docker Compose** | Reproducible multi-container local and cloud deployments |
-
----
-
-## 🛠️ Getting Started
-
-### Prerequisites
-- **Node.js** (v18.0 or later) & **npm**
-- **Python** (v3.10 or later)
-- **MySQL** or **TiDB** (or Docker for automated setup)
-
----
-
-### Option A: 🐳 Quickstart with Docker Compose (Recommended)
-
-Run the entire stack (FastAPI, Redis, React frontend) with a single command:
+## Clone & start (one command)
 
 ```bash
-# 1. Clone the repository
 git clone https://github.com/KartikValhe/deploy.git raspp
 cd raspp
-
-# 2. Launch multi-container services
-docker-compose up --build -d
 ```
 
-- **Frontend:** `http://localhost` (or `http://localhost:5173`)
-- **Backend API Docs:** `http://localhost:8000/docs`
-- **Redis Health:** `localhost:6379`
+### Windows
+
+```bash
+start.bat
+```
+
+or:
+
+```powershell
+.\start.ps1
+```
+
+### macOS / Linux
+
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+That command will:
+
+1. Create a Python `.venv` and install `requirements.txt`
+2. Install the React app under `frontend/`
+3. Prepare ML model artifacts and database configuration
+4. Start the API on `http://127.0.0.1:8000`
+5. Start the UI on `http://127.0.0.1:5173` (or `:3000` if 5173 is busy)
 
 ---
 
-### Option B: 💻 Manual Local Setup
+## Login
 
-#### 1. Database Setup
-Create a MySQL database named `rasppdb`:
+Change these before a public GitHub repository.
+
+| User | Password | Role |
+| :--- | :--- | :--- |
+| `admin@example.com` | `admin123` | Administrator (System, Curriculum & RBAC) |
+| `teacher@example.com` | `teacher123` | Faculty / Evaluator (Marks & Risk Alerts) |
+| `student@example.com` | `student123` | Student Portal (Results, Resume & Transcripts) |
+| `coordinator@example.com` | `coordinator123` | Placement Cell (Drives & AI Placement) |
+
+Open `http://127.0.0.1:5173`
+
+---
+
+## Prerequisites
+
+- **Python 3.10+** (3.10 or 3.11 recommended)
+- **Node.js 18+** and npm
+- **MySQL Server** or **TiDB Cloud** (or Docker)
+- ~2 GB free disk for first-run packages + sample ML data
+
+---
+
+## Features & Portals
+
+### 🎓 Student Portal
+- **Dashboard**: Real-time overview of attendance, current SGPA, and cumulative CGPA.
+- **Result Analysis**: Visual breakdown of semester-wise performance (marks, trends, subject grades).
+- **Resume Builder**: Integrated tool to build ATS-friendly, recruiter-ready resumes.
+- **Placement Cell**: View campus job openings, eligibility criteria, and placement predictions.
+- **Transcript**: View and download official academic transcripts in high-fidelity A4 PDF format.
+
+### 👩‍🏫 Teacher Portal
+- **Marks Entry**: Streamlined interface for entering student grades with automatic calculations.
+- **Bulk Prediction**: Upload CSV spreadsheets to predict performance for entire batches using ML.
+- **Analytics**: Class-wise performance reports, pass/fail ratios, and grade distribution charts.
+- **Attendance Management**: Track and update section-wise student attendance status with risk threshold alerts.
+
+### 💼 Placement Portal
+- **Coordinator Dashboard**: Track key metrics including Placement Rate, Average Package, and Highest CTC.
+- **Job Management**: Post and manage recruitment listings for prospective student applicants.
+- **AI Predictions**: Predict student placement probability using a specialized Random Forest model (~95% accuracy).
+- **Records**: Archive and manage verified student placement records and offer letters.
+
+### 🛠️ Admin Portal
+- **User Management**: Manage Students, Teachers, and Placement Coordinators.
+- **System Configuration**: Manage academic branches, semesters, subjects, and credits.
+- **Predictive Analytics**: System-wide performance overview, risk distribution, and department health.
+
+### 🤖 RASPP Assistant (AI Chatbot)
+- **Google Gemini 2.5 Integration**: Interactive chatbot assisting with academic queries, grading rubrics, and portal navigation.
+- **Zero-Downtime Offline Fallback**: Embedded educational knowledge base serves queries even if external API limits are exceeded.
+
+---
+
+## Machine Learning Models
+
+The platform powers two core predictive models:
+
+### 1. Academic Performance Predictor
+- **Goal**: Identify "At Risk" students early before final examinations.
+- **Algorithm**: Ensemble Voting Classifier (Random Forest + XGBoost).
+- **Features Used**: Attendance Rate, Marks Consistency, and Internal Assessment Scores.
+
+### 2. Placement Probability Predictor
+- **Goal**: Estimate the likelihood of securing campus placements.
+- **Algorithm**: Random Forest Classifier (~95% Accuracy).
+- **Features Used**: CGPA, DSA Skills, Projects, and Internship Count.
+- **Explainable AI (XAI)**: Integrated SHAP and LIME feature attribution to ensure transparent predictions.
+
+---
+
+## Project Structure
+
+```
+raspp/
+├── backend/            # FastAPI Application
+│   ├── app/
+│   │   ├── api/        # REST Endpoints (Auth, Students, Marks, Chatbot, etc.)
+│   │   ├── core/       # Configuration, Security & JWT Utilities
+│   │   ├── ml/         # Machine Learning Inference & Pipelines
+│   │   │   └── models/ # Serialized .joblib Model Binaries
+│   │   ├── models/     # SQLAlchemy Database Schemas
+│   │   └── schemas/    # Pydantic Validation Schemas
+│   ├── requirements.txt# Python Dependencies
+│   └── run.py          # Backend Launcher
+├── frontend/           # React 19 + TypeScript + Vite Application
+│   ├── src/
+│   │   ├── components/ # Reusable UI (Navbar, Sidebar, DataTable, Chatbot)
+│   │   ├── pages/      # Portal Pages (Admin, Teacher, Student, Placement)
+│   │   ├── layouts/    # Role-Based Layouts & Navigation
+│   │   └── services/   # Axios API Client
+│   └── package.json    # Frontend Dependencies
+├── docker-compose.yml  # Multi-Container Orchestration (FastAPI + Redis + React)
+├── render.yaml         # Cloud Deployment Blueprint (Render)
+├── start.bat           # 1-Click Startup for Windows CMD
+├── start.ps1           # 1-Click Startup for PowerShell
+└── start.sh            # 1-Click Startup for Linux / macOS
+```
+
+---
+
+## Alternative: Manual Step-by-Step Setup
+
+If you prefer launching components manually in separate terminals:
+
+### 1. Database Setup
+Create a MySQL database named `rasppdb` (or configure your connection in `backend/.env`):
 ```sql
 CREATE DATABASE rasppdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-#### 2. Backend Setup
+### 2. Backend Setup
 ```bash
-# Navigate to backend directory
 cd backend
-
-# Create and activate virtual environment
 python -m venv venv
 
 # Windows:
 venv\Scripts\activate
-# macOS/Linux:
+# Linux / macOS:
 source venv/bin/activate
 
-# Install dependencies
 pip install -r requirements.txt
-
-# Configure environment variables (copy template)
-cp .env.example .env
-
-# Start FastAPI server
 python run.py
-# Alternatively: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
-> **Backend runs at:** `http://localhost:8000` (Interactive docs at `/docs`)
+> Server runs at `http://127.0.0.1:8000` (Interactive API docs at `/docs`)
 
-#### 3. Frontend Setup
+### 3. Frontend Setup
 ```bash
-# In a new terminal, navigate to frontend directory
 cd frontend
-
-# Install Node dependencies
 npm install
-
-# Start Vite development server
 npm run dev
 ```
-> **Frontend runs at:** `http://localhost:5173`
+> Client runs at `http://127.0.0.1:5173`
 
 ---
 
-## ⚙️ Environment Configuration
+## Docker Deployment
 
-Create a `.env` file inside the `backend/` directory:
+To launch all services (FastAPI Backend, Redis Cache, and React Frontend) with Docker:
 
-```env
-# Database Credentials
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=rasppdb
-DB_SSL_CA=
-
-# Security & Tokens
-SECRET_KEY=generate_a_secure_random_key_here
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=1440
-
-# AI Chatbot (Optional for Gemini 2.5; fallback works offline)
-GEMINI_API_KEY=your_gemini_api_key_here
-
-# Redis Cache (Optional, set to false to run purely on DB)
-REDIS_ENABLED=false
-REDIS_HOST=localhost
-REDIS_PORT=6379
+```bash
+docker-compose up --build -d
 ```
 
 ---
 
-## 🔐 Default Test Credentials
+## License
 
-For quick evaluation, use the pre-configured demonstration accounts:
-
-| Role | Email | Password | Access Scope |
-| :--- | :--- | :--- | :--- |
-| **👑 Admin** | `admin@example.com` | `admin123` | Institutional analytics, master records, system config |
-| **👩‍🏫 Teacher** | `teacher@example.com` | `teacher123` | Marks entry, student profiler, batch predictions |
-| **🎓 Student** | `student@example.com` | `student123` | Personal results, resume builder, placement status |
-| **💼 Placement Officer** | `coordinator@example.com` | `coordinator123` | Recruitment drives, placement analytics, offer logs |
-
-> 💡 *Tip: The landing page also features a **1-Click Instant Demo Login** bar to jump directly into any role without manual typing.*
-
----
-
-## 📡 API Documentation
-
-Once the backend is running, explore the interactive documentation directly in your browser:
-
-- **Swagger UI:** `http://localhost:8000/docs`
-- **ReDoc:** `http://localhost:8000/redoc`
-
-### Core API Route Highlights:
-- `POST /api/v1/auth/login` — OAuth2 JWT authentication
-- `GET /api/v1/students/me` — Authenticated student profile & records
-- `POST /api/v1/marks/bulk` — Batch marks submission with validation
-- `POST /api/v1/predictions/predict-student` — Single-student ML academic outcome
-- `POST /api/v1/predictions/bulk` — Batch CSV prediction processing
-- `POST /api/v1/placement/predict` — Candidate placement probability scoring
-- `POST /api/v1/chatbot/message` — Contextual AI assistance endpoint
-
----
-
-## 📂 Project Structure
-
-```
-raspp/
-├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   │   └── endpoints/      # Auth, students, teachers, marks, placement, chatbot
-│   │   ├── core/               # Configuration, security, JWT utilities
-│   │   ├── db/                 # Database session and base models
-│   │   ├── ml/                 # Machine learning models, pipelines, feature scalers
-│   │   │   └── models/         # Serialized .joblib ensemble models
-│   │   ├── models/             # SQLAlchemy ORM database schemas
-│   │   ├── schemas/            # Pydantic validation schemas
-│   │   └── services/           # Business logic & external AI integrations
-│   ├── certs/                  # SSL root certificates
-│   ├── requirements.txt        # Python package dependencies
-│   └── run.py                  # Production-ready backend entrypoint
-├── frontend/
-│   ├── src/
-│   │   ├── components/         # Reusable UI (Navbar, Sidebar, DataTable, Chatbot)
-│   │   ├── context/            # Global React Contexts (Auth, Theme)
-│   │   ├── layouts/            # Role-specific master layouts
-│   │   ├── pages/
-│   │   │   ├── admin/          # Institutional dashboards & directory views
-│   │   │   ├── teacher/        # Marks entry, attendance, batch predictions
-│   │   │   ├── student/        # Results, transcripts, resume builder
-│   │   │   └── placement/      # Job postings, drive records, placement ML
-│   │   └── services/           # Axios API configuration & interceptors
-│   ├── package.json            # Node dependencies
-│   ├── tailwind.config.js      # Tailwind theme extensions
-│   └── vite.config.ts          # Vite build configuration
-├── docker-compose.yml          # Multi-container service specification
-├── render.yaml                 # Cloud deployment blueprint (Render)
-└── README.md                   # Project documentation
-```
-
----
-
-## 🚀 Cloud Deployment
-
-RASPP is pre-configured for one-click cloud deployment on **Render**:
-
-1. Fork this repository to your GitHub account.
-2. In Render, select **Blueprints** and connect your repository.
-3. Render automatically reads `render.yaml` to spin up the web services, configure environment variables, and attach databases.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! If you'd like to improve RASPP:
-
-1. Fork the Project (`git checkout -b feature/AmazingFeature`)
-2. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-3. Push to the Branch (`git push origin feature/AmazingFeature`)
-4. Open a Pull Request
-
----
-
-## 📄 License
-
-Distributed under the **MIT License**. See `LICENSE` for more information.
-
----
-
-<div align="center">
-  <sub>Built with ❤️ by <strong>Kartik Valhe</strong> & Contributors</sub><br />
-  <sub>Empowering institutions to nurture every student's potential through predictive technology.</sub>
-</div>
+Distributed under the **MIT License**.
