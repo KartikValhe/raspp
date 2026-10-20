@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Layout } from './components/Layout';
 import { StudentLayout } from './layouts/StudentLayout';
+import { SystemChatbot } from './components/SystemChatbot';
 import { LoginPage } from './pages/LoginPage';
 import { Dashboard } from './pages/Dashboard';
 
@@ -406,6 +407,7 @@ function App() {
               }
             />
           </Routes>
+          <SystemChatbot />
         </Router>
       </AuthProvider>
     </ThemeProvider>
