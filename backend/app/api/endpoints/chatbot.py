@@ -49,5 +49,5 @@ def get_chatbot_status():
     return {
         "status": "online",
         "is_genai_active": chatbot_service.is_configured,
-        "model": "gemini-1.5-flash" if chatbot_service.is_configured else "internal-knowledge-engine"
+        "model": chatbot_service.model_name if chatbot_service.is_configured else "internal-knowledge-engine"
     }

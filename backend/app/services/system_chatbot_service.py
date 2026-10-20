@@ -1,7 +1,8 @@
 import logging
 import re
 from typing import List, Dict, Optional, Tuple, Any
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -176,37 +177,39 @@ DEFAULT_FOLLOW_UPS = [
 
 class SystemChatbotService:
     def __init__(self):
+        self.client = None
         self.is_configured = False
-        self.model = None
+        self.model_name = "gemini-3.8-flash"
 
         if settings.GEMINI_API_KEY:
             try:
-                genai.configure(api_key=settings.GEMINI_API_KEY)
-                try:
-                    self.model = genai.GenerativeModel(
-                        model_name="gemini-1.5-flash",
-                        system_instruction=SYSTEM_PROMPT
-                    )
-                except Exception:
-                    self.model = genai.GenerativeModel(model_name="gemini-flash-latest")
+                self.client = genai.Client(
+                    api_key=settings.GEMINI_API_KEY
+                )
                 self.is_configured = True
-                logger.info("SystemChatbotService successfully configured with Gemini API")
-            except Exception as e:
-                logger.warning(f"Could not initialize Gemini model: {e}")
-                self.is_configured = False
+                logger.info("SystemChatbotService initialized successfully with Google GenAI SDK (gemini-3.8-flash)")
+            except Exception:
+                logger.exception("Failed to initialize Gemini client")
 
-    def _extract_follow_ups(self, text: str, default_follow_ups: List[str]) -> Tuple[str, List[str]]:
-        """Splits answer and follow-up questions from the response."""
+    def _extract_follow_ups(
+        self,
+        text: str,
+        default_follow_ups: List[str]
+    ) -> Tuple[str, List[str]]:
+        """Extract suggested follow-up questions from the response."""
         if "FOLLOW_UPS:" in text:
-            parts = text.split("FOLLOW_UPS:")
+            parts = text.split("FOLLOW_UPS:", 1)
             main_reply = parts[0].strip()
             follow_ups = []
-            for line in parts[1].strip().split("\n"):
+
+            for line in parts[1].strip().splitlines():
                 cleaned = line.strip().lstrip("-*123456789. ")
                 if cleaned and len(cleaned) > 5:
                     follow_ups.append(cleaned)
+
             if follow_ups:
                 return main_reply, follow_ups[:4]
+
         return text.strip(), default_follow_ups
 
     def generate_response(
@@ -215,68 +218,99 @@ class SystemChatbotService:
         user_role: Optional[str] = "student",
         current_page: Optional[str] = None
     ) -> Dict[str, Any]:
-        """
-        Generates a responsive answer along with dynamic suggested follow-up questions.
-        """
+        """Generate an answer with suggested follow-up questions."""
         user_query = ""
-        for m in reversed(messages):
-            if m.get("role") == "user":
-                user_query = m.get("content", "").strip()
+        for message in reversed(messages):
+            if message.get("role") == "user":
+                user_query = message.get("content", "").strip()
                 break
 
         if not user_query:
             return {
-                "reply": "Hello! I am your **RASPP Assistant**. How can I help you navigate the system or understand your predictions today?",
+                "reply": (
+                    "Hello! I am your **RASPP Assistant**. "
+                    "How can I help you navigate the system "
+                    "or understand your predictions today?"
+                ),
                 "suggested_questions": DEFAULT_FOLLOW_UPS,
                 "topic": "general"
             }
 
-        # 1. Try Gemini GenAI if configured
-        if self.is_configured and self.model:
+        # 1. Try Gemini using the Google Gen AI SDK
+        if self.is_configured and self.client:
             try:
-                gemini_contents = []
-                for m in messages:
-                    role = "user" if m.get("role") == "user" else "model"
-                    gemini_contents.append({
-                        "role": role,
-                        "parts": [m.get("content", "")]
-                    })
+                context_cue = (
+                    f"User Role: {user_role or 'guest'}\n"
+                    f"Current Page: {current_page or '/'}"
+                )
 
-                context_cue = f"[User Role: {user_role or 'guest'}, Current Page: {current_page or '/'}]\n"
-                if gemini_contents and gemini_contents[-1]["role"] == "user":
-                    gemini_contents[-1]["parts"][0] = context_cue + gemini_contents[-1]["parts"][0]
+                conversation_parts = []
+                for message in messages:
+                    role = message.get("role", "user")
+                    content = message.get("content", "").strip()
+                    if not content:
+                        continue
 
-                chat_response = self.model.generate_content(gemini_contents)
-                if chat_response and chat_response.text:
-                    reply_text, follow_ups = self._extract_follow_ups(chat_response.text, DEFAULT_FOLLOW_UPS)
+                    role_label = "Assistant" if role == "assistant" else "User"
+                    conversation_parts.append(f"{role_label}: {content}")
+
+                if conversation_parts:
+                    for index in range(len(conversation_parts) - 1, -1, -1):
+                        if conversation_parts[index].startswith("User:"):
+                            conversation_parts[index] = (
+                                f"[Context: {context_cue}]\n"
+                                f"{conversation_parts[index]}"
+                            )
+                            break
+
+                conversation_prompt = "\n\n".join(conversation_parts)
+
+                response = self.client.models.generate_content(
+                    model=self.model_name,
+                    contents=conversation_prompt,
+                    config=types.GenerateContentConfig(
+                        system_instruction=SYSTEM_PROMPT,
+                        temperature=0.7
+                    )
+                )
+
+                if response and response.text:
+                    reply_text, follow_ups = self._extract_follow_ups(
+                        response.text,
+                        DEFAULT_FOLLOW_UPS
+                    )
                     return {
                         "reply": reply_text,
                         "suggested_questions": follow_ups,
                         "topic": "genai"
                     }
-            except Exception as e:
-                logger.warning(f"Gemini API request failed, falling back to internal knowledge base: {e}")
 
-        # 2. Intelligent Knowledge-Base Fallback
-        lower_q = user_query.lower()
+                logger.warning("Gemini returned an empty response")
+            except Exception:
+                logger.exception("Gemini request failed; falling back to internal knowledge base")
+
+        # 2. Internal knowledge-base fallback
+        lower_query = user_query.lower()
         for item in FALLBACK_KNOWLEDGE:
-            if any(kw in lower_q for kw in item["keywords"]):
+            if any(keyword in lower_query for keyword in item["keywords"]):
                 return {
                     "reply": item["answer"],
                     "suggested_questions": item["follow_ups"],
                     "topic": item["topic"]
                 }
 
-        # Default fallback
+        # 3. General fallback when no topic matches
         return {
             "reply": (
-                f"Hello! I am your **RASPP Assistant**.\n\n"
-                f"I can help you with:\n"
-                f"* **Placement Predictions**: How our 95% accurate Random Forest model evaluates your profile ([My Prediction](/student/placement/prediction)).\n"
-                f"* **Academic Results & Transcripts**: Viewing SGPA/CGPA records ([Official Transcript](/student/transcript)).\n"
-                f"* **Resume Builder**: Creating an ATS-friendly resume for campus recruitment ([Resume Builder](/student/resume)).\n"
-                f"* **Portal Navigation**: Guiding you through Student, Teacher, Coordinator, and Admin workflows.\n\n"
-                f"Please let me know what specific feature or page you'd like to explore!"
+                "Hello! I am your **RASPP Assistant**.\n\n"
+                "I can help you with:\n"
+                "* **Placement Predictions**: Learn how your profile is evaluated "
+                "([My Prediction](/student/placement/prediction)).\n"
+                "* **Academic Results & Transcripts**: View SGPA/CGPA records "
+                "([Official Transcript](/student/transcript)).\n"
+                "* **Resume Builder**: Create an ATS-friendly resume ([Resume Builder](/student/resume)).\n"
+                "* **Portal Navigation**: Explore Student, Teacher, Coordinator, and Admin features.\n\n"
+                "What would you like to explore?"
             ),
             "suggested_questions": DEFAULT_FOLLOW_UPS,
             "topic": "general"
