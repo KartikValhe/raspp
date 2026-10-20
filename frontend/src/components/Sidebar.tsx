@@ -13,8 +13,14 @@ export const Sidebar: React.FC = () => {
     const { logout, user } = useAuth();
     const { theme, toggleTheme } = useTheme();
 
+    const dashboardPath = React.useMemo(() => {
+        if (user?.role === 'student') return '/student/dashboard';
+        if (user?.role === 'placement_coordinator') return '/placement/dashboard';
+        return '/dashboard';
+    }, [user?.role]);
+
     const links = [
-        { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
+        { to: dashboardPath, icon: LayoutDashboard, label: 'Dashboard' },
 
         // Teacher
         ...(user?.role === 'teacher' ? [
@@ -41,7 +47,6 @@ export const Sidebar: React.FC = () => {
 
         // Student
         ...(user?.role === 'student' ? [
-            { to: '/student/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
             { to: '/student/results', icon: Trophy, label: 'Results' },
             { to: '/student/transcript', icon: FileText, label: 'Transcript' },
             { to: '/student/resume', icon: FileText, label: 'Resume Builder' },
@@ -49,11 +54,11 @@ export const Sidebar: React.FC = () => {
             { to: '/student/placement/jobs', icon: Search, label: 'Job Listings' },
             { to: '/student/placement/prediction', icon: Target, label: 'My Prediction' },
             { to: '/student/placement/stats', icon: BarChart2, label: 'Placement Stats' },
+            { to: '/student/profile', icon: UserCircle, label: 'My Profile' },
         ] : []),
 
         // Placement Coordinator
         ...(user?.role === 'placement_coordinator' ? [
-            { to: '/placement/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
             { to: '/placement/jobs', icon: Briefcase, label: 'Job Management' },
             { to: '/placement/bulk-prediction', icon: Upload, label: 'AI Predictions' },
             { to: '/placement/records', icon: FileText, label: 'Records' },

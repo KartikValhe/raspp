@@ -58,9 +58,9 @@ from app.core.redis import redis_cache
 @app.get("/health")
 @app.get("/test_debug")
 def test_debug():
-    redis_status = "connected" if redis_cache.is_healthy() else "disconnected (fallback to DB)"
+    cache_mode = "Redis" if (redis_cache._client and redis_cache._is_connected) else "In-Memory Fast Cache (Zero-latency fallback)"
     return {
         "status": "healthy",
-        "message": "You are hitting the correct server!",
-        "redis": redis_status
+        "message": "RASPP API is active",
+        "cache_engine": cache_mode
     }

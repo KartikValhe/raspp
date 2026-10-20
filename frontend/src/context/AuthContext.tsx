@@ -27,12 +27,12 @@ const parseJwt = (token: string) => {
 
 const getInitialUser = () => {
     const token = localStorage.getItem('token');
+    const storedRole = localStorage.getItem('user_role');
     if (!token) return null;
     const decoded = parseJwt(token);
-    if (!decoded) return null;
     return {
-        email: decoded.sub,
-        role: decoded.role,
+        email: decoded?.sub || '',
+        role: storedRole || decoded?.role || 'student',
     };
 };
 
@@ -49,10 +49,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             api.get('/api/v1/users/me')
                 .then(response => {
                     setUser(response.data);
+                    if (response.data.role) {
+                        localStorage.setItem('user_role', response.data.role);
+                    }
                     setIsAuthenticated(true);
                 })
-                .catch(() => {
-                    logout();
+                .catch((err) => {
+                    if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+                        logout();
+                    }
                 });
         }
     }, []);
@@ -62,9 +67,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsAuthenticated(true);
 
         const decoded = parseJwt(token);
+        const resolvedRole = explicitRole || decoded?.role || 'student';
+        localStorage.setItem('user_role', resolvedRole);
+
         const immediateUser = {
             email: decoded?.sub || '',
-            role: explicitRole || decoded?.role || 'student',
+            role: resolvedRole,
         };
         setUser(immediateUser);
 
@@ -72,6 +80,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         api.get('/api/v1/users/me')
             .then(res => {
                 setUser(res.data);
+                if (res.data.role) {
+                    localStorage.setItem('user_role', res.data.role);
+                }
             })
             .catch(err => {
                 console.error("Profile fetch error:", err);
@@ -80,6 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('user_role');
         setUser(null);
         setIsAuthenticated(false);
     };

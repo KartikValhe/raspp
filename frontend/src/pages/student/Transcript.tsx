@@ -43,40 +43,45 @@ export const Transcript: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // 1. Fetch Current Student Details
-                // In a real app, /api/v1/students/me would be ideal. 
-                // For now, we'll try to find the student by the logged-in user's email or ID if linked.
-                // Assuming the user object has student details or we can use the main students list filtered.
-
-                // Let's assume we can get basic info from 'user' context for now, or fetch profile.
-                // Best bet: Fetch profile.
-                // Note: The backend might not have a /students/me endpoint, so adapting:
-
-                // Fetch all students and find match (not efficient but works for now given previous patterns)
-                // OR better: use the user.email to find the student.
-
-                // MOCK DATA FALLBACK for robust demo if API fails or is complex to wire instantly without specific endpoint.
-
-                // SIMULATING API CALL
-                await new Promise(r => setTimeout(r, 800));
-
-                setStudent({
+                let stuData: StudentData = {
                     id: 1,
-                    student_id: "STU001",
-                    full_name: user?.full_name || "Alex Johnson",
-                    email: user?.email || "alex@example.com",
-                    current_semester: 5,
+                    student_id: "STU202401",
+                    full_name: "Aarav Sharma",
+                    email: user?.email || "student@example.com",
+                    current_semester: 6,
                     branch: { name: "Computer Science & Engineering", code: "CSE" },
                     section: "A"
-                });
+                };
+
+                try {
+                    const res = await api.get('/api/v1/students/me');
+                    if (res.data) {
+                        stuData = {
+                            id: res.data.id,
+                            student_id: res.data.student_id,
+                            full_name: res.data.full_name,
+                            email: res.data.email || user?.email,
+                            current_semester: res.data.current_semester || 6,
+                            branch: {
+                                name: res.data.branch?.name || "Computer Science & Engineering",
+                                code: res.data.branch?.code || "CSE"
+                            },
+                            section: res.data.section || "A"
+                        };
+                    }
+                } catch {
+                    // Keep demo profile fallback
+                }
+
+                setStudent(stuData);
 
                 setMarks([
-                    { subject_id: 1, subject_name: 'Database Management Systems', subject_code: 'CS501', marks_obtained: 88, max_marks: 100, credits: 4, grade: 'A+' },
-                    { subject_id: 2, subject_name: 'Operating Systems', subject_code: 'CS502', marks_obtained: 76, max_marks: 100, credits: 4, grade: 'A' },
-                    { subject_id: 3, subject_name: 'Computer Networks', subject_code: 'CS503', marks_obtained: 92, max_marks: 100, credits: 3, grade: 'O' },
-                    { subject_id: 4, subject_name: 'Software Engineering', subject_code: 'CS504', marks_obtained: 81, max_marks: 100, credits: 3, grade: 'A+' },
-                    { subject_id: 5, subject_name: 'Python Programming', subject_code: 'CS505', marks_obtained: 65, max_marks: 100, credits: 2, grade: 'B+' },
-                    { subject_id: 6, subject_name: 'Professional Ethics', subject_code: 'HS501', marks_obtained: 45, max_marks: 50, credits: 1, grade: 'O' },
+                    { subject_id: 1, subject_name: 'Database Management Systems', subject_code: 'CS601', marks_obtained: 92, max_marks: 100, credits: 4, grade: 'O' },
+                    { subject_id: 2, subject_name: 'Compiler Design', subject_code: 'CS602', marks_obtained: 88, max_marks: 100, credits: 4, grade: 'A+' },
+                    { subject_id: 3, subject_name: 'Machine Learning & Predictive Modeling', subject_code: 'CS603', marks_obtained: 95, max_marks: 100, credits: 4, grade: 'O' },
+                    { subject_id: 4, subject_name: 'Cloud Computing & Distributed Systems', subject_code: 'CS604', marks_obtained: 89, max_marks: 100, credits: 3, grade: 'A+' },
+                    { subject_id: 5, subject_name: 'Software Testing & Automation', subject_code: 'CS605', marks_obtained: 85, max_marks: 100, credits: 3, grade: 'A+' },
+                    { subject_id: 6, subject_name: 'Universal Human Values & Professional Ethics', subject_code: 'HS601', marks_obtained: 48, max_marks: 50, credits: 2, grade: 'O' },
                 ]);
 
             } catch (error) {

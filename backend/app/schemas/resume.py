@@ -4,42 +4,58 @@ from datetime import datetime
 
 # Nested schemas for resume sections
 class EducationEntry(BaseModel):
-    degree: str
-    institution: str
-    location: str
-    startDate: str  # YYYY-MM format
-    endDate: Optional[str] = None  # YYYY-MM or "Present"
+    degree: Optional[str] = "Bachelor of Technology"
+    institution: Optional[str] = "Institute of Technology"
+    location: Optional[str] = None
+    startDate: Optional[str] = None
+    endDate: Optional[str] = None
     cgpa: Optional[str] = None
     description: Optional[str] = None
+    year: Optional[str] = None
+
+    class Config:
+        extra = "allow"
 
 class ExperienceEntry(BaseModel):
-    company: str
-    role: str
-    location: str
-    startDate: str
+    company: Optional[str] = None
+    role: Optional[str] = None
+    location: Optional[str] = None
+    startDate: Optional[str] = None
     endDate: Optional[str] = None
-    description: str
+    description: Optional[str] = None
     techStack: Optional[List[str]] = []
 
+    class Config:
+        extra = "allow"
+
 class ProjectEntry(BaseModel):
-    title: str
-    techStack: List[str]
-    description: str
+    title: Optional[str] = None
+    techStack: Optional[List[str]] = []
+    description: Optional[str] = None
     link: Optional[str] = None
     startDate: Optional[str] = None
     endDate: Optional[str] = None
 
+    class Config:
+        extra = "allow"
+
 class CertificationEntry(BaseModel):
-    name: str
-    issuer: str
-    date: str
+    name: Optional[str] = None
+    issuer: Optional[str] = None
+    date: Optional[str] = None
     credentialId: Optional[str] = None
     link: Optional[str] = None
 
+    class Config:
+        extra = "allow"
+
 class AchievementEntry(BaseModel):
-    title: str
-    description: str
+    title: Optional[str] = None
+    description: Optional[str] = None
     date: Optional[str] = None
+
+    class Config:
+        extra = "allow"
 
 # Main Resume Schemas
 class ResumeBase(BaseModel):

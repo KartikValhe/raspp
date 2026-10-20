@@ -36,12 +36,10 @@ export const CheckResults: React.FC = () => {
     const handleCheckResult = () => {
         if (!selectedSemester) return;
         setIsLoading(true);
-
-        // Simulate loading delay
         setTimeout(() => {
             setIsLoading(false);
             setShowResult(true);
-        }, 1500);
+        }, 100);
     };
 
     return (

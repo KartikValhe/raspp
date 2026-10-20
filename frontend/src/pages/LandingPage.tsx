@@ -12,7 +12,7 @@ import {
 
 export const LandingPage: React.FC = () => {
     const navigate = useNavigate();
-    const { login, isAuthenticated } = useAuth();
+    const { login, isAuthenticated, user } = useAuth();
     const { theme, toggleTheme } = useTheme();
 
     const handleQuickLogin = async (demoEmail: string, demoPass: string, targetPath: string, role: string) => {
@@ -77,7 +77,11 @@ export const LandingPage: React.FC = () => {
 
                         {isAuthenticated ? (
                             <button
-                                onClick={() => navigate('/dashboard')}
+                                onClick={() => {
+                                    if (user?.role === 'student') navigate('/student/dashboard');
+                                    else if (user?.role === 'placement_coordinator') navigate('/placement/dashboard');
+                                    else navigate('/dashboard');
+                                }}
                                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm shadow-md shadow-blue-500/20 hover:shadow-blue-500/30 transition-all"
                             >
                                 Open Dashboard

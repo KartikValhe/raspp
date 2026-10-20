@@ -10,6 +10,89 @@ import io
 
 router = APIRouter()
 
+from app.core.redis import redis_cache
+
+@router.get("/me", response_model=ResumeResponse)
+def get_my_resume(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """Get resume for the currently authenticated student"""
+    cache_key = f"resume:me:{current_user.id}"
+    cached = redis_cache.get(cache_key)
+    if cached:
+        return cached
+
+    student = db.query(models.Student).filter(models.Student.user_id == current_user.id).first()
+    if not student and current_user.email:
+        student = db.query(models.Student).filter(models.Student.email.ilike(current_user.email.strip())).first()
+    
+    if not student:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Student profile not found"
+        )
+    
+    resume = db.query(models.Resume).filter(models.Resume.student_id == student.id).first()
+    if not resume:
+        # Create a default rich demo resume if none exists
+        resume = models.Resume(
+            student_id=student.id,
+            full_name=student.full_name or "Aarav Sharma",
+            email=student.email or current_user.email,
+            phone="+91 98765 43210",
+            linkedin_url="https://linkedin.com/in/aarav-sharma-cs",
+            github_url="https://github.com/aarav-sharma",
+            portfolio_url="https://aaravsharma.dev",
+            summary="Aspiring Full Stack & ML Engineer. Passionate about scalable web systems, distributed computing, and predictive analytics in higher education.",
+            education=[{
+                "degree": "B.Tech in Computer Science & Engineering",
+                "institution": "Institute of Technology & Management",
+                "location": "Mumbai, India",
+                "startDate": "2021-08",
+                "endDate": "2025-06",
+                "cgpa": "8.8",
+                "description": "Specializing in Data Structures, AI/ML, and Cloud Systems."
+            }],
+            skills=["Python", "React", "TypeScript", "FastAPI", "Machine Learning", "PostgreSQL", "Docker", "Tailwind CSS"],
+            experience=[{
+                "company": "TechInnovate Labs",
+                "role": "Software Engineering Intern",
+                "location": "Remote",
+                "startDate": "2024-05",
+                "endDate": "2024-08",
+                "description": "Engineered REST APIs with FastAPI and reduced cache latency by 40% using Redis and in-memory caches.",
+                "techStack": ["FastAPI", "Redis", "Python", "Docker"]
+            }],
+            projects=[{
+                "title": "RASPP - Academic Performance & Placement Predictor",
+                "techStack": ["React", "FastAPI", "Scikit-Learn", "TiDB"],
+                "description": "Full-stack analytics portal predicting placement likelihood with 95.2% ensemble accuracy.",
+                "link": "https://github.com/aarav-sharma/raspp",
+                "startDate": "2024-01",
+                "endDate": "2024-05"
+            }],
+            certifications=[{
+                "name": "AWS Certified Cloud Practitioner",
+                "issuer": "Amazon Web Services",
+                "date": "2024-03",
+                "credentialId": "AWS-CCP-2024",
+                "link": "https://aws.amazon.com"
+            }],
+            achievements=[{
+                "title": "Smart India Hackathon Finalist",
+                "description": "Built AI student dropout early warning system, ranked in top 5 nationwide.",
+                "date": "2023-11"
+            }]
+        )
+        db.add(resume)
+        db.commit()
+        db.refresh(resume)
+    
+    from fastapi.encoders import jsonable_encoder
+    redis_cache.set(cache_key, jsonable_encoder(resume), ttl=300)
+    return resume
+
 @router.get("/{student_id}", response_model=ResumeResponse)
 def get_student_resume(
     student_id: int,

@@ -45,18 +45,70 @@ def read_students(
     students = query.offset(skip).limit(limit).all()
     return students
 
+from app.core.redis import redis_cache
+
 @router.get("/me", response_model=schemas.Student)
 def read_student_me(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
-    Get current logged-in student.
+    Get current logged-in student. Auto-links or creates profile if missing.
+    Cached in memory for instant navigation between student pages.
     """
+    cache_key = f"student:me:{current_user.id}"
+    cached = redis_cache.get(cache_key)
+    if cached:
+        return cached
+
+    # 1. Search by user_id
     student = db.query(models.Student).options(joinedload(models.Student.branch)).filter(models.Student.user_id == current_user.id).first()
+    
+    # 2. Search by email fallback
+    if not student and current_user.email:
+        student = db.query(models.Student).options(joinedload(models.Student.branch)).filter(models.Student.email.ilike(current_user.email.strip())).first()
+        if student:
+            student.user_id = current_user.id
+            db.commit()
+            db.refresh(student)
+
+    # 3. Auto-provision profile for student users if still missing
+    if not student and current_user.role == "student":
+        first_branch = db.query(models.Branch).first()
+        student = models.Student(
+            user_id=current_user.id,
+            student_id=f"STU{current_user.id:04d}",
+            full_name=current_user.email.split("@")[0].replace(".", " ").title(),
+            current_semester=6,
+            branch_id=first_branch.id if first_branch else None,
+            section="A",
+            email=current_user.email
+        )
+        db.add(student)
+        db.commit()
+        db.refresh(student)
+
     if not student:
         raise HTTPException(status_code=404, detail="Student profile not found for this user")
-    return student
+
+    data = {
+        "id": student.id,
+        "student_id": student.student_id,
+        "full_name": student.full_name,
+        "current_semester": student.current_semester,
+        "section": student.section,
+        "branch_id": student.branch_id,
+        "branch": {
+            "id": student.branch.id,
+            "name": student.branch.name,
+            "code": student.branch.code,
+            "description": getattr(student.branch, 'description', None)
+        } if student.branch else None,
+        "user_id": student.user_id,
+        "email": student.email or current_user.email
+    }
+    redis_cache.set(cache_key, data, ttl=300)
+    return data
 
 @router.get("/next_id", response_model=str)
 def get_next_student_id(
@@ -184,6 +236,9 @@ def update_student(
     
     db.commit()
     db.refresh(student)
+    if student.user_id:
+        redis_cache.delete(f"student:me:{student.user_id}")
+    redis_cache.delete_pattern("students:*")
     return student
 
 @router.delete("/{id}")

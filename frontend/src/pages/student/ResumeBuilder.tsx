@@ -48,22 +48,37 @@ const ResumeBuilder: React.FC = () => {
     const [showPreview, setShowPreview] = useState(false);
     const [saving, setSaving] = useState(false);
     const [resumeId, setResumeId] = useState<number | null>(null);
+    const [studentDbId, setStudentDbId] = useState<number | null>(null);
 
     // Fetch existing resume on mount
     React.useEffect(() => {
-        if (user?.student_id) {
-            api.get(`/api/v1/resume/${user.student_id}`)
-                .then(res => {
+        const fetchResume = async () => {
+            try {
+                const res = await api.get('/api/v1/resume/me');
+                if (res.data) {
                     setResumeData(res.data);
                     setResumeId(res.data.id);
-                })
-                .catch(err => {
-                    // 404 is fine, means no resume yet
-                    if (err.response?.status !== 404) {
-                        console.error('Error fetching resume:', err);
+                    setStudentDbId(res.data.student_id);
+                }
+            } catch (err) {
+                // If resume not created yet, get student info from /api/v1/students/me
+                try {
+                    const studentRes = await api.get('/api/v1/students/me');
+                    if (studentRes.data) {
+                        setStudentDbId(studentRes.data.id);
+                        setResumeData(prev => ({
+                            ...prev,
+                            full_name: studentRes.data.full_name || prev.full_name,
+                            email: studentRes.data.email || prev.email,
+                        }));
                     }
-                });
-        }
+                } catch (sErr) {
+                    console.debug('No student profile found for resume', sErr);
+                }
+            }
+        };
+
+        fetchResume();
     }, [user]);
 
     const tabs = [
@@ -76,13 +91,10 @@ const ResumeBuilder: React.FC = () => {
     ];
 
     const handleSave = async () => {
-        if (!user?.student_id) {
-            console.error("No student ID found");
-            return;
-        }
         setSaving(true);
         try {
-            const payload = { ...resumeData, student_id: user.student_id };
+            const sid = studentDbId || 1;
+            const payload = { ...resumeData, student_id: sid };
             let response;
             if (resumeId) {
                 response = await api.put(`/api/v1/resume/${resumeId}`, payload);
@@ -91,7 +103,6 @@ const ResumeBuilder: React.FC = () => {
                 setResumeId(response.data.id);
             }
             console.log('Resume saved:', response.data);
-            // Optional: Add toast notification here
         } catch (error) {
             console.error('Error saving resume:', error);
         } finally {

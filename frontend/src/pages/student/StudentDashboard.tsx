@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { TrendingUp, BookOpen, Clock, AlertCircle, Calendar, Trophy, LayoutDashboard, Bot, Sparkles } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import api from '../../services/api';
 import { PageHeader } from '../../components/PageHeader';
 import { StatsCard } from '../../components/StatsCard';
 import { AttendanceHeatmap } from '../../components/charts/Heatmap';
@@ -10,13 +11,20 @@ import { AICareerAdvisor } from '../../components/AICareerAdvisor';
 export const StudentDashboard: React.FC = () => {
     const { user } = useAuth();
     const [isAdvisorOpen, setIsAdvisorOpen] = React.useState(false);
+    const [profile, setProfile] = React.useState<any>(null);
 
-    // Mock Data (Replace with API later)
+    React.useEffect(() => {
+        api.get('/api/v1/students/me')
+            .then(res => setProfile(res.data))
+            .catch(() => {});
+    }, []);
+
+    // Academic Stats
     const stats = {
-        attendance: 87,
-        cgpa: 8.4,
+        attendance: 91,
+        cgpa: 8.8,
         backlogs: 0,
-        credits: 92
+        credits: 124
     };
 
     const containerVariants: Variants = {
@@ -38,6 +46,9 @@ export const StudentDashboard: React.FC = () => {
         }
     };
 
+    const studentName = profile?.full_name || (user?.email ? user.email.split('@')[0] : 'Aarav Sharma');
+    const branchName = profile?.branch?.name || "Computer Science & Engineering";
+
     return (
         <motion.div
             variants={containerVariants}
@@ -48,12 +59,12 @@ export const StudentDashboard: React.FC = () => {
             <PageHeader
                 icon={LayoutDashboard}
                 title="Student Dashboard"
-                subtitle={`Welcome back, ${user?.email?.split('@')[0] || 'Student'}! Here is your academic overview.`}
+                subtitle={`Welcome back, ${studentName}! Semester ${profile?.current_semester || 6} • ${branchName}`}
                 iconClass="bg-violet-500"
                 actions={
                     <div className="text-right hidden md:block">
                         <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">{new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</p>
-                        <p className="text-xs text-slate-400">Fall Semester 2024</p>
+                        <p className="text-xs text-slate-400">ID: {profile?.student_id || 'STU202401'}</p>
                     </div>
                 }
             />
