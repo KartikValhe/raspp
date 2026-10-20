@@ -12,8 +12,7 @@ export default {
             mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
         },
 
-        // ─── FIXED FONT SIZE SCALE ───────────────────────────────────────
-        // Strictly limited to 8 sizes — consistent across the entire app
+        // ─── STANDARDIZED FONT SIZE SCALE ───────────────────────────────
         fontSize: {
             'xs': ['11px', { lineHeight: '16px', letterSpacing: '0.02em' }],  // tags, labels
             'sm': ['12px', { lineHeight: '18px', letterSpacing: '0.01em' }],  // captions, helper text
@@ -22,7 +21,11 @@ export default {
             'lg': ['16px', { lineHeight: '24px', letterSpacing: '-0.01em' }],  // sub-headings
             'xl': ['18px', { lineHeight: '28px', letterSpacing: '-0.02em' }],  // card titles
             '2xl': ['22px', { lineHeight: '32px', letterSpacing: '-0.025em' }],  // page headings
-            '3xl': ['28px', { lineHeight: '36px', letterSpacing: '-0.03em' }],  // hero / stat numbers
+            '3xl': ['28px', { lineHeight: '36px', letterSpacing: '-0.03em' }],  // section headers
+            '4xl': ['36px', { lineHeight: '44px', letterSpacing: '-0.03em' }],  // hero subheaders
+            '5xl': ['48px', { lineHeight: '56px', letterSpacing: '-0.035em' }],  // large titles
+            '6xl': ['60px', { lineHeight: '68px', letterSpacing: '-0.04em' }],  // massive display
+            '7xl': ['72px', { lineHeight: '80px', letterSpacing: '-0.04em' }],  // hero displays
         },
 
         extend: {
