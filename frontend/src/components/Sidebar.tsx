@@ -72,8 +72,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
         // Placement Coordinator
         ...(user?.role === 'placement_coordinator' ? [
             { to: '/placement/jobs', icon: Briefcase, label: 'Job Management', end: true },
-            { to: '/placement/bulk-prediction', icon: Upload, label: 'AI Predictions', end: true },
-            { to: '/placement/records', icon: FileText, label: 'Records', end: true },
+            { to: '/placement/records', icon: FileText, label: 'Placement Records', end: true },
         ] : []),
     ];
 

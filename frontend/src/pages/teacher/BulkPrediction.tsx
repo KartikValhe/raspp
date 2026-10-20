@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
     Upload, Download, X, CheckCircle, AlertCircle, FileText,
-    TrendingUp, Minus, Award, Search
+    TrendingUp, Minus, Award, Search, Sparkles
 } from 'lucide-react';
 import api from '../../services/api';
 import { PageHeader } from '../../components/PageHeader';
@@ -74,6 +74,32 @@ const BulkPrediction: React.FC = () => {
             setResults(response.data);
         } catch (err: any) {
             setError(err.response?.data?.detail || 'Failed to process CSV file');
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleDownloadDemoCSV = () => {
+        const link = document.createElement('a');
+        link.href = '/student_dataset_100.csv';
+        link.download = 'student_dataset_100.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const handleLoadDemoFile = async () => {
+        try {
+            setUploading(true);
+            setError(null);
+            const response = await fetch('/student_dataset_100.csv');
+            if (!response.ok) throw new Error('Could not fetch sample dataset');
+            const blob = await response.blob();
+            const demoFile = new File([blob], 'student_dataset_100.csv', { type: 'text/csv' });
+            setFile(demoFile);
+        } catch (err: any) {
+            console.error('Failed to load demo CSV:', err);
+            setError('Could not auto-load sample CSV. Please use the download link.');
         } finally {
             setUploading(false);
         }
@@ -209,32 +235,44 @@ const BulkPrediction: React.FC = () => {
                         </div>
                     )}
 
-                    <div className="mt-6 flex justify-between items-center">
-                        <a
-                            href="/docs/student_data.csv"
-                            download
-                            className="text-violet-600 dark:text-violet-400 hover:underline flex items-center gap-2"
-                        >
-                            <Download size={18} />
-                            Download sample CSV
-                        </a>
+                    <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-700/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+                            <button
+                                type="button"
+                                onClick={handleDownloadDemoCSV}
+                                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-violet-200 dark:border-violet-900/50 bg-violet-50/70 dark:bg-violet-950/30 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/50 text-xs sm:text-sm font-semibold transition-all shadow-sm cursor-pointer"
+                            >
+                                <Download size={16} />
+                                <span>Download Sample CSV (100 Students)</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={handleLoadDemoFile}
+                                disabled={uploading}
+                                className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 text-xs sm:text-sm font-semibold transition-all shadow-sm cursor-pointer disabled:opacity-50"
+                            >
+                                <Sparkles size={15} className="text-amber-500" />
+                                <span>Auto-Load Demo Dataset</span>
+                            </button>
+                        </div>
 
                         <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
                             onClick={handleUpload}
                             disabled={!file || uploading}
-                            className="px-8 py-3 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-xl font-medium flex items-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-xl transition-all"
+                            className="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-violet-600 to-purple-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-xl transition-all"
                         >
                             {uploading ? (
                                 <>
                                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    Processing...
+                                    <span>Processing batch...</span>
                                 </>
                             ) : (
                                 <>
-                                    <Upload size={20} />
-                                    Upload & Predict
+                                    <Upload size={18} />
+                                    <span>Upload & Predict</span>
                                 </>
                             )}
                         </motion.button>

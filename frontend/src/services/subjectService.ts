@@ -1,6 +1,4 @@
-import axios from 'axios';
-
-const API_URL = 'http://localhost:8000/api/v1';
+import api from './api';
 
 export interface Subject {
     id: number;
@@ -61,43 +59,29 @@ export const getSubjects = async (params?: {
     branch_id?: number;
     is_active?: boolean;
 }) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.get<Subject[]>(`${API_URL}/subjects/`, {
-        headers: { Authorization: `Bearer ${token}` },
+    const response = await api.get<Subject[]>('/api/v1/subjects/', {
         params
     });
     return response.data;
 };
 
 export const getSubject = async (id: number) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.get<Subject>(`${API_URL}/subjects/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
+    const response = await api.get<Subject>(`/api/v1/subjects/${id}`);
     return response.data;
 };
 
 export const createSubject = async (subject: SubjectCreate) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.post<Subject>(`${API_URL}/subjects/`, subject, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
+    const response = await api.post<Subject>('/api/v1/subjects/', subject);
     return response.data;
 };
 
 export const updateSubject = async (id: number, subject: SubjectUpdate) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.put<Subject>(`${API_URL}/subjects/${id}`, subject, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
+    const response = await api.put<Subject>(`/api/v1/subjects/${id}`, subject);
     return response.data;
 };
 
 export const deleteSubject = async (id: number) => {
-    const token = localStorage.getItem('token');
-    await axios.delete(`${API_URL}/subjects/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
+    await api.delete(`/api/v1/subjects/${id}`);
 };
 
 // Teacher Subject Assignment API calls
@@ -107,29 +91,22 @@ export const getTeacherAssignments = async (params?: {
     semester?: number;
     academic_year?: string;
 }) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.get<TeacherSubjectAssignment[]>(`${API_URL}/subjects/assignments/`, {
-        headers: { Authorization: `Bearer ${token}` },
+    const response = await api.get<TeacherSubjectAssignment[]>('/api/v1/subjects/assignments/', {
         params
     });
     return response.data;
 };
 
 export const createTeacherAssignment = async (assignment: TeacherSubjectAssignmentCreate) => {
-    const token = localStorage.getItem('token');
-    const response = await axios.post<TeacherSubjectAssignment>(
-        `${API_URL}/subjects/assignments/`,
-        assignment,
-        { headers: { Authorization: `Bearer ${token}` } }
+    const response = await api.post<TeacherSubjectAssignment>(
+        '/api/v1/subjects/assignments/',
+        assignment
     );
     return response.data;
 };
 
 export const deleteTeacherAssignment = async (id: number) => {
-    const token = localStorage.getItem('token');
-    await axios.delete(`${API_URL}/subjects/assignments/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
+    await api.delete(`/api/v1/subjects/assignments/${id}`);
 };
 
 // Branch interface (for subject management UI)
@@ -142,9 +119,6 @@ export interface Branch {
 
 // Get all branches
 export const getBranches = async () => {
-    const token = localStorage.getItem('token');
-    const response = await axios.get<Branch[]>(`${API_URL}/branches/`, {
-        headers: { Authorization: `Bearer ${token}` }
-    });
+    const response = await api.get<Branch[]>('/api/v1/branches/');
     return response.data;
 };

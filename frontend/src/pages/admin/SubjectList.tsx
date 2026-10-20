@@ -28,8 +28,8 @@ const SubjectList = () => {
                 getSubjects(),
                 getBranches()
             ]);
-            setSubjects(subjectsData);
-            setBranches(branchesData);
+            setSubjects(Array.isArray(subjectsData) ? subjectsData : []);
+            setBranches(Array.isArray(branchesData) ? branchesData : []);
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {

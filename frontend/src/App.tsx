@@ -48,7 +48,6 @@ import BulkPrediction from './pages/teacher/BulkPrediction';
 // Placement Coordinator Pages
 import CoordinatorDashboard from './pages/placement/CoordinatorDashboard';
 import JobManagement from './pages/placement/JobManagement';
-import PlacementBulkPrediction from './pages/placement/BulkPrediction';
 import PlacementRecords from './pages/placement/PlacementRecords';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode; layout?: 'standard' | 'student' }> = ({ children, layout = 'standard' }) => {
@@ -392,11 +391,7 @@ function App() {
             />
             <Route
               path="/placement/bulk-prediction"
-              element={
-                <ProtectedRoute>
-                  <PlacementBulkPrediction />
-                </ProtectedRoute>
-              }
+              element={<Navigate to="/placement/dashboard" replace />}
             />
             <Route
               path="/placement/records"
