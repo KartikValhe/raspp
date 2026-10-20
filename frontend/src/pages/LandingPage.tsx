@@ -10,13 +10,14 @@ import {
     ChevronRight, Zap, Moon, Sun, PlayCircle, Activity,
     TrendingUp, Award, Sliders, Cpu, Layers, Server,
     ChevronDown, UserCheck, Shield, Check, Laptop, Clock,
-    Target, Star, Users
+    Target, Star, Users, Menu, X
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
     const navigate = useNavigate();
     const { login, isAuthenticated, user } = useAuth();
     const { theme, toggleTheme } = useTheme();
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     // ─── Quick Demo Login State ──────────────────────────────────────────
     const [loadingRole, setLoadingRole] = useState<string | null>(null);
@@ -106,9 +107,9 @@ export const LandingPage: React.FC = () => {
                 <div className="absolute inset-0 bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.08] dark:opacity-[0.15]" />
             </div>
 
-            {/* FLOATING GLASS CAPSULE NAVBAR */}
-            <div className="sticky top-4 z-50 max-w-6xl mx-auto px-4 sm:px-6">
-                <header className="backdrop-blur-xl bg-white/75 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-xl shadow-slate-900/5 dark:shadow-black/20 transition-all duration-300">
+            {/* FIXED GLASS CAPSULE NAVBAR (Stays pinned at top, never scrolls away) */}
+            <div className="fixed top-3 inset-x-0 mx-auto z-50 max-w-6xl px-4 sm:px-6 pointer-events-none">
+                <header className="pointer-events-auto backdrop-blur-xl bg-white/85 dark:bg-slate-900/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-xl shadow-slate-900/5 dark:shadow-black/20 transition-all duration-300">
                     <div className="h-16 px-4 sm:px-6 flex items-center justify-between gap-4">
                         {/* Brand Logo */}
                         <div 
@@ -172,13 +173,71 @@ export const LandingPage: React.FC = () => {
                                     </button>
                                 </>
                             )}
+
+                            {/* Mobile Menu Toggle Button */}
+                            <button
+                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                                className="md:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                aria-label="Toggle Mobile Menu"
+                            >
+                                {mobileMenuOpen ? <X size={17} /> : <Menu size={17} />}
+                            </button>
                         </div>
                     </div>
+
+                    {/* Mobile Navigation Drawer */}
+                    <AnimatePresence>
+                        {mobileMenuOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="md:hidden overflow-hidden border-t border-slate-200/70 dark:border-white/10 px-4 py-3 flex flex-col gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-200"
+                            >
+                                <a
+                                    href="#showcase"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
+                                >
+                                    Portals Preview
+                                </a>
+                                <a
+                                    href="#simulator"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
+                                >
+                                    AI Simulator
+                                </a>
+                                <a
+                                    href="#demo"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
+                                >
+                                    Instant Testbed
+                                </a>
+                                <a
+                                    href="#architecture"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
+                                >
+                                    Architecture
+                                </a>
+                                <a
+                                    href="#faq"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
+                                >
+                                    FAQ
+                                </a>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </header>
             </div>
 
             {/* HERO SECTION */}
-            <section className="relative pt-12 pb-16 sm:pt-20 sm:pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <section className="relative pt-28 pb-16 sm:pt-36 sm:pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
