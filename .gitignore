@@ -35,6 +35,8 @@ env/
 venv/
 ENV/
 *.pem
+!certs/*.pem
+!backend/certs/*.pem
 
 # Node
 node_modules/
@@ -57,8 +59,6 @@ Thumbs.db
 *.swo
 
 # Project specific
-backend/app/ml/models/*.joblib
-backend/app/ml/models/*.pkl
 frontend/dist/
 frontend/build/
 frontend/.next/

@@ -37,3 +37,61 @@ def login_access_token(
         ),
         "token_type": "bearer",
     }
+
+@router.get("/branches", response_model=Any)
+def read_public_branches(db: Session = Depends(get_db)) -> Any:
+    """
+    Public branches list for registration dropdown.
+    """
+    return db.query(models.Branch).all()
+
+@router.post("/register-student", response_model=schemas.Student)
+def register_student(
+    *,
+    db: Session = Depends(get_db),
+    student_in: schemas.StudentCreate,
+) -> Any:
+    """
+    Public student self-registration endpoint.
+    Creates User and Student profile.
+    """
+    clean_email = student_in.email.strip().lower() if student_in.email else None
+    if not clean_email or not student_in.password:
+        raise HTTPException(status_code=400, detail="Email and password are required")
+
+    existing_user = db.query(models.User).filter(models.User.email.ilike(clean_email)).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="User with this email already exists")
+
+    # Check student_id uniqueness
+    clean_student_id = student_in.student_id.strip()
+    existing_student = db.query(models.Student).filter(models.Student.student_id == clean_student_id).first()
+    if existing_student:
+        raise HTTPException(status_code=400, detail="Student with this ID already exists")
+
+    # Create User
+    new_user = models.User(
+        email=clean_email,
+        hashed_password=security.get_password_hash(student_in.password),
+        role="student",
+        is_active=True
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    # Create Student
+    student = models.Student(
+        student_id=clean_student_id,
+        full_name=student_in.full_name.strip(),
+        current_semester=student_in.current_semester,
+        section=student_in.section or "A",
+        branch_id=student_in.branch_id,
+        user_id=new_user.id,
+        email=clean_email
+    )
+    db.add(student)
+    db.commit()
+    db.refresh(student)
+    return student
+

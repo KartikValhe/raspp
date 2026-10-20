@@ -66,6 +66,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; layout?: 'standard' 
 };
 
 import { ThemeProvider } from './context/ThemeContext';
+import { LandingPage } from './pages/LandingPage';
 
 function App() {
   return (
@@ -73,13 +74,13 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/get-started" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
-            {/* ... routes ... */}
-            {/* Keeping existing structure but simplified for diff */}
 
             {/* Default/Admin Dashboard */}
             <Route
-              path="/"
+              path="/dashboard"
               element={
                 <ProtectedRoute>
                   <Dashboard />

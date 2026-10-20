@@ -5,18 +5,20 @@ from app.core.config import settings
 from app.core.database import engine, Base
 from app.models import models
 
-# Create tables
-# Base.metadata.create_all(bind=engine)
-
 app = FastAPI(
     title="RASPP - Result Analyzer & Student Performance Predictor",
     description="AI-powered Student Performance Prediction System",
     version="1.0.0"
 )
 
-from app.api.api_v1.api import api_router
+@app.on_event("startup")
+def startup_db_check():
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        print(f"Notice: Database startup check: {e}")
 
-# ... (existing code)
+from app.api.api_v1.api import api_router
 
 # CORS Middleware
 origins = [
@@ -25,14 +27,20 @@ origins = [
     "http://localhost:3000",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:3000",
-    # Docker / production (Nginx frontend on port 80)
     "http://localhost",
     "http://127.0.0.1",
 ]
 
+if settings.CORS_ORIGINS:
+    for origin in settings.CORS_ORIGINS.split(","):
+        stripped = origin.strip()
+        if stripped and stripped not in origins:
+            origins.append(stripped)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"^https:\/\/.*\.vercel\.app$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

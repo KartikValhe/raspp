@@ -15,6 +15,10 @@ export const Dashboard: React.FC = () => {
         return <Navigate to="/student/dashboard" replace />;
     }
 
+    if (user?.role === 'placement_coordinator') {
+        return <Navigate to="/placement/dashboard" replace />;
+    }
+
     if (user?.role === 'admin') {
         return <AdminDashboard />;
     }
