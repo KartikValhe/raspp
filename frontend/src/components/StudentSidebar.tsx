@@ -18,15 +18,15 @@ export const StudentSidebar: React.FC<StudentSidebarProps> = ({ onClose }) => {
     const { theme, toggleTheme } = useTheme();
 
     const links = [
-        { to: '/student/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-        { to: '/student/results', icon: Trophy, label: 'Performance' },
-        { to: '/student/transcript', icon: FileText, label: 'Transcript' },
-        { to: '/student/resume', icon: FileText, label: 'Resume Builder' },
-        { to: '/student/placement', icon: Briefcase, label: 'Placement Portal' },
-        { to: '/student/placement/jobs', icon: Search, label: 'Job Listings' },
-        { to: '/student/placement/prediction', icon: Target, label: 'My Prediction' },
-        { to: '/student/placement/stats', icon: BarChart2, label: 'Placement Stats' },
-        { to: '/student/profile', icon: UserCircle, label: 'My Profile' },
+        { to: '/student/dashboard', icon: LayoutDashboard, label: 'Dashboard', end: true },
+        { to: '/student/results', icon: Trophy, label: 'Performance', end: true },
+        { to: '/student/transcript', icon: FileText, label: 'Transcript', end: true },
+        { to: '/student/resume', icon: FileText, label: 'Resume Builder', end: true },
+        { to: '/student/placement', icon: Briefcase, label: 'Placement Portal', end: true },
+        { to: '/student/placement/jobs', icon: Search, label: 'Job Listings', end: true },
+        { to: '/student/placement/prediction', icon: Target, label: 'My Prediction', end: true },
+        { to: '/student/placement/stats', icon: BarChart2, label: 'Placement Stats', end: true },
+        { to: '/student/profile', icon: UserCircle, label: 'My Profile', end: true },
     ];
 
     const initial = user?.email?.[0]?.toUpperCase() ?? 'S';
@@ -84,6 +84,7 @@ export const StudentSidebar: React.FC<StudentSidebarProps> = ({ onClose }) => {
                         <NavLink
                             key={link.to}
                             to={link.to}
+                            end={link.end ?? true}
                             onClick={() => onClose?.()}
                             className={({ isActive }) =>
                                 isActive

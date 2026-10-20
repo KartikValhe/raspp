@@ -24,49 +24,56 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
         return '/dashboard';
     }, [user?.role]);
 
-    const links = [
-        { to: dashboardPath, icon: LayoutDashboard, label: 'Dashboard' },
+    interface NavItem {
+        to: string;
+        icon: any;
+        label: string;
+        end?: boolean;
+    }
+
+    const links: NavItem[] = [
+        { to: dashboardPath, icon: LayoutDashboard, label: 'Dashboard', end: true },
 
         // Teacher
         ...(user?.role === 'teacher' ? [
-            { to: '/teacher/marks', icon: Edit, label: 'Grading Hub' },
+            { to: '/teacher/marks', icon: Edit, label: 'Grading Hub', end: true },
             { to: '/teacher/students', icon: GraduationCap, label: 'My Students' },
-            { to: '/teacher/merit', icon: Award, label: 'Merit List' },
-            { to: '/teacher/analytics', icon: TrendingUp, label: 'Class Analytics' },
-            { to: '/teacher/predictions', icon: Brain, label: 'AI Predictions' },
-            { to: '/teacher/bulk-prediction', icon: Upload, label: 'Bulk Predictions' },
-            { to: '/teacher/attendance', icon: Clock, label: 'Take Attendance' },
-            { to: '/teacher/profile', icon: UserCircle, label: 'My Profile' },
+            { to: '/teacher/merit', icon: Award, label: 'Merit List', end: true },
+            { to: '/teacher/analytics', icon: TrendingUp, label: 'Class Analytics', end: true },
+            { to: '/teacher/predictions', icon: Brain, label: 'AI Predictions', end: true },
+            { to: '/teacher/bulk-prediction', icon: Upload, label: 'Bulk Predictions', end: true },
+            { to: '/teacher/attendance', icon: Clock, label: 'Take Attendance', end: true },
+            { to: '/teacher/profile', icon: UserCircle, label: 'My Profile', end: true },
         ] : []),
 
         // Admin
         ...(user?.role === 'admin' ? [
             { to: '/students', icon: GraduationCap, label: 'Students' },
             { to: '/teachers', icon: Users, label: 'Teachers' },
-            { to: '/branches', icon: BookOpen, label: 'Manage Branches' },
-            { to: '/subjects', icon: BookOpen, label: 'Subjects' },
-            { to: '/results', icon: Trophy, label: 'Results & Merit' },
-            { to: '/analytics', icon: TrendingUp, label: 'Analytics' },
-            { to: '/predictions', icon: Brain, label: 'AI Predictions' },
+            { to: '/branches', icon: BookOpen, label: 'Manage Branches', end: true },
+            { to: '/subjects', icon: BookOpen, label: 'Subjects', end: true },
+            { to: '/results', icon: Trophy, label: 'Results & Merit', end: true },
+            { to: '/analytics', icon: TrendingUp, label: 'Analytics', end: true },
+            { to: '/predictions', icon: Brain, label: 'AI Predictions', end: true },
         ] : []),
 
         // Student
         ...(user?.role === 'student' ? [
-            { to: '/student/results', icon: Trophy, label: 'Results' },
-            { to: '/student/transcript', icon: FileText, label: 'Transcript' },
-            { to: '/student/resume', icon: FileText, label: 'Resume Builder' },
-            { to: '/student/placement', icon: Briefcase, label: 'Placement Portal' },
-            { to: '/student/placement/jobs', icon: Search, label: 'Job Listings' },
-            { to: '/student/placement/prediction', icon: Target, label: 'My Prediction' },
-            { to: '/student/placement/stats', icon: BarChart2, label: 'Placement Stats' },
-            { to: '/student/profile', icon: UserCircle, label: 'My Profile' },
+            { to: '/student/results', icon: Trophy, label: 'Results', end: true },
+            { to: '/student/transcript', icon: FileText, label: 'Transcript', end: true },
+            { to: '/student/resume', icon: FileText, label: 'Resume Builder', end: true },
+            { to: '/student/placement', icon: Briefcase, label: 'Placement Portal', end: true },
+            { to: '/student/placement/jobs', icon: Search, label: 'Job Listings', end: true },
+            { to: '/student/placement/prediction', icon: Target, label: 'My Prediction', end: true },
+            { to: '/student/placement/stats', icon: BarChart2, label: 'Placement Stats', end: true },
+            { to: '/student/profile', icon: UserCircle, label: 'My Profile', end: true },
         ] : []),
 
         // Placement Coordinator
         ...(user?.role === 'placement_coordinator' ? [
-            { to: '/placement/jobs', icon: Briefcase, label: 'Job Management' },
-            { to: '/placement/bulk-prediction', icon: Upload, label: 'AI Predictions' },
-            { to: '/placement/records', icon: FileText, label: 'Records' },
+            { to: '/placement/jobs', icon: Briefcase, label: 'Job Management', end: true },
+            { to: '/placement/bulk-prediction', icon: Upload, label: 'AI Predictions', end: true },
+            { to: '/placement/records', icon: FileText, label: 'Records', end: true },
         ] : []),
     ];
 
@@ -125,6 +132,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
                         <NavLink
                             key={link.to}
                             to={link.to}
+                            end={link.end}
                             onClick={() => onClose?.()}
                             className={({ isActive }) =>
                                 isActive
