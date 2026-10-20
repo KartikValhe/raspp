@@ -59,7 +59,7 @@ export const LoginPage: React.FC = () => {
     }, []);
 
     // Helper for direct login
-    const performLogin = async (loginEmail: string, loginPass: string) => {
+    const performLogin = async (loginEmail: string, loginPass: string, targetPath?: string) => {
         setError('');
         setLoading(true);
         try {
@@ -71,8 +71,18 @@ export const LoginPage: React.FC = () => {
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             });
 
-            login(response.data.access_token);
-            navigate('/dashboard');
+            const role = response.data.role;
+            login(response.data.access_token, role);
+
+            if (targetPath) {
+                navigate(targetPath);
+            } else if (role === 'student') {
+                navigate('/student/dashboard');
+            } else if (role === 'placement_coordinator') {
+                navigate('/placement/dashboard');
+            } else {
+                navigate('/dashboard');
+            }
         } catch (err: any) {
             console.error(err);
             setError(err.response?.data?.detail || 'Invalid credentials. Please try again.');
@@ -106,9 +116,9 @@ export const LoginPage: React.FC = () => {
             await api.post('/api/v1/auth/register-student', payload);
             setSuccessMessage('Account created successfully! Logging you in...');
             
-            // Automatically log in newly registered student
+            // Automatically log in newly registered student and go to student dashboard
             setTimeout(() => {
-                performLogin(regEmail, regPassword);
+                performLogin(regEmail, regPassword, '/student/dashboard');
             }, 600);
         } catch (err: any) {
             console.error(err);
@@ -117,11 +127,11 @@ export const LoginPage: React.FC = () => {
         }
     };
 
-    const handleQuickLogin = (demoEmail: string, demoPass: string) => {
+    const handleQuickLogin = (demoEmail: string, demoPass: string, targetPath: string, role: string) => {
         setEmail(demoEmail);
         setPassword(demoPass);
         setIsRegisterMode(false);
-        performLogin(demoEmail, demoPass);
+        performLogin(demoEmail, demoPass, targetPath);
     };
 
     return (
@@ -490,7 +500,7 @@ export const LoginPage: React.FC = () => {
                             <button
                                 type="button"
                                 disabled={loading}
-                                onClick={() => handleQuickLogin('student@example.com', 'student123')}
+                                onClick={() => handleQuickLogin('student@example.com', 'student123', '/student/dashboard', 'student')}
                                 className="flex items-center gap-2 p-2.5 rounded-xl border border-blue-200 dark:border-blue-900/40 bg-blue-50/50 dark:bg-blue-950/20 hover:bg-blue-100/70 dark:hover:bg-blue-900/40 text-left transition-all group"
                             >
                                 <div className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-sm">
@@ -505,7 +515,7 @@ export const LoginPage: React.FC = () => {
                             <button
                                 type="button"
                                 disabled={loading}
-                                onClick={() => handleQuickLogin('teacher@example.com', 'teacher123')}
+                                onClick={() => handleQuickLogin('teacher@example.com', 'teacher123', '/dashboard', 'teacher')}
                                 className="flex items-center gap-2 p-2.5 rounded-xl border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/50 dark:bg-emerald-950/20 hover:bg-emerald-100/70 dark:hover:bg-emerald-900/40 text-left transition-all group"
                             >
                                 <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-sm">
@@ -520,7 +530,7 @@ export const LoginPage: React.FC = () => {
                             <button
                                 type="button"
                                 disabled={loading}
-                                onClick={() => handleQuickLogin('coordinator@example.com', 'coordinator123')}
+                                onClick={() => handleQuickLogin('coordinator@example.com', 'coordinator123', '/placement/dashboard', 'placement_coordinator')}
                                 className="flex items-center gap-2 p-2.5 rounded-xl border border-purple-200 dark:border-purple-900/40 bg-purple-50/50 dark:bg-purple-950/20 hover:bg-purple-100/70 dark:hover:bg-purple-900/40 text-left transition-all group"
                             >
                                 <div className="w-7 h-7 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-sm">
@@ -535,7 +545,7 @@ export const LoginPage: React.FC = () => {
                             <button
                                 type="button"
                                 disabled={loading}
-                                onClick={() => handleQuickLogin('admin@example.com', 'admin123')}
+                                onClick={() => handleQuickLogin('admin@example.com', 'admin123', '/dashboard', 'admin')}
                                 className="flex items-center gap-2 p-2.5 rounded-xl border border-amber-200 dark:border-amber-900/40 bg-amber-50/50 dark:bg-amber-950/20 hover:bg-amber-100/70 dark:hover:bg-amber-900/40 text-left transition-all group"
                             >
                                 <div className="w-7 h-7 rounded-lg bg-amber-600 text-white flex items-center justify-center text-xs font-bold shrink-0 shadow-sm">

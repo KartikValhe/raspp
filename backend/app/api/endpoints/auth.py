@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import Any
+from typing import Any, List
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -36,14 +36,17 @@ def login_access_token(
             data={"sub": user.email, "role": user.role}, expires_delta=access_token_expires
         ),
         "token_type": "bearer",
+        "role": user.role,
+        "email": user.email,
     }
 
-@router.get("/branches", response_model=Any)
+@router.get("/branches", response_model=List[schemas.Branch])
 def read_public_branches(db: Session = Depends(get_db)) -> Any:
     """
     Public branches list for registration dropdown.
     """
-    return db.query(models.Branch).all()
+    branches = db.query(models.Branch).all()
+    return [{"id": b.id, "name": b.name, "code": b.code} for b in branches]
 
 @router.post("/register-student", response_model=schemas.Student)
 def register_student(

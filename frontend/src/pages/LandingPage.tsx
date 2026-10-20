@@ -15,7 +15,7 @@ export const LandingPage: React.FC = () => {
     const { login, isAuthenticated } = useAuth();
     const { theme, toggleTheme } = useTheme();
 
-    const handleQuickLogin = async (demoEmail: string, demoPass: string) => {
+    const handleQuickLogin = async (demoEmail: string, demoPass: string, targetPath: string, role: string) => {
         try {
             const params = new URLSearchParams();
             params.append('username', demoEmail);
@@ -25,11 +25,11 @@ export const LandingPage: React.FC = () => {
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             });
 
-            login(res.data.access_token);
-            navigate('/dashboard');
+            const userRole = role || res.data.role;
+            login(res.data.access_token, userRole);
+            navigate(targetPath);
         } catch (e) {
             console.error('Quick login error:', e);
-            // Fallback: navigate to login page with prefilled credentials
             navigate(`/login`);
         }
     };
@@ -187,7 +187,7 @@ export const LandingPage: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         {/* Student Demo */}
                         <div 
-                            onClick={() => handleQuickLogin('student@example.com', 'student123')}
+                            onClick={() => handleQuickLogin('student@example.com', 'student123', '/student/dashboard', 'student')}
                             className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-5 rounded-2xl border border-white/20 cursor-pointer transition-all hover:scale-[1.02] shadow-lg group"
                         >
                             <div className="flex items-center justify-between mb-3">
@@ -205,7 +205,7 @@ export const LandingPage: React.FC = () => {
 
                         {/* Teacher Demo */}
                         <div 
-                            onClick={() => handleQuickLogin('teacher@example.com', 'teacher123')}
+                            onClick={() => handleQuickLogin('teacher@example.com', 'teacher123', '/dashboard', 'teacher')}
                             className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-5 rounded-2xl border border-white/20 cursor-pointer transition-all hover:scale-[1.02] shadow-lg group"
                         >
                             <div className="flex items-center justify-between mb-3">
@@ -223,7 +223,7 @@ export const LandingPage: React.FC = () => {
 
                         {/* Placement Demo */}
                         <div 
-                            onClick={() => handleQuickLogin('coordinator@example.com', 'coordinator123')}
+                            onClick={() => handleQuickLogin('coordinator@example.com', 'coordinator123', '/placement/dashboard', 'placement_coordinator')}
                             className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-5 rounded-2xl border border-white/20 cursor-pointer transition-all hover:scale-[1.02] shadow-lg group"
                         >
                             <div className="flex items-center justify-between mb-3">
@@ -241,7 +241,7 @@ export const LandingPage: React.FC = () => {
 
                         {/* Admin Demo */}
                         <div 
-                            onClick={() => handleQuickLogin('admin@example.com', 'admin123')}
+                            onClick={() => handleQuickLogin('admin@example.com', 'admin123', '/dashboard', 'admin')}
                             className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-5 rounded-2xl border border-white/20 cursor-pointer transition-all hover:scale-[1.02] shadow-lg group"
                         >
                             <div className="flex items-center justify-between mb-3">
@@ -303,7 +303,7 @@ export const LandingPage: React.FC = () => {
                             </li>
                         </ul>
                         <button
-                            onClick={() => handleQuickLogin('student@example.com', 'student123')}
+                            onClick={() => handleQuickLogin('student@example.com', 'student123', '/student/dashboard', 'student')}
                             className="inline-flex items-center gap-2 text-sm font-bold text-blue-600 dark:text-blue-400 group-hover:translate-x-1 transition-transform"
                         >
                             <span>Open Student Workspace</span>
@@ -339,7 +339,7 @@ export const LandingPage: React.FC = () => {
                             </li>
                         </ul>
                         <button
-                            onClick={() => handleQuickLogin('teacher@example.com', 'teacher123')}
+                            onClick={() => handleQuickLogin('teacher@example.com', 'teacher123', '/dashboard', 'teacher')}
                             className="inline-flex items-center gap-2 text-sm font-bold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform"
                         >
                             <span>Open Teacher Workspace</span>
@@ -375,7 +375,7 @@ export const LandingPage: React.FC = () => {
                             </li>
                         </ul>
                         <button
-                            onClick={() => handleQuickLogin('coordinator@example.com', 'coordinator123')}
+                            onClick={() => handleQuickLogin('coordinator@example.com', 'coordinator123', '/placement/dashboard', 'placement_coordinator')}
                             className="inline-flex items-center gap-2 text-sm font-bold text-purple-600 dark:text-purple-400 group-hover:translate-x-1 transition-transform"
                         >
                             <span>Open Placement Workspace</span>
@@ -411,7 +411,7 @@ export const LandingPage: React.FC = () => {
                             </li>
                         </ul>
                         <button
-                            onClick={() => handleQuickLogin('admin@example.com', 'admin123')}
+                            onClick={() => handleQuickLogin('admin@example.com', 'admin123', '/dashboard', 'admin')}
                             className="inline-flex items-center gap-2 text-sm font-bold text-amber-600 dark:text-amber-400 group-hover:translate-x-1 transition-transform"
                         >
                             <span>Open Admin Workspace</span>
