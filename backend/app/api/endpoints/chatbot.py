@@ -18,6 +18,8 @@ class ChatResponse(BaseModel):
     reply: str
     status: str = "success"
     is_genai_active: bool = False
+    suggested_questions: List[str] = []
+    topic: Optional[str] = "general"
 
 @router.post("/message", response_model=ChatResponse)
 def send_chat_message(request: ChatRequest):
@@ -28,15 +30,18 @@ def send_chat_message(request: ChatRequest):
         )
 
     formatted_messages = [{"role": m.role, "content": m.content} for m in request.messages]
-    reply = chatbot_service.generate_response(
+    result = chatbot_service.generate_response(
         messages=formatted_messages,
-        user_role=request.user_role
+        user_role=request.user_role,
+        current_page=request.current_page
     )
 
     return ChatResponse(
-        reply=reply,
+        reply=result["reply"],
         status="success",
-        is_genai_active=chatbot_service.is_configured
+        is_genai_active=chatbot_service.is_configured,
+        suggested_questions=result.get("suggested_questions", []),
+        topic=result.get("topic", "general")
     )
 
 @router.get("/status")

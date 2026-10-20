@@ -1,5 +1,6 @@
 import logging
-from typing import List, Dict, Optional
+import re
+from typing import List, Dict, Optional, Tuple, Any
 import google.generativeai as genai
 from app.core.config import settings
 
@@ -59,16 +60,25 @@ Your primary mission is to guide users (Students, Teachers, Admins, and Placemen
    - **[Batch Prediction](/placement/bulk-prediction)**: Filter candidates meeting company eligibility criteria using AI predictions.
    - **[Placement Records](/placement/records)**: Maintain official records of placed candidates and package stats.
 
-### RESPONSE GUIDELINES:
+### RESPONSE GUIDELINES & DYNAMIC FOLLOW-UPS:
 - **Format**: Use clean GitHub-flavored markdown with bullet points, bold key terms, and markdown links like `[Feature Name](/path)`.
 - **Tone**: Helpful, concise, motivating, and polite.
 - **Accuracy**: Always provide exact route links so the user can click them to navigate directly.
 - **Context Awareness**: Tailor your guidance to the user's current role if known.
+- **CRITICAL REQUIREMENT FOR DYNAMIC RESPONSIVENESS**:
+  At the very end of every single response, provide exactly 3 relevant, highly specific follow-up questions that the user might want to ask next based on your answer.
+  Use this exact format at the very end:
+  
+  FOLLOW_UPS:
+  - First follow-up question?
+  - Second follow-up question?
+  - Third follow-up question?
 """
 
 FALLBACK_KNOWLEDGE = [
     {
-        "keywords": ["placement", "probability", "predict", "prediction", "ml", "model", "chance"],
+        "topic": "placement",
+        "keywords": ["placement", "probability", "predict", "prediction", "ml", "model", "chance", "package"],
         "answer": """### Placement Probability Prediction in RASPP
 Our system calculates your placement chances using an **Ensemble Machine Learning model** (predominantly **Random Forest Classifier with 95% accuracy**).
 
@@ -78,48 +88,90 @@ Our system calculates your placement chances using an **Ensemble Machine Learnin
 * Uses **Explainable AI (SHAP)** to break down your highest-impact strengths and areas needing improvement.
 
 **Where to check your score:**
-* Head over to [My Prediction](/student/placement/prediction) to analyze your profile and receive an automated 3-step action plan!"""
+* Head over to [My Prediction](/student/placement/prediction) to analyze your profile and receive an automated 3-step action plan!""",
+        "follow_ups": [
+            "How can I improve my placement probability score?",
+            "What technical skills have the highest weight?",
+            "Where can I view active campus job listings?"
+        ]
     },
     {
-        "keywords": ["transcript", "marksheet", "certificate", "sgpa", "cgpa", "grade"],
+        "topic": "academic",
+        "keywords": ["transcript", "marksheet", "certificate", "sgpa", "cgpa", "grade", "results", "marks"],
         "answer": """### Accessing Your Academic Transcript & Results
 * **Official Transcript**: Visit [Official Transcript](/student/transcript) to view your verified academic records, credits completed, and cumulative SGPA/CGPA.
 * **Semester Results**: Check [Performance](/student/results) for a subject-by-subject breakdown of internal and external scores.
-* **Teacher Marks Entry**: Faculty can enter marks through the [Grading Hub](/teacher/marks)."""
+* **Teacher Marks Entry**: Faculty can enter marks through the [Grading Hub](/teacher/marks).""",
+        "follow_ups": [
+            "How is SGPA calculated from credits and grades?",
+            "How do I print or download my official transcript?",
+            "Where do I see subject-wise attendance?"
+        ]
     },
     {
+        "topic": "resume",
         "keywords": ["resume", "cv", "ats", "builder"],
         "answer": """### ATS-Friendly Resume Builder
 RASPP includes a built-in **Resume Builder** tailored for campus placements:
 * Generates an **ATS-optimized** resume format preferred by recruiters.
 * Highlights your key projects, technical certifications, and university CGPA.
-* Access it anytime at [Resume Builder](/student/resume)."""
+* Access it anytime at [Resume Builder](/student/resume).""",
+        "follow_ups": [
+            "What makes a resume score high in ATS?",
+            "What projects should I highlight in my resume?",
+            "Can I download my resume directly as a PDF?"
+        ]
     },
     {
-        "keywords": ["job", "jobs", "company", "companies", "drive", "recruitment", "hiring", "package"],
+        "topic": "jobs",
+        "keywords": ["job", "jobs", "company", "companies", "drive", "recruitment", "hiring"],
         "answer": """### Campus Placement Drives & Job Listings
 * **View Job Openings**: Visit [Job Listings](/student/placement/jobs) to view active campus recruitment drives, required tech stacks, package CTC, and application deadlines.
-* **Placement Overview**: Visit [Placement Portal](/student/placement) for general stats and upcoming company visits."""
+* **Placement Overview**: Visit [Placement Portal](/student/placement) for general stats and upcoming company visits.""",
+        "follow_ups": [
+            "How do I check if I am eligible for a company drive?",
+            "Where can I see department placement statistics?",
+            "How do I calculate my placement probability before applying?"
+        ]
     },
     {
-        "keywords": ["teacher", "grading", "marks", "attendance", "merit"],
+        "topic": "teacher",
+        "keywords": ["teacher", "grading", "attendance", "merit", "faculty"],
         "answer": """### Teacher & Faculty Features
 Teachers have access to dedicated management tools:
 * **[Grading Hub](/teacher/marks)**: Enter and update internal and end-sem marks.
 * **[My Students](/teacher/students)**: View student list and inspect individual progress.
 * **[Take Attendance](/teacher/attendance)**: Record daily lecture attendance.
 * **[Merit List](/teacher/merit)**: View branch-wise toppers and rank distributions.
-* **[AI Predictions](/teacher/predictions)**: Discover at-risk students who need extra academic mentoring."""
+* **[AI Predictions](/teacher/predictions)**: Discover at-risk students who need extra academic mentoring.""",
+        "follow_ups": [
+            "How do I enter internal vs mid-sem marks in Grading Hub?",
+            "How do I record and export daily attendance?",
+            "Where can I view the branch merit list?"
+        ]
     },
     {
-        "keywords": ["admin", "branch", "subject", "user", "create"],
+        "topic": "admin",
+        "keywords": ["admin", "branch", "subject", "user", "create", "manage"],
         "answer": """### Administrator Tools
 Administrators manage system configuration:
 * **[Students Directory](/students)** & **[Teachers Directory](/teachers)**: Manage user accounts.
 * **[Manage Branches](/branches)**: Add or edit departments.
 * **[Subjects](/subjects)**: Configure subject codes, evaluation weights, and credits.
-* **[Results & Merit](/results)**: Publish verified examination results."""
+* **[Results & Merit](/results)**: Publish verified examination results.""",
+        "follow_ups": [
+            "How do I add a new branch or department?",
+            "How do I configure subjects and credit schemes?",
+            "Where can I view college-wide analytics?"
+        ]
     }
+]
+
+DEFAULT_FOLLOW_UPS = [
+    "How does the 95% accurate Random Forest model work?",
+    "Where can I check my semester results and transcript?",
+    "How do I build an ATS-friendly resume in RASPP?",
+    "What features are available for teachers in the portal?"
 ]
 
 class SystemChatbotService:
@@ -130,7 +182,6 @@ class SystemChatbotService:
         if settings.GEMINI_API_KEY:
             try:
                 genai.configure(api_key=settings.GEMINI_API_KEY)
-                # Try 1.5 flash, fallback to pro or flash-latest
                 try:
                     self.model = genai.GenerativeModel(
                         model_name="gemini-1.5-flash",
@@ -144,9 +195,28 @@ class SystemChatbotService:
                 logger.warning(f"Could not initialize Gemini model: {e}")
                 self.is_configured = False
 
-    def generate_response(self, messages: List[Dict[str, str]], user_role: Optional[str] = "student") -> str:
+    def _extract_follow_ups(self, text: str, default_follow_ups: List[str]) -> Tuple[str, List[str]]:
+        """Splits answer and follow-up questions from the response."""
+        if "FOLLOW_UPS:" in text:
+            parts = text.split("FOLLOW_UPS:")
+            main_reply = parts[0].strip()
+            follow_ups = []
+            for line in parts[1].strip().split("\n"):
+                cleaned = line.strip().lstrip("-*123456789. ")
+                if cleaned and len(cleaned) > 5:
+                    follow_ups.append(cleaned)
+            if follow_ups:
+                return main_reply, follow_ups[:4]
+        return text.strip(), default_follow_ups
+
+    def generate_response(
+        self,
+        messages: List[Dict[str, str]],
+        user_role: Optional[str] = "student",
+        current_page: Optional[str] = None
+    ) -> Dict[str, Any]:
         """
-        Generates a chatbot response either via Gemini GenAI or via the built-in intelligent fallback.
+        Generates a responsive answer along with dynamic suggested follow-up questions.
         """
         user_query = ""
         for m in reversed(messages):
@@ -155,12 +225,15 @@ class SystemChatbotService:
                 break
 
         if not user_query:
-            return "Hello! I am your RASPP Assistant. How can I help you navigate the system or understand your predictions today?"
+            return {
+                "reply": "Hello! I am your **RASPP Assistant**. How can I help you navigate the system or understand your predictions today?",
+                "suggested_questions": DEFAULT_FOLLOW_UPS,
+                "topic": "general"
+            }
 
         # 1. Try Gemini GenAI if configured
         if self.is_configured and self.model:
             try:
-                # Format conversation history for Gemini
                 gemini_contents = []
                 for m in messages:
                     role = "user" if m.get("role") == "user" else "model"
@@ -169,33 +242,44 @@ class SystemChatbotService:
                         "parts": [m.get("content", "")]
                     })
 
-                # Append context cue if role is known
-                if user_role and user_role != "guest":
-                    cue = f"[User Role: {user_role}]\n"
-                    if gemini_contents and gemini_contents[-1]["role"] == "user":
-                        gemini_contents[-1]["parts"][0] = cue + gemini_contents[-1]["parts"][0]
+                context_cue = f"[User Role: {user_role or 'guest'}, Current Page: {current_page or '/'}]\n"
+                if gemini_contents and gemini_contents[-1]["role"] == "user":
+                    gemini_contents[-1]["parts"][0] = context_cue + gemini_contents[-1]["parts"][0]
 
                 chat_response = self.model.generate_content(gemini_contents)
                 if chat_response and chat_response.text:
-                    return chat_response.text.strip()
+                    reply_text, follow_ups = self._extract_follow_ups(chat_response.text, DEFAULT_FOLLOW_UPS)
+                    return {
+                        "reply": reply_text,
+                        "suggested_questions": follow_ups,
+                        "topic": "genai"
+                    }
             except Exception as e:
                 logger.warning(f"Gemini API request failed, falling back to internal knowledge base: {e}")
 
-        # 2. Intelligent Knowledge-Base Fallback (Always reliable, zero downtime)
+        # 2. Intelligent Knowledge-Base Fallback
         lower_q = user_query.lower()
         for item in FALLBACK_KNOWLEDGE:
             if any(kw in lower_q for kw in item["keywords"]):
-                return item["answer"]
+                return {
+                    "reply": item["answer"],
+                    "suggested_questions": item["follow_ups"],
+                    "topic": item["topic"]
+                }
 
-        # Default helpful guide
-        return (
-            f"Hello! I am your **RASPP Assistant**.\n\n"
-            f"I can help you with:\n"
-            f"* **Placement Predictions**: How our 95% accurate Random Forest model evaluates your profile ([My Prediction](/student/placement/prediction)).\n"
-            f"* **Academic Results & Transcripts**: Viewing SGPA/CGPA records ([Official Transcript](/student/transcript)).\n"
-            f"* **Resume Builder**: Creating an ATS-friendly resume for campus recruitment ([Resume Builder](/student/resume)).\n"
-            f"* **Portal Navigation**: Guiding you through Student, Teacher, Coordinator, and Admin workflows.\n\n"
-            f"Please let me know what specific feature or page you'd like to explore!"
-        )
+        # Default fallback
+        return {
+            "reply": (
+                f"Hello! I am your **RASPP Assistant**.\n\n"
+                f"I can help you with:\n"
+                f"* **Placement Predictions**: How our 95% accurate Random Forest model evaluates your profile ([My Prediction](/student/placement/prediction)).\n"
+                f"* **Academic Results & Transcripts**: Viewing SGPA/CGPA records ([Official Transcript](/student/transcript)).\n"
+                f"* **Resume Builder**: Creating an ATS-friendly resume for campus recruitment ([Resume Builder](/student/resume)).\n"
+                f"* **Portal Navigation**: Guiding you through Student, Teacher, Coordinator, and Admin workflows.\n\n"
+                f"Please let me know what specific feature or page you'd like to explore!"
+            ),
+            "suggested_questions": DEFAULT_FOLLOW_UPS,
+            "topic": "general"
+        }
 
 chatbot_service = SystemChatbotService()
