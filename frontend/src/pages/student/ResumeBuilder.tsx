@@ -129,7 +129,7 @@ const ResumeBuilder: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-6 scroll-smooth">
+        <div className="h-full overflow-y-auto p-3 sm:p-6 scroll-smooth">
             <div className="max-w-7xl mx-auto pb-12">
 
                 <PageHeader
@@ -157,22 +157,22 @@ const ResumeBuilder: React.FC = () => {
                     }
                 />
 
-                <div className="grid grid-cols-12 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
                     {/* Main Content */}
-                    <div className={`${showPreview ? 'col-span-7' : 'col-span-12'} transition-all duration-300`}>
+                    <div className={`${showPreview ? 'col-span-1 lg:col-span-7' : 'col-span-1 lg:col-span-12'} transition-all duration-300`}>
                         {/* Tab Navigation */}
                         <div className={`backdrop-blur-xl border rounded-2xl p-2 mb-6 ${theme === 'dark'
                             ? 'bg-white/5 border-white/10'
                             : 'bg-white border-slate-200 shadow-sm'
                             }`}>
-                            <div className="grid grid-cols-6 gap-2">
+                            <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 sm:gap-2">
                                 {tabs.map((tab, index) => (
                                     <motion.button
                                         key={index}
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                         onClick={() => setActiveTab(index)}
-                                        className={`relative px-4 py-3 rounded-xl flex flex-col items-center gap-2 transition-all ${activeTab === index
+                                        className={`relative px-2 py-2.5 sm:px-4 sm:py-3 rounded-xl flex flex-col items-center gap-1 sm:gap-2 transition-all ${activeTab === index
                                             ? 'bg-violet-600 text-white shadow-md'
                                             : theme === 'dark'
                                                 ? 'text-slate-400 hover:text-white hover:bg-white/5'
@@ -198,7 +198,7 @@ const ResumeBuilder: React.FC = () => {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: -20 }}
-                            className={`backdrop-blur-xl border rounded-2xl p-8 ${theme === 'dark'
+                            className={`backdrop-blur-xl border rounded-2xl p-4 sm:p-8 ${theme === 'dark'
                                 ? 'bg-white/5 border-white/10'
                                 : 'bg-white border-slate-200 shadow-sm'
                                 }`}
@@ -273,7 +273,7 @@ const ResumeBuilder: React.FC = () => {
                                 initial={{ opacity: 0, x: 50 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 50 }}
-                                className="col-span-5"
+                                className="col-span-1 lg:col-span-5 mt-6 lg:mt-0"
                             >
                                 <div className={`sticky top-6 rounded-2xl p-8 shadow-sm max-h-[calc(100vh-8rem)] overflow-y-auto border ${theme === 'dark'
                                     ? 'bg-slate-800 border-slate-700 text-slate-300'

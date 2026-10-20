@@ -39,20 +39,20 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
-        className="flex items-center justify-between mb-6"
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6"
     >
         {/* Left: Icon + Text */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-primary shrink-0 ${iconClass}`}>
                 <Icon size={20} strokeWidth={2} />
             </div>
-            <div>
+            <div className="min-w-0">
                 {/* h1 — ALWAYS text-2xl (22px) — the only heading size for page titles */}
-                <h1 className="text-2xl font-bold text-slate-900 dark:text-white leading-tight">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white leading-tight truncate">
                     {title}
                 </h1>
                 {subtitle && (
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5 font-normal">
+                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5 font-normal line-clamp-1 sm:line-clamp-none">
                         {subtitle}
                     </p>
                 )}
@@ -61,7 +61,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
 
         {/* Right: Actions */}
         {actions && (
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
                 {actions}
             </div>
         )}

@@ -3,13 +3,18 @@ import { NavLink } from 'react-router-dom';
 import {
     LayoutDashboard, Users, GraduationCap, LogOut, BookOpen, Clock,
     TrendingUp, Award, Edit, UserCircle, Trophy, Moon, Sun,
-    Brain, Upload, Briefcase, FileText, Target, BarChart2, Search
+    Brain, Upload, Briefcase, FileText, Target, BarChart2, Search, X
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { motion } from 'framer-motion';
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+    onClose?: () => void;
+    isMobile?: boolean;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
     const { logout, user } = useAuth();
     const { theme, toggleTheme } = useTheme();
 
@@ -89,16 +94,27 @@ export const Sidebar: React.FC = () => {
                     </div>
                 </div>
 
-                <button
-                    onClick={toggleTheme}
-                    className="btn-ghost w-8 h-8 p-0 rounded-lg flex items-center justify-center"
-                    aria-label="Toggle Theme"
-                >
-                    {theme === 'dark'
-                        ? <Sun size={15} className="text-amber-400" />
-                        : <Moon size={15} />
-                    }
-                </button>
+                <div className="flex items-center gap-1">
+                    <button
+                        onClick={toggleTheme}
+                        className="btn-ghost w-8 h-8 p-0 rounded-lg flex items-center justify-center"
+                        aria-label="Toggle Theme"
+                    >
+                        {theme === 'dark'
+                            ? <Sun size={15} className="text-amber-400" />
+                            : <Moon size={15} />
+                        }
+                    </button>
+                    {onClose && (
+                        <button
+                            onClick={onClose}
+                            className="btn-ghost w-8 h-8 p-0 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white"
+                            aria-label="Close Navigation Menu"
+                        >
+                            <X size={17} />
+                        </button>
+                    )}
+                </div>
             </div>
 
             {/* Nav */}
@@ -109,6 +125,7 @@ export const Sidebar: React.FC = () => {
                         <NavLink
                             key={link.to}
                             to={link.to}
+                            onClick={() => onClose?.()}
                             className={({ isActive }) =>
                                 isActive
                                     ? 'sidebar-nav-item-active'

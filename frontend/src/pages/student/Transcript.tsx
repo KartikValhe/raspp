@@ -145,9 +145,9 @@ export const Transcript: React.FC = () => {
     const sgpa = totalCredits > 0 ? (weightedSum / totalCredits).toFixed(2) : '0.00';
 
     return (
-        <div className="h-full overflow-y-auto bg-slate-100 dark:bg-slate-900 p-8 print:bg-white print:p-0">
+        <div className="h-full overflow-y-auto bg-slate-100 dark:bg-slate-900 p-3 sm:p-8 print:bg-white print:p-0">
             {/* Header */}
-            <div className="max-w-[210mm] mx-auto mb-6 flex items-center gap-4 print:hidden">
+            <div className="max-w-[210mm] mx-auto mb-6 flex items-center gap-3 sm:gap-4 print:hidden">
                 <div className="p-3 bg-blue-500/10 rounded-xl text-blue-600 dark:text-blue-400">
                     <BookOpen size={32} />
                 </div>
@@ -158,7 +158,7 @@ export const Transcript: React.FC = () => {
             </div>
 
             {/* Toolbar - Hidden in Print */}
-            <div className="max-w-[210mm] mx-auto mb-8 flex justify-between items-center print:hidden">
+            <div className="max-w-[210mm] mx-auto mb-6 sm:mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 print:hidden">
                 <Button
                     variant="secondary"
                     onClick={() => navigate('/student/results')}
@@ -167,8 +167,8 @@ export const Transcript: React.FC = () => {
                     <ArrowLeft size={18} />
                     Back to Results
                 </Button>
-                <div className="flex items-center gap-4">
-                    <p className="text-sm text-slate-500">For best results, set paper size to A4.</p>
+                <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <p className="text-xs sm:text-sm text-slate-500">For best results, set paper size to A4.</p>
                     <Button onClick={handleDownloadPDF} className="flex items-center gap-2 shadow-lg shadow-blue-500/20">
                         <Download size={18} />
                         Download PDF
@@ -176,8 +176,9 @@ export const Transcript: React.FC = () => {
                 </div>
             </div>
 
-            {/* A4 Page Container */}
-            <motion.div
+            {/* A4 Page Container Wrapper for Mobile */}
+            <div className="w-full overflow-x-auto pb-8">
+                <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="max-w-[210mm] min-h-[297mm] mx-auto bg-white text-black shadow-2xl overflow-hidden print:shadow-none print:m-0 print:w-full print:h-full relative"
@@ -296,6 +297,7 @@ export const Transcript: React.FC = () => {
                 </div>
 
             </motion.div>
+            </div>
         </div>
     );
 };

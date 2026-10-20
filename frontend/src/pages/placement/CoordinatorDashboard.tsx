@@ -94,7 +94,7 @@ const CoordinatorDashboard: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-6">
+        <div className="h-full overflow-y-auto p-4 sm:p-6">
             <motion.div
                 variants={containerVariants}
                 initial="hidden"
@@ -115,7 +115,7 @@ const CoordinatorDashboard: React.FC = () => {
                 />
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                     <StatCard
                         title="Placement Rate"
                         value={`${stats.placement_percentage.toFixed(1)}%`}
@@ -146,7 +146,7 @@ const CoordinatorDashboard: React.FC = () => {
                 </div>
 
                 {/* Quick Actions */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     <QuickActionCard
                         title="Manage Jobs"
                         description="Post new opportunities, update status, and track applications."

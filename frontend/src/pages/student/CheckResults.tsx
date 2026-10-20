@@ -50,7 +50,7 @@ export const CheckResults: React.FC = () => {
                 <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[100px]" />
             </div>
 
-            <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
+            <div className="max-w-4xl mx-auto px-3 sm:px-4 py-4 sm:py-8 relative z-10">
                 {/* Header */}
                 <div className="flex items-center gap-4 mb-8">
                     <button
@@ -81,7 +81,7 @@ export const CheckResults: React.FC = () => {
                                 <Trophy size={48} className="text-white" />
                             </div>
 
-                            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-3">
+                            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2 sm:mb-3">
                                 Ready to see your performance?
                             </h2>
                             <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-md">
@@ -138,22 +138,22 @@ export const CheckResults: React.FC = () => {
                                     {/* Simple Background Pattern */}
                                     <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent" />
 
-                                    <p className="relative z-10 text-indigo-200 font-medium mb-2 uppercase tracking-widest text-xs">Semester 5 Performance</p>
-                                    <div className="relative z-10 flex justify-center items-center gap-6 my-6">
+                                    <p className="relative z-10 text-indigo-200 font-medium mb-2 uppercase tracking-widest text-[10px] sm:text-xs">Semester 5 Performance</p>
+                                    <div className="relative z-10 flex justify-center items-center gap-4 sm:gap-6 my-4 sm:my-6">
                                         <div className="text-center">
-                                            <span className="text-6xl font-black tracking-tighter drop-shadow-lg">{resultData.sgpa}</span>
-                                            <span className="block text-sm opacity-70 font-medium mt-1">SGPA</span>
+                                            <span className="text-4xl sm:text-6xl font-black tracking-tighter drop-shadow-lg">{resultData.sgpa}</span>
+                                            <span className="block text-xs sm:text-sm opacity-70 font-medium mt-1">SGPA</span>
                                         </div>
-                                        <div className="h-16 w-px bg-white/20" />
+                                        <div className="h-12 sm:h-16 w-px bg-white/20" />
                                         <div className="text-center">
-                                            <span className="text-6xl font-black tracking-tighter drop-shadow-lg flex items-center gap-2">
+                                            <span className="text-4xl sm:text-6xl font-black tracking-tighter drop-shadow-lg flex items-center gap-2">
                                                 {resultData.status === 'Pass' ? (
                                                     <span className="text-emerald-400">P</span>
                                                 ) : (
                                                     <span className="text-rose-400">F</span>
                                                 )}
                                             </span>
-                                            <span className="block text-sm opacity-70 font-medium mt-1">Status</span>
+                                            <span className="block text-xs sm:text-sm opacity-70 font-medium mt-1">Status</span>
                                         </div>
                                     </div>
 
@@ -169,7 +169,7 @@ export const CheckResults: React.FC = () => {
                                 </div>
 
                                 {/* Detailed Breakdown */}
-                                <div className="p-6">
+                                <div className="p-4 sm:p-6">
                                     <div className="grid grid-cols-2 gap-4 mb-8">
                                         <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl border border-slate-100 dark:border-slate-700">
                                             <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase mb-1">Total Marks</p>
@@ -202,16 +202,16 @@ export const CheckResults: React.FC = () => {
                                         ))}
                                     </div>
 
-                                    <div className="flex gap-4">
+                                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                                         <button
                                             onClick={() => setShowResult(false)}
-                                            className="flex-1 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-white font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
+                                            className="w-full sm:flex-1 py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-white font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors"
                                         >
                                             Check Another
                                         </button>
                                         <button
                                             onClick={() => navigate('/student/transcript')}
-                                            className="flex-[2] py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20"
+                                            className="w-full sm:flex-[2] py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20"
                                         >
                                             <Download size={18} />
                                             Download Transcript

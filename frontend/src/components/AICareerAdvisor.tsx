@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Bot, X, Loader2, ChevronRight } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import api from '../services/api';
 
 interface AICareerAdvisorProps {
     isOpen: boolean;
@@ -24,23 +25,10 @@ export const AICareerAdvisor: React.FC<AICareerAdvisorProps> = ({ isOpen, onClos
         setLoading(true);
         setError(null);
         try {
-            const authToken = localStorage.getItem('token') || '';
-            const response = await fetch(`http://localhost:8000/api/v1/advisor/generate/${studentId}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${authToken}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to generate advice.');
-            }
-
-            const data = await response.json();
-            setAdvice(data.advice);
+            const response = await api.get(`/api/v1/advisor/generate/${studentId}`);
+            setAdvice(response.data.advice);
         } catch (err: any) {
-            setError(err.message || "An unexpected error occurred.");
+            setError(err.response?.data?.detail || err.message || "An unexpected error occurred.");
         } finally {
             setLoading(false);
         }
@@ -64,20 +52,20 @@ export const AICareerAdvisor: React.FC<AICareerAdvisorProps> = ({ isOpen, onClos
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="fixed inset-0 m-auto z-50 w-full max-w-3xl max-h-[85vh] h-fit bg-slate-900/90 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+                        className="fixed inset-x-3 inset-y-6 sm:inset-0 sm:m-auto z-50 w-auto sm:w-full max-w-3xl max-h-[88vh] h-fit bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col"
                     >
                         {/* Header */}
-                        <div className="p-6 border-b border-white/10 flex items-center justify-between bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20">
+                        <div className="p-4 sm:p-6 border-b border-white/10 flex items-center justify-between bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20">
                             <div className="flex items-center gap-3">
-                                <div className="p-2.5 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl shadow-lg shadow-violet-500/30">
-                                    <Bot size={24} className="text-white" />
+                                <div className="p-2 sm:p-2.5 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl shadow-lg shadow-violet-500/30 shrink-0">
+                                    <Bot size={22} className="text-white" />
                                 </div>
                                 <div>
-                                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                                    <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                                         AI Career Advisor
                                         <Sparkles size={16} className="text-yellow-400" />
                                     </h2>
-                                    <p className="text-sm text-slate-400">Powered by Gemini AI & RASPP Predictive Engine</p>
+                                    <p className="text-xs sm:text-sm text-slate-400">Powered by Gemini AI & RASPP Predictive Engine</p>
                                 </div>
                             </div>
                             <button

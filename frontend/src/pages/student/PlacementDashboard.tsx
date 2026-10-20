@@ -80,7 +80,7 @@ const PlacementDashboard: React.FC = () => {
     }, []);
 
     return (
-        <div className="h-full overflow-y-auto p-6">
+        <div className="h-full overflow-y-auto p-4 sm:p-6">
             <div className="max-w-7xl mx-auto space-y-6">
 
                 <PageHeader
@@ -101,9 +101,9 @@ const PlacementDashboard: React.FC = () => {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-white/10 dark:to-white/5 rounded-3xl p-8 border border-white/10 relative overflow-hidden text-white"
+                        className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-white/10 dark:to-white/5 rounded-3xl p-5 sm:p-8 border border-white/10 relative overflow-hidden text-white"
                     >
-                        <div className="flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-5 sm:gap-8 relative z-10">
                             <div>
                                 <h2 className="text-2xl font-bold mb-2">AI Placement Prediction</h2>
                                 <p className="text-slate-300">Based on your academic performance and skills profile.</p>
@@ -122,7 +122,7 @@ const PlacementDashboard: React.FC = () => {
                 )}
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                     <StatCard
                         title="Active Companies"
                         value={stats.total_companies}

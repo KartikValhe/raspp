@@ -60,7 +60,7 @@ const StudentResults: React.FC = () => {
     };
 
     return (
-        <div className="h-full flex flex-col space-y-5 overflow-hidden p-6">
+        <div className="h-full flex flex-col space-y-4 sm:space-y-5 overflow-y-auto sm:overflow-hidden p-3 sm:p-6">
             <div className="flex-none">
                 {/* Standardized Page Header */}
                 <PageHeader
@@ -106,7 +106,7 @@ const StudentResults: React.FC = () => {
                 />
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                     <div className="bg-gradient-to-br from-yellow-500/10 to-orange-500/10 dark:from-yellow-500/20 dark:to-orange-500/20 p-5 rounded-2xl border border-yellow-100 dark:border-yellow-500/10 backdrop-blur-sm">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="p-2 bg-yellow-500/20 rounded-lg text-yellow-600 dark:text-yellow-400">

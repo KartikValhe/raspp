@@ -44,7 +44,7 @@ export const TeacherForm: React.FC = () => {
     };
 
     return (
-        <div className="p-6 max-w-2xl mx-auto bg-white shadow rounded-lg mt-10">
+        <div className="p-4 sm:p-6 max-w-2xl mx-auto bg-white dark:bg-surface-900 border border-slate-200 dark:border-white/10 shadow-sm rounded-2xl mt-4 sm:mt-10">
             <h2 className="text-2xl font-bold mb-6">{isEditMode ? 'Edit Teacher' : 'Add Teacher'}</h2>
             <form onSubmit={handleSubmit}>
                 <Input

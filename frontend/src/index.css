@@ -315,7 +315,7 @@
      └─────────────────────────────────────────────────────────┘ */
 
   .sidebar-root {
-    @apply bg-white/80 dark:bg-surface-950/90 backdrop-blur-xl border-r border-slate-200 dark:border-white/[0.07] shadow-glass text-slate-800 dark:text-white w-56 min-h-screen flex flex-col transition-colors duration-200;
+    @apply bg-white/80 dark:bg-surface-950/90 backdrop-blur-xl border-r border-slate-200 dark:border-white/[0.07] shadow-glass text-slate-800 dark:text-white w-full md:w-56 h-full flex flex-col transition-colors duration-200;
   }
 
   .sidebar-nav-item {

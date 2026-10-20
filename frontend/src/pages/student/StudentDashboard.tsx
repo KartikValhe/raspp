@@ -54,7 +54,7 @@ export const StudentDashboard: React.FC = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="h-full overflow-y-auto p-6 space-y-6"
+            className="h-full overflow-y-auto p-4 sm:p-6 space-y-5 sm:space-y-6"
         >
             <PageHeader
                 icon={LayoutDashboard}
@@ -70,7 +70,7 @@ export const StudentDashboard: React.FC = () => {
             />
 
             {/* Stats Grid using shared StatsCard component */}
-            <motion.div variants={containerVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <motion.div variants={containerVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 <motion.div variants={itemVariants}>
                     <StatsCard
                         label="Attendance"
@@ -118,7 +118,7 @@ export const StudentDashboard: React.FC = () => {
             {/* Attendance Heatmap Section */}
             <motion.div
                 variants={itemVariants}
-                className="p-6 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm shadow-sm dark:shadow-none"
+                className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm shadow-sm dark:shadow-none"
             >
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -154,10 +154,10 @@ export const StudentDashboard: React.FC = () => {
             </motion.div>
 
             {/* Quick Actions / Recent */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6">
                 <motion.div
                     variants={itemVariants}
-                    className="lg:col-span-2 p-6 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm shadow-sm dark:shadow-none"
+                    className="lg:col-span-2 p-4 sm:p-6 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm shadow-sm dark:shadow-none"
                 >
                     <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                         <Calendar size={20} className="text-indigo-400" />
@@ -239,24 +239,24 @@ export const StudentDashboard: React.FC = () => {
                 {/* AI Advisor Card */}
                 <motion.div
                     variants={itemVariants}
-                    className="lg:col-span-3 p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 border border-indigo-500/30 shadow-xl relative overflow-hidden"
+                    className="lg:col-span-3 p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-indigo-950 border border-indigo-500/30 shadow-xl relative overflow-hidden"
                 >
-                    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div className="flex items-center gap-6">
-                            <div className="p-4 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-2xl shadow-lg shadow-violet-500/20">
-                                <Sparkles size={32} className="text-white" />
+                    <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+                            <div className="p-3.5 sm:p-4 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-2xl shadow-lg shadow-violet-500/20 shrink-0">
+                                <Sparkles size={28} className="text-white" />
                             </div>
                             <div>
-                                <h2 className="text-2xl font-bold text-white mb-2">Personalized Career Plan</h2>
-                                <p className="text-indigo-200">Leverage our ML engine and AI to get a tailored roadmap for your placements.</p>
+                                <h2 className="text-xl sm:text-2xl font-bold text-white mb-1.5 sm:mb-2">Personalized Career Plan</h2>
+                                <p className="text-sm text-indigo-200">Leverage our ML engine and AI to get a tailored roadmap for your placements.</p>
                             </div>
                         </div>
                         <button
                             onClick={() => setIsAdvisorOpen(true)}
-                            className="whitespace-nowrap px-8 py-4 bg-white text-indigo-900 font-bold rounded-xl hover:bg-indigo-50 transition-transform hover:scale-105 shadow-lg flex items-center gap-2"
+                            className="w-full md:w-auto text-center justify-center whitespace-nowrap px-6 py-3.5 bg-white text-indigo-900 font-bold rounded-xl hover:bg-indigo-50 transition-transform hover:scale-105 shadow-lg flex items-center gap-2"
                         >
-                            <Bot size={20} />
-                            Generate AI Plan
+                            <Bot size={18} />
+                            <span>Generate AI Plan</span>
                         </button>
                     </div>
                     {/* Decorative Elements */}

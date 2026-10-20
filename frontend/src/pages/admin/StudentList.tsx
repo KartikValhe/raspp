@@ -209,7 +209,7 @@ export const StudentList: React.FC = () => {
     ];
 
     return (
-        <div className="h-full flex flex-col p-6 space-y-5 overflow-hidden">
+        <div className="h-full flex flex-col p-3 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto sm:overflow-hidden">
 
             {/* Standardized Page Header */}
             <div className="flex-none">
@@ -233,7 +233,7 @@ export const StudentList: React.FC = () => {
                 />
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
                     {[
                         { label: 'Total Students', value: students.length || '1,240', color: 'from-blue-500 to-cyan-500', icon: Users },
                         { label: 'Avg Attendance', value: '85%', color: 'from-green-500 to-emerald-500', icon: Activity },
@@ -273,7 +273,7 @@ export const StudentList: React.FC = () => {
                         className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-lg text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-400"
                     />
                 </div>
-                <div className="flex items-center gap-2 border-l border-slate-100 dark:border-white/10 pl-4 overflow-x-auto">
+                <div className="flex items-center gap-2 border-t md:border-t-0 md:border-l border-slate-100 dark:border-white/10 pt-3 md:pt-0 md:pl-4 overflow-x-auto">
                     <Filter className="text-slate-400 shrink-0" size={18} />
 
                     {/* Branch Filter */}

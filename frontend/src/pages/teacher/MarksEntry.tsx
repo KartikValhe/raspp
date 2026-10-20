@@ -212,7 +212,7 @@ export const MarksEntry: React.FC = () => {
     );
 
     return (
-        <div className="h-full flex flex-col p-6 space-y-5 overflow-hidden">
+        <div className="h-full flex flex-col p-3 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto sm:overflow-hidden">
 
             <PageHeader
                 icon={PenTool}

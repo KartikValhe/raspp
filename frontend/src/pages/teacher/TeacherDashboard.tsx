@@ -36,7 +36,7 @@ export const TeacherDashboard: React.FC = () => {
     ];
 
     return (
-        <div className="h-full overflow-y-auto p-6 space-y-6">
+        <div className="h-full overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
 
             {/* Standardized Page Header with tab switcher in actions */}
             <PageHeader
@@ -45,13 +45,13 @@ export const TeacherDashboard: React.FC = () => {
                 subtitle="Manage your classes, track performance, and grade assignments"
                 iconClass="bg-primary-500"
                 actions={
-                    <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+                    <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg w-full sm:w-auto overflow-x-auto">
                         {(['overview', 'gradebook', 'attendance'] as const).map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
                                 className={clsx(
-                                    'px-4 py-2 text-sm font-medium rounded-md transition-all capitalize',
+                                    'flex-1 sm:flex-none px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-md transition-all capitalize whitespace-nowrap',
                                     activeTab === tab
                                         ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-white shadow-sm'
                                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
@@ -82,14 +82,14 @@ export const TeacherDashboard: React.FC = () => {
                         </div>
 
                         {/* Charts Section */}
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[400px]">
-                            <div className="lg:col-span-2 bg-white dark:bg-white/5 p-6 rounded-xl border border-slate-100 dark:border-white/10 shadow-sm flex flex-col">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div className="lg:col-span-2 bg-white dark:bg-white/5 p-4 sm:p-6 rounded-xl border border-slate-100 dark:border-white/10 shadow-sm flex flex-col min-h-[340px]">
                                 <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-4">Class Performance Trend</h2>
-                                <div className="flex-1 min-h-0">
+                                <div className="flex-1 min-h-[260px]">
                                     <PerformanceChart />
                                 </div>
                             </div>
-                            <div className="bg-white dark:bg-white/5 p-6 rounded-xl border border-slate-100 dark:border-white/10 shadow-sm">
+                            <div className="bg-white dark:bg-white/5 p-4 sm:p-6 rounded-xl border border-slate-100 dark:border-white/10 shadow-sm">
                                 <h2 className="text-lg font-bold text-slate-800 dark:text-white mb-4">Attendance Heatmap (Today)</h2>
                                 <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">Visual snapshot of recent patterns.</p>
                                 <AttendanceHeatmap data={attendanceData.slice(-14)} /> {/* Showing last 2 weeks here small */}

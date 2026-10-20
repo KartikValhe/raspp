@@ -31,19 +31,20 @@ const PlacementChecker: React.FC = () => {
     };
 
     return (
-        <div className="p-8 min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white font-sans">
-            <div className="max-w-4xl mx-auto space-y-8">
+        <div className="p-4 sm:p-8 min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white font-sans">
+            <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
 
-                <div className="text-center space-y-4 mb-12">
+                <div className="text-center space-y-3 sm:space-y-4 mb-8 sm:mb-12">
                     <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="w-20 h-20 bg-gradient-to-tr from-violet-500 to-fuchsia-500 rounded-3xl mx-auto flex items-center justify-center text-white shadow-xl shadow-fuchsia-500/30"
+                        className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-tr from-violet-500 to-fuchsia-500 rounded-3xl mx-auto flex items-center justify-center text-white shadow-xl shadow-fuchsia-500/30"
                     >
-                        <Target size={40} />
+                        <Target size={32} className="sm:hidden" />
+                        <Target size={40} className="hidden sm:block" />
                     </motion.div>
-                    <h1 className="text-4xl font-extrabold">Placement Probability Checker</h1>
-                    <p className="text-slate-500 dark:text-slate-400 text-lg max-w-xl mx-auto">
+                    <h1 className="text-2xl sm:text-4xl font-extrabold">Placement Probability Checker</h1>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-lg max-w-xl mx-auto">
                         Our AI analyzes your academic history, skills, and projects to predict your placement chances.
                     </p>
                 </div>
@@ -52,12 +53,12 @@ const PlacementChecker: React.FC = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-12 text-center"
+                        className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-12 text-center"
                     >
                         <button
                             onClick={checkPrediction}
                             disabled={loading}
-                            className="px-12 py-5 bg-slate-900 dark:bg-white text-white dark:text-black font-bold text-lg rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-5 bg-slate-900 dark:bg-white text-white dark:text-black font-bold text-base sm:text-lg rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {loading ? "Analyzing Profile..." : "Analyze My Profile"}
                         </button>
