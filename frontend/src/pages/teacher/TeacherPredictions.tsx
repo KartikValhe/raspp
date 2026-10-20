@@ -158,7 +158,7 @@ export const TeacherPredictions: React.FC = () => {
 
     if (loading && !teacherBranchId) {
         return (
-            <div className="h-full overflow-y-auto p-8 space-y-8">
+            <div className="min-h-full p-8 space-y-8 flex items-center justify-center">
                 <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
             </div>
         );
@@ -174,7 +174,7 @@ export const TeacherPredictions: React.FC = () => {
     }
 
     return (
-        <div className="h-full overflow-y-auto p-6 space-y-6 max-w-[1600px] mx-auto">
+        <div className="min-h-full p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-[1600px] mx-auto">
 
             <PageHeader
                 icon={Brain}

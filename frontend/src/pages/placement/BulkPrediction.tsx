@@ -187,7 +187,43 @@ const BulkPlacementPrediction: React.FC = () => {
                                     </span>
                                 </div>
 
-                                <div className="overflow-x-auto">
+                                {/* Mobile Cards View (< md) */}
+                                <div className="md:hidden p-4 space-y-3">
+                                    {results.map((result, idx) => (
+                                        <div key={idx} className="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-4 shadow-sm space-y-2.5">
+                                            <div className="flex items-start justify-between gap-2">
+                                                <div>
+                                                    <h4 className="font-semibold text-slate-900 dark:text-white text-base leading-snug">
+                                                        {result.name}
+                                                    </h4>
+                                                    <p className="text-xs text-slate-500 font-mono">{result.student_id}</p>
+                                                </div>
+                                                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold shrink-0 ${result.prediction === 'Placed'
+                                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400'
+                                                    : 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
+                                                    }`}>
+                                                    {result.prediction}
+                                                </span>
+                                            </div>
+                                            <div className="pt-2 border-t border-slate-200/60 dark:border-white/5 flex items-center justify-between">
+                                                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Confidence</span>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-20 h-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
+                                                        <div
+                                                            className={`h-full rounded-full ${result.prediction === 'Placed' ? 'bg-emerald-500' : 'bg-red-500'
+                                                                }`}
+                                                            style={{ width: `${(result.confidence * 100)}%` }}
+                                                        />
+                                                    </div>
+                                                    <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">{(result.confidence * 100).toFixed(0)}%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Desktop Table (>= md) */}
+                                <div className="hidden md:block overflow-x-auto">
                                     <table className="w-full text-left text-sm">
                                         <thead className="bg-slate-50 dark:bg-black/20 text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">
                                             <tr>

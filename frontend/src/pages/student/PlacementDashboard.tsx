@@ -80,7 +80,7 @@ const PlacementDashboard: React.FC = () => {
     }, []);
 
     return (
-        <div className="h-full overflow-y-auto p-4 sm:p-6">
+        <div className="min-h-full p-4 sm:p-6">
             <div className="max-w-7xl mx-auto space-y-6">
 
                 <PageHeader

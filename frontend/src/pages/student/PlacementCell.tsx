@@ -99,7 +99,7 @@ export const PlacementCell: React.FC = () => {
     });
 
     return (
-        <div className="h-full overflow-y-auto p-8 space-y-8">
+        <div className="min-h-full p-4 sm:p-8 space-y-6 sm:space-y-8">
 
             {/* Header */}
             <div className="flex items-center gap-4">

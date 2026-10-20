@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Menu, LayoutDashboard, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -9,6 +10,15 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { user } = useAuth();
     const { theme, toggleTheme } = useTheme();
+    const location = useLocation();
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    // Reset scroll to top on page/route change
+    useEffect(() => {
+        if (scrollContainerRef.current) {
+            scrollContainerRef.current.scrollTop = 0;
+        }
+    }, [location.pathname]);
 
     const portalTitle = React.useMemo(() => {
         if (user?.role === 'teacher') return 'Faculty Portal';
@@ -18,7 +28,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     }, [user?.role]);
 
     return (
-        <div className="flex h-screen bg-surface-50 dark:bg-[#0a0a0c] overflow-hidden selection:bg-primary-500/30 transition-colors duration-300">
+        <div className="flex h-screen h-[100dvh] max-h-[100dvh] bg-surface-50 dark:bg-[#0a0a0c] overflow-hidden selection:bg-primary-500/30 transition-colors duration-300">
             {/* Desktop Sidebar (visible on md screens and wider) */}
             <aside className="hidden md:flex h-full shrink-0">
                 <Sidebar />
@@ -50,9 +60,9 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
             </AnimatePresence>
 
             {/* Main Content Area */}
-            <main className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
+            <main className="flex-1 flex flex-col min-h-0 h-full overflow-hidden relative">
                 {/* Mobile Top Header (visible on mobile only) */}
-                <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white/85 dark:bg-surface-950/85 backdrop-blur-md border-b border-slate-200 dark:border-white/[0.07] shrink-0 z-30">
+                <header className="md:hidden sticky top-0 flex items-center justify-between px-4 py-3 bg-white/90 dark:bg-surface-950/90 backdrop-blur-md border-b border-slate-200 dark:border-white/[0.07] shrink-0 z-30">
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setSidebarOpen(true)}
@@ -92,8 +102,11 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
                     <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-accent-600/20 rounded-full blur-[120px] opacity-20" />
                 </div>
 
-                {/* Main Scrollable Viewport */}
-                <div className="flex-1 w-full min-h-0 overflow-y-auto scrollbar-none relative z-10">
+                {/* Main Scrollable Viewport with Touch Pan and Momentum */}
+                <div
+                    ref={scrollContainerRef}
+                    className="flex-1 w-full min-h-0 overflow-y-auto overscroll-y-contain relative z-10 [touch-action:pan-y] [-webkit-overflow-scrolling:touch]"
+                >
                     {children}
                 </div>
             </main>

@@ -18,10 +18,16 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5.5rem;
+    height: 100%;
+    min-height: 100dvh;
+    -webkit-overflow-scrolling: touch;
   }
 
   body {
     @apply font-sans text-md text-slate-800 dark:text-slate-100 bg-surface-50 dark:bg-surface-950;
+    height: 100%;
+    min-height: 100dvh;
+    -webkit-overflow-scrolling: touch;
   }
 
   /* ── Fixed heading sizes — consistent across the whole app ── */
@@ -115,7 +121,14 @@
      └─────────────────────────────────────────────────────────┘ */
 
   .page-wrap {
-    @apply h-full overflow-y-auto p-6 space-y-6 animate-fade-in;
+    @apply min-h-full p-4 sm:p-6 space-y-4 sm:space-y-6 animate-fade-in;
+  }
+
+  /* Unified Portal Viewport for smooth native and touch scrolling */
+  .portal-viewport {
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior-y: contain;
   }
 
   .page-header {

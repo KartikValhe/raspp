@@ -156,7 +156,7 @@ export const StudentPerformance: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="h-full overflow-y-auto p-8 space-y-8">
+            <div className="min-h-full p-8 space-y-8 flex items-center justify-center">
                 <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
             </div>
         );
@@ -180,7 +180,7 @@ export const StudentPerformance: React.FC = () => {
     const sgpa = totalCredits > 0 ? (weightedSum / totalCredits).toFixed(2) : '0.00';
 
     return (
-        <div className="h-full overflow-y-auto bg-slate-50 dark:bg-slate-900 p-6 md:p-8 print:bg-white print:p-0">
+        <div className="min-h-full bg-slate-50 dark:bg-slate-900 p-4 md:p-8 print:bg-white print:p-0">
             {/* Navigation / Actions - Hidden in Print */}
             <div className="max-w-5xl mx-auto mb-8 flex justify-between items-center print:hidden">
                 <button
@@ -265,52 +265,89 @@ export const StudentPerformance: React.FC = () => {
                 </div>
 
                 {/* Score Table */}
-                <div className="px-8 pb-8">
+                <div className="px-4 sm:px-8 pb-8">
                     <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
                         <BookOpen size={20} className="text-blue-500" />
                         Course Performance
                     </h3>
 
                     <div className="border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden print:border-black">
-                        <table className="w-full">
-                            <thead>
-                                <tr className="bg-slate-50 dark:bg-white/5 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider print:bg-slate-100 print:text-black">
-                                    <th className="px-6 py-4">Subject Code</th>
-                                    <th className="px-6 py-4">Subject Name</th>
-                                    <th className="px-6 py-4 text-center">Methods</th>
-                                    <th className="px-6 py-4 text-center">Marks</th>
-                                    <th className="px-6 py-4 text-center">Grade</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-                                {marks.map((mark) => (
-                                    <tr key={mark.subject_id} className="hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors">
-                                        <td className="px-6 py-4 font-mono text-sm text-slate-600 dark:text-slate-400">{mark.subject_code}</td>
-                                        <td className="px-6 py-4 font-medium text-slate-800 dark:text-white">{mark.subject_name}</td>
-                                        <td className="px-6 py-4 text-center text-sm text-slate-500">Theory</td>
-                                        <td className="px-6 py-4 text-center font-bold text-slate-700 dark:text-slate-300">{mark.marks_obtained}</td>
-                                        <td className="px-6 py-4 text-center">
-                                            <span className={`
-                                                inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold
-                                                ${['O', 'A+', 'A'].includes(mark.grade || '') ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400' :
-                                                    ['B+', 'B', 'P'].includes(mark.grade || '') ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400' :
-                                                        'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'}
-                                                print:border print:border-slate-300 print:bg-transparent print:text-black
-                                            `}>
-                                                {mark.grade}
-                                            </span>
-                                        </td>
+                        {/* Mobile Cards View (< md, hidden in print) */}
+                        <div className="md:hidden p-3.5 space-y-3 print:hidden">
+                            {marks.map((mark) => (
+                                <div key={mark.subject_id} className="bg-slate-50 dark:bg-white/5 border border-slate-200/70 dark:border-white/10 rounded-xl p-3.5 space-y-2">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div className="min-w-0">
+                                            <h4 className="font-semibold text-slate-800 dark:text-white text-sm leading-snug">
+                                                {mark.subject_name}
+                                            </h4>
+                                            <span className="font-mono text-xs text-slate-500">{mark.subject_code}</span>
+                                        </div>
+                                        <span className={`
+                                            inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold shrink-0
+                                            ${['O', 'A+', 'A'].includes(mark.grade || '') ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400' :
+                                                ['B+', 'B', 'P'].includes(mark.grade || '') ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400' :
+                                                    'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'}
+                                        `}>
+                                            {mark.grade}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-200/50 dark:border-white/5">
+                                        <span className="text-slate-400">Theory</span>
+                                        <span className="font-bold text-slate-700 dark:text-slate-200">
+                                            Marks: {mark.marks_obtained}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                            <div className="bg-slate-100 dark:bg-white/10 rounded-xl p-3 flex justify-between items-center text-sm font-bold text-slate-800 dark:text-white">
+                                <span>TOTAL</span>
+                                <span>{marks.reduce((a, b) => a + b.marks_obtained, 0)} / {marks.reduce((a, b) => a + b.max_marks, 0)}</span>
+                            </div>
+                        </div>
+
+                        {/* Desktop & Print Table */}
+                        <div className="hidden md:block print:block overflow-x-auto">
+                            <table className="w-full">
+                                <thead>
+                                    <tr className="bg-slate-50 dark:bg-white/5 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider print:bg-slate-100 print:text-black">
+                                        <th className="px-6 py-4">Subject Code</th>
+                                        <th className="px-6 py-4">Subject Name</th>
+                                        <th className="px-6 py-4 text-center">Methods</th>
+                                        <th className="px-6 py-4 text-center">Marks</th>
+                                        <th className="px-6 py-4 text-center">Grade</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                            <tfoot className="bg-slate-50 dark:bg-white/5 border-t border-slate-200 dark:border-white/10 print:bg-slate-100">
-                                <tr>
-                                    <td colSpan={3} className="px-6 py-4 text-right font-bold text-slate-600 dark:text-slate-400">TOTAL</td>
-                                    <td className="px-6 py-4 text-center font-bold text-slate-800 dark:text-white">{marks.reduce((a, b) => a + b.marks_obtained, 0)} / {marks.reduce((a, b) => a + b.max_marks, 0)}</td>
-                                    <td className="px-6 py-4"></td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100 dark:divide-white/5">
+                                    {marks.map((mark) => (
+                                        <tr key={mark.subject_id} className="hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors">
+                                            <td className="px-6 py-4 font-mono text-sm text-slate-600 dark:text-slate-400">{mark.subject_code}</td>
+                                            <td className="px-6 py-4 font-medium text-slate-800 dark:text-white">{mark.subject_name}</td>
+                                            <td className="px-6 py-4 text-center text-sm text-slate-500">Theory</td>
+                                            <td className="px-6 py-4 text-center font-bold text-slate-700 dark:text-slate-300">{mark.marks_obtained}</td>
+                                            <td className="px-6 py-4 text-center">
+                                                <span className={`
+                                                    inline-flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold
+                                                    ${['O', 'A+', 'A'].includes(mark.grade || '') ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400' :
+                                                        ['B+', 'B', 'P'].includes(mark.grade || '') ? 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400' :
+                                                            'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'}
+                                                    print:border print:border-slate-300 print:bg-transparent print:text-black
+                                                `}>
+                                                    {mark.grade}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                                <tfoot className="bg-slate-50 dark:bg-white/5 border-t border-slate-200 dark:border-white/10 print:bg-slate-100">
+                                    <tr>
+                                        <td colSpan={3} className="px-6 py-4 text-right font-bold text-slate-600 dark:text-slate-400">TOTAL</td>
+                                        <td className="px-6 py-4 text-center font-bold text-slate-800 dark:text-white">{marks.reduce((a, b) => a + b.marks_obtained, 0)} / {marks.reduce((a, b) => a + b.max_marks, 0)}</td>
+                                        <td className="px-6 py-4"></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
 
                     <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 print:grid-cols-2">

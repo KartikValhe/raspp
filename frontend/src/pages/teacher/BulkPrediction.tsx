@@ -140,7 +140,7 @@ const BulkPrediction: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-6 space-y-6">
+        <div className="min-h-full p-4 sm:p-6 space-y-4 sm:space-y-6">
 
             <PageHeader
                 icon={Upload}
@@ -348,7 +348,42 @@ const BulkPrediction: React.FC = () => {
                     </div>
 
                     <div className="bg-white dark:bg-slate-800 rounded-xl shadow border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col">
-                        <div className="overflow-x-auto">
+                        {/* Mobile Cards View (< md) */}
+                        <div className="md:hidden divide-y divide-slate-200 dark:divide-slate-700">
+                            {paginatedPredictions.map((prediction) => (
+                                <div key={prediction.student_id} className="p-4 space-y-2.5">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div>
+                                            <h4 className="font-semibold text-slate-900 dark:text-white text-base leading-snug">
+                                                {prediction.name}
+                                            </h4>
+                                            <p className="text-xs text-slate-500 font-mono">{prediction.student_id} • {prediction.branch}</p>
+                                        </div>
+                                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium shrink-0 ${getClassColor(prediction.predicted_class)}`}>
+                                            {getClassIcon(prediction.predicted_class)}
+                                            {prediction.predicted_label}
+                                        </span>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100 dark:border-slate-700/60 text-xs">
+                                        <div>
+                                            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Confidence</span>
+                                            <span className="font-semibold text-slate-900 dark:text-white">{(prediction.confidence * 100).toFixed(1)}%</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Avg Score</span>
+                                            <span className="font-medium text-slate-800 dark:text-slate-200">{prediction.features.avg_score.toFixed(1)}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Attendance</span>
+                                            <span className="font-medium text-slate-800 dark:text-slate-200">{prediction.features.attendance_rate.toFixed(1)}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Desktop Table (>= md) */}
+                        <div className="hidden md:block overflow-x-auto">
                             <table className="w-full">
                                 <thead className="bg-slate-50 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600">
                                     <tr>
@@ -390,7 +425,7 @@ const BulkPrediction: React.FC = () => {
                                 No students match your search criteria
                             </div>
                         ) : (
-                            <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+                            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
                                 <div className="text-sm text-slate-500 dark:text-slate-400">
                                     Showing <span className="font-medium">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-medium">{Math.min(currentPage * itemsPerPage, allFilteredPredictions.length)}</span> of <span className="font-medium">{allFilteredPredictions.length}</span> results
                                 </div>

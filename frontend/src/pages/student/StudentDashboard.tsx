@@ -54,7 +54,7 @@ export const StudentDashboard: React.FC = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="h-full overflow-y-auto p-4 sm:p-6 space-y-5 sm:space-y-6"
+            className="min-h-full flex flex-col p-4 sm:p-6 space-y-5 sm:space-y-6"
         >
             <PageHeader
                 icon={LayoutDashboard}

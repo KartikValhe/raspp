@@ -54,7 +54,7 @@ export const MyPerformance: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-6">
+        <div className="min-h-full p-4 sm:p-6">
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -217,8 +217,52 @@ export const MyPerformance: React.FC = () => {
                                         exit={{ height: 0 }}
                                         className="overflow-hidden"
                                     >
-                                        <div className="p-6 pt-0 border-t border-gray-200 dark:border-white/10">
-                                            <div className="overflow-x-auto">
+                                        <div className="p-4 sm:p-6 pt-0 border-t border-gray-200 dark:border-white/10">
+                                            {/* Mobile Cards View (< md) */}
+                                            <div className="md:hidden pt-4 space-y-3">
+                                                {sem.subjects.map((sub, i) => (
+                                                    <div key={i} className="bg-slate-50 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 rounded-2xl p-4 space-y-2.5">
+                                                        <div className="flex items-start justify-between gap-2">
+                                                            <div>
+                                                                <h4 className="font-semibold text-gray-900 dark:text-white text-sm leading-snug">
+                                                                    {sub.name}
+                                                                </h4>
+                                                                <span className="font-mono text-xs font-medium text-indigo-600 dark:text-indigo-400">{sub.code}</span>
+                                                            </div>
+                                                            <span className={`inline-flex items-center justify-center w-8 h-8 rounded-lg font-bold text-xs shrink-0 ${sub.grade === 'S' ? 'bg-violet-500/10 dark:bg-violet-500/20 text-violet-600 dark:text-violet-300' :
+                                                                sub.grade === 'A' ? 'bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300' :
+                                                                    sub.grade === 'B' ? 'bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300' :
+                                                                        sub.grade === 'F' ? 'bg-red-500/10 dark:bg-red-500/20 text-red-600 dark:text-red-300' :
+                                                                            'bg-gray-100 dark:bg-gray-500/20 text-gray-600 dark:text-gray-300'
+                                                                }`}>
+                                                                {sub.grade}
+                                                            </span>
+                                                        </div>
+
+                                                        <div className="grid grid-cols-4 gap-2 pt-2 border-t border-slate-200/60 dark:border-white/5 text-center text-xs">
+                                                            <div>
+                                                                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Credits</span>
+                                                                <span className="font-medium text-slate-700 dark:text-slate-300">{sub.credits}</span>
+                                                            </div>
+                                                            <div>
+                                                                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Internal</span>
+                                                                <span className="font-medium text-slate-700 dark:text-slate-300">{sub.internal}</span>
+                                                            </div>
+                                                            <div>
+                                                                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">External</span>
+                                                                <span className="font-medium text-slate-700 dark:text-slate-300">{sub.external}</span>
+                                                            </div>
+                                                            <div>
+                                                                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Total</span>
+                                                                <span className="font-bold text-gray-900 dark:text-white">{sub.total}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* Desktop Table (>= md) */}
+                                            <div className="hidden md:block overflow-x-auto">
                                                 <table className="w-full text-left border-collapse">
                                                     <thead>
                                                         <tr className="text-xs text-gray-500 uppercase tracking-wider border-b border-gray-200 dark:border-white/10">

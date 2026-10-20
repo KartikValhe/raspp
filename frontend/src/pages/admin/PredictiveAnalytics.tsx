@@ -138,7 +138,7 @@ export const PredictiveAnalytics: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-6 space-y-6 max-w-[1600px] mx-auto">
+        <div className="min-h-full p-4 sm:p-6 space-y-4 sm:space-y-6 max-w-[1600px] mx-auto">
 
             {/* Standardized Page Header */}
             <PageHeader

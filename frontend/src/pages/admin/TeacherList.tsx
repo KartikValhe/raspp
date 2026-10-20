@@ -171,7 +171,7 @@ export const TeacherList: React.FC = () => {
     ];
 
     return (
-        <div className="h-full flex flex-col p-6 space-y-5 overflow-hidden">
+        <div className="min-h-full flex flex-col p-3 sm:p-6 space-y-4 sm:space-y-5">
 
             {/* Standardized Page Header */}
             <div className="flex-none">
@@ -234,8 +234,8 @@ export const TeacherList: React.FC = () => {
                 </div>
             </div>
 
-            {/* Teachers Table - Using filteredTeachers */}
-            <div className="flex-1 overflow-y-auto min-h-0 rounded-xl border border-slate-200 dark:border-white/10">
+            {/* Teachers Table - Natural Flow with Horizontal Scroll via DataTable */}
+            <div className="w-full">
                 <DataTable
                     columns={columns}
                     data={filteredTeachers}

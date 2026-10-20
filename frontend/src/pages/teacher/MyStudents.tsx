@@ -72,7 +72,7 @@ export const MyStudents: React.FC = () => {
     };
 
     return (
-        <div className="h-full flex flex-col p-6 space-y-5 overflow-hidden">
+        <div className="min-h-full flex flex-col p-3 sm:p-6 space-y-4 sm:space-y-5">
 
             <PageHeader
                 icon={GraduationCap}
@@ -99,7 +99,7 @@ export const MyStudents: React.FC = () => {
                         className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded-lg text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-400"
                     />
                 </div>
-                <div className="flex items-center gap-2 border-l border-slate-100 dark:border-white/10 pl-4 overflow-x-auto">
+                <div className="flex items-center gap-2 border-t md:border-t-0 md:border-l border-slate-100 dark:border-white/10 pt-3 md:pt-0 pl-0 md:pl-4 overflow-x-auto">
                     <Filter className="text-slate-400 shrink-0" size={18} />
 
                     {/* Semester Filter */}
@@ -136,8 +136,8 @@ export const MyStudents: React.FC = () => {
                 <div className="w-1/5 text-right">Actions</div>
             </div>
 
-            {/* Scrollable List */}
-            <div className="flex-1 overflow-y-auto min-h-0 space-y-3">
+            {/* Natural Document Flow List */}
+            <div className="space-y-3">
                 {students.length > 0 ? (
                     students.map((student, index) => (
                         <motion.div

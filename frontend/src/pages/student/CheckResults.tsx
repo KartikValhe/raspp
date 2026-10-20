@@ -43,7 +43,7 @@ export const CheckResults: React.FC = () => {
     };
 
     return (
-        <div className="h-full relative overflow-y-auto bg-slate-50 dark:bg-slate-900">
+        <div className="min-h-full relative bg-slate-50 dark:bg-slate-900">
             {/* Background Gradients */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-violet-500/10 rounded-full blur-[100px]" />

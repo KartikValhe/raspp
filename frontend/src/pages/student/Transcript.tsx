@@ -145,7 +145,7 @@ export const Transcript: React.FC = () => {
     const sgpa = totalCredits > 0 ? (weightedSum / totalCredits).toFixed(2) : '0.00';
 
     return (
-        <div className="h-full overflow-y-auto bg-slate-100 dark:bg-slate-900 p-3 sm:p-8 print:bg-white print:p-0">
+        <div className="min-h-full bg-slate-100 dark:bg-slate-900 p-3 sm:p-8 print:bg-white print:p-0">
             {/* Header */}
             <div className="max-w-[210mm] mx-auto mb-6 flex items-center gap-3 sm:gap-4 print:hidden">
                 <div className="p-3 bg-blue-500/10 rounded-xl text-blue-600 dark:text-blue-400">

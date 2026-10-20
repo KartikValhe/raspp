@@ -129,7 +129,7 @@ const ResumeBuilder: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-3 sm:p-6 scroll-smooth">
+        <div className="min-h-full p-3 sm:p-6 scroll-smooth">
             <div className="max-w-7xl mx-auto pb-12">
 
                 <PageHeader

@@ -94,7 +94,7 @@ const CoordinatorDashboard: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-4 sm:p-6">
+        <div className="min-h-full p-4 sm:p-6">
             <motion.div
                 variants={containerVariants}
                 initial="hidden"

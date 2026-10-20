@@ -212,7 +212,7 @@ export const MarksEntry: React.FC = () => {
     );
 
     return (
-        <div className="h-full flex flex-col p-3 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto sm:overflow-hidden">
+        <div className="min-h-full flex flex-col p-3 sm:p-6 space-y-4 sm:space-y-5">
 
             <PageHeader
                 icon={PenTool}
@@ -249,7 +249,7 @@ export const MarksEntry: React.FC = () => {
             </div>
 
             {/* Premium Student List */}
-            <div className="flex-1 flex flex-col min-h-0 space-y-4 bg-white dark:bg-white/5 p-4 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm">
+            <div className="flex flex-col space-y-4 bg-white dark:bg-white/5 p-4 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm">
                 <div className="flex items-center justify-between px-4 py-2 text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider hidden md:flex">
                     <div className="w-1/3">Student Details</div>
                     <div className="w-1/6 text-center">Semester</div>
@@ -258,7 +258,7 @@ export const MarksEntry: React.FC = () => {
                     <div className="w-1/6 text-right">Action</div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto min-h-0 space-y-3 custom-scrollbar">
+                <div className="space-y-3">
                     {filteredStudents.length > 0 ? (
                         filteredStudents.map((student, index) => (
                             <motion.div

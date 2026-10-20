@@ -89,7 +89,7 @@ const PlacementRecords: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-6">
+        <div className="min-h-full p-4 sm:p-6">
             <div className="max-w-7xl mx-auto space-y-6">
 
                 <PageHeader
@@ -131,9 +131,82 @@ const PlacementRecords: React.FC = () => {
                     </select>
                 </div>
 
-                {/* Records Table */}
+                {/* Records Table & Mobile Cards */}
                 <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-xl">
-                    <div className="overflow-x-auto">
+                    {/* Mobile Card View (< md) */}
+                    <div className="md:hidden p-4 space-y-3">
+                        {loading ? (
+                            [...Array(4)].map((_, i) => (
+                                <div key={i} className="animate-pulse bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/5 space-y-3">
+                                    <div className="h-4 bg-slate-200 dark:bg-white/10 rounded w-1/2"></div>
+                                    <div className="h-3 bg-slate-200 dark:bg-white/10 rounded w-1/3"></div>
+                                    <div className="grid grid-cols-2 gap-2 pt-2">
+                                        <div className="h-3 bg-slate-200 dark:bg-white/10 rounded"></div>
+                                        <div className="h-3 bg-slate-200 dark:bg-white/10 rounded"></div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : records.length === 0 ? (
+                            <div className="py-12 text-center text-slate-500 dark:text-slate-400">
+                                No placement records found.
+                            </div>
+                        ) : (
+                            records.map((record) => (
+                                <div key={record.id} className="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-4 shadow-sm space-y-3">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div>
+                                            <h4 className="font-semibold text-slate-900 dark:text-white text-base leading-snug">
+                                                {record.student?.full_name || 'Unknown'}
+                                            </h4>
+                                            <p className="text-xs text-slate-500">{record.student?.student_id || 'N/A'}</p>
+                                        </div>
+                                        <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0 ${record.status === 'placed'
+                                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400'
+                                            : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400'
+                                            }`}>
+                                            {record.status}
+                                        </span>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-2.5 pt-2 border-t border-slate-200/60 dark:border-white/5 text-xs">
+                                        <div>
+                                            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Company</span>
+                                            <span className="font-medium text-slate-800 dark:text-slate-200">{record.company_name}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Role</span>
+                                            <span className="font-medium text-slate-800 dark:text-slate-200">{record.job_role}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Package</span>
+                                            <span className="font-semibold text-emerald-600 dark:text-emerald-400">₹{record.package} LPA</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Date</span>
+                                            <span className="text-slate-600 dark:text-slate-300">{new Date(record.placed_date).toLocaleDateString()}</span>
+                                        </div>
+                                    </div>
+
+                                    {record.offer_letter_url && (
+                                        <div className="pt-2 border-t border-slate-200/60 dark:border-white/5 flex justify-end">
+                                            <a
+                                                href={record.offer_letter_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                                            >
+                                                <span>View Offer Letter</span>
+                                                <ExternalLink size={14} />
+                                            </a>
+                                        </div>
+                                    )}
+                                </div>
+                            ))
+                        )}
+                    </div>
+
+                    {/* Desktop Table (>= md) */}
+                    <div className="hidden md:block overflow-x-auto">
                         <table className="w-full text-left text-sm">
                             <thead className="bg-slate-50 dark:bg-black/20 text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">
                                 <tr>

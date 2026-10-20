@@ -60,7 +60,7 @@ const StudentResults: React.FC = () => {
     };
 
     return (
-        <div className="h-full flex flex-col space-y-4 sm:space-y-5 overflow-y-auto sm:overflow-hidden p-3 sm:p-6">
+        <div className="min-h-full flex flex-col space-y-4 sm:space-y-5 p-3 sm:p-6">
             <div className="flex-none">
                 {/* Standardized Page Header */}
                 <PageHeader
@@ -162,93 +162,167 @@ const StudentResults: React.FC = () => {
                     </button>
                 </div>
 
-                {/* Table - Scrollable */}
-                <div className="flex-1 overflow-y-auto overflow-x-auto min-h-0">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="bg-slate-50/90 dark:bg-slate-900/90 border-y border-slate-100 dark:border-white/10 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider sticky top-0 z-20 backdrop-blur-sm">
-                                <th className="px-6 py-4">Rank</th>
-                                <th className="px-6 py-4">Student</th>
-                                <th className="px-6 py-4">Branch & Sem</th>
-                                <th className="px-6 py-4 text-center">Total Marks</th>
-                                <th className="px-6 py-4 text-center">Percentage</th>
-                                <th className="px-6 py-4 text-center">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-                            {loading ? (
-                                <tr>
-                                    <td colSpan={6} className="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
-                                        Loading results...
-                                    </td>
-                                </tr>
-                            ) : meritList.length === 0 ? (
-                                <tr>
-                                    <td colSpan={6} className="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
-                                        No results found matching your criteria.
-                                    </td>
-                                </tr>
-                            ) : (
-                                (limit === 'all' ? meritList : meritList.slice(0, typeof limit === 'number' ? limit : undefined)).map((item) => (
-                                    <tr key={item.student_id} className="hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors group">
-                                        <td className="px-6 py-4">
+                <div className="w-full">
+                    {/* Mobile Cards View (Visible on < md) */}
+                    <div className="md:hidden flex flex-col gap-3">
+                        {loading ? (
+                            [...Array(3)].map((_, i) => (
+                                <div key={i} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-4 shadow-sm animate-pulse space-y-3">
+                                    <div className="h-5 bg-slate-200 dark:bg-white/10 rounded w-1/3"></div>
+                                    <div className="h-4 bg-slate-100 dark:bg-white/5 rounded w-1/2"></div>
+                                </div>
+                            ))
+                        ) : meritList.length === 0 ? (
+                            <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-8 text-center text-slate-500 dark:text-slate-400">
+                                No results found matching your criteria.
+                            </div>
+                        ) : (
+                            (limit === 'all' ? meritList : meritList.slice(0, typeof limit === 'number' ? limit : undefined)).map((item) => (
+                                <div
+                                    key={item.student_id}
+                                    className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-4 shadow-sm space-y-3"
+                                >
+                                    {/* Card Header: Rank & Status */}
+                                    <div className="flex items-center justify-between gap-2">
+                                        <div className="flex items-center gap-2">
                                             <div className={`
-                                                w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm
+                                                w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs
                                                 ${item.rank === 1 ? 'bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400' :
                                                     item.rank === 2 ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300' :
                                                         item.rank === 3 ? 'bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-400' :
-                                                            'bg-slate-50 dark:bg-white/5 text-slate-500 dark:text-slate-400'}
+                                                            'bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-400'}
                                             `}>
-                                                {item.rank}
+                                                #{item.rank}
                                             </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`
-                                                    w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-white uppercase shadow-sm
-                                                    ${['bg-blue-500', 'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-teal-500'][Math.floor(Math.random() * 5)]}
-                                                `}>
-                                                    {item.student_name.substring(0, 2)}
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-slate-800 dark:text-white">{item.student_name}</div>
-                                                    <div className="text-xs text-slate-500 dark:text-slate-500 font-mono">{item.student_id}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="text-sm text-slate-600 dark:text-slate-400">
-                                                <span className="font-medium">{item.branch}</span>
-                                                <span className="mx-2 text-slate-300 dark:text-slate-700">|</span>
-                                                Sem {item.semester}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-center font-mono font-medium text-slate-700 dark:text-slate-300">
-                                            {item.total_marks.toFixed(1)}
-                                        </td>
-                                        <td className="px-6 py-4 text-center">
-                                            <span className={`
-                                                inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                                ${item.percentage >= 75 ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-400' :
-                                                    item.percentage >= 60 ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-800 dark:text-blue-400' :
-                                                        'bg-orange-100 dark:bg-orange-500/20 text-orange-800 dark:text-orange-400'}
-                                            `}>
-                                                {item.percentage.toFixed(2)}%
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-center">
-                                            <span className={`
-                                                inline-flex items-center px-2 py-1 rounded text-xs font-medium capitalize
-                                                ${item.status === 'Pass' ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10' : 'text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-500/10'}
-                                            `}>
-                                                {item.status}
-                                            </span>
+                                            <span className="text-xs font-semibold text-slate-400 uppercase">Rank</span>
+                                        </div>
+                                        <span className={`
+                                            inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold capitalize
+                                            ${item.status === 'Pass' ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10' : 'text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-500/10'}
+                                        `}>
+                                            {item.status}
+                                        </span>
+                                    </div>
+
+                                    {/* Student Info */}
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-primary-600 to-indigo-600 flex items-center justify-center font-bold text-xs text-white uppercase shadow-sm">
+                                            {item.student_name.substring(0, 2)}
+                                        </div>
+                                        <div>
+                                            <div className="font-semibold text-slate-800 dark:text-white text-sm">{item.student_name}</div>
+                                            <div className="text-xs text-slate-500 font-mono">{item.student_id}</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Score Grid */}
+                                    <div className="grid grid-cols-3 gap-2 pt-2.5 border-t border-slate-100 dark:border-white/5 text-xs text-center">
+                                        <div className="bg-slate-50 dark:bg-white/5 rounded-xl p-2">
+                                            <span className="text-[10px] font-semibold text-slate-400 block uppercase">Branch & Sem</span>
+                                            <span className="font-semibold text-slate-700 dark:text-slate-200 text-xs mt-0.5 block">{item.branch} • S{item.semester}</span>
+                                        </div>
+                                        <div className="bg-slate-50 dark:bg-white/5 rounded-xl p-2">
+                                            <span className="text-[10px] font-semibold text-slate-400 block uppercase">Total Marks</span>
+                                            <span className="font-bold text-slate-800 dark:text-slate-100 text-xs mt-0.5 block font-mono">{item.total_marks.toFixed(1)}</span>
+                                        </div>
+                                        <div className="bg-slate-50 dark:bg-white/5 rounded-xl p-2">
+                                            <span className="text-[10px] font-semibold text-slate-400 block uppercase">Percentage</span>
+                                            <span className="font-bold text-indigo-600 dark:text-indigo-400 text-xs mt-0.5 block">{item.percentage.toFixed(2)}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+
+                    {/* Desktop Table View (Hidden on < md, visible on md+) */}
+                    <div className="hidden md:block w-full overflow-x-auto rounded-xl border border-slate-200 dark:border-white/10">
+                        <table className="w-full">
+                            <thead>
+                                <tr className="bg-slate-50/90 dark:bg-slate-900/90 border-y border-slate-100 dark:border-white/10 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider sticky top-0 z-20 backdrop-blur-sm">
+                                    <th className="px-6 py-4">Rank</th>
+                                    <th className="px-6 py-4">Student</th>
+                                    <th className="px-6 py-4">Branch & Sem</th>
+                                    <th className="px-6 py-4 text-center">Total Marks</th>
+                                    <th className="px-6 py-4 text-center">Percentage</th>
+                                    <th className="px-6 py-4 text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100 dark:divide-white/5">
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan={6} className="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
+                                            Loading results...
                                         </td>
                                     </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                                ) : meritList.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={6} className="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
+                                            No results found matching your criteria.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    (limit === 'all' ? meritList : meritList.slice(0, typeof limit === 'number' ? limit : undefined)).map((item) => (
+                                        <tr key={item.student_id} className="hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors group">
+                                            <td className="px-6 py-4">
+                                                <div className={`
+                                                    w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm
+                                                    ${item.rank === 1 ? 'bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400' :
+                                                        item.rank === 2 ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300' :
+                                                            item.rank === 3 ? 'bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-400' :
+                                                                'bg-slate-50 dark:bg-white/5 text-slate-500 dark:text-slate-400'}
+                                                `}>
+                                                    {item.rank}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className={`
+                                                        w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-white uppercase shadow-sm
+                                                        ${['bg-blue-500', 'bg-purple-500', 'bg-pink-500', 'bg-indigo-500', 'bg-teal-500'][Math.floor(Math.random() * 5)]}
+                                                    `}>
+                                                        {item.student_name.substring(0, 2)}
+                                                    </div>
+                                                    <div>
+                                                        <div className="font-semibold text-slate-800 dark:text-white">{item.student_name}</div>
+                                                        <div className="text-xs text-slate-500 dark:text-slate-500 font-mono">{item.student_id}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="text-sm text-slate-600 dark:text-slate-400">
+                                                    <span className="font-medium">{item.branch}</span>
+                                                    <span className="mx-2 text-slate-300 dark:text-slate-700">|</span>
+                                                    Sem {item.semester}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-center font-mono font-medium text-slate-700 dark:text-slate-300">
+                                                {item.total_marks.toFixed(1)}
+                                            </td>
+                                            <td className="px-6 py-4 text-center">
+                                                <span className={`
+                                                    inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                                    ${item.percentage >= 75 ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-400' :
+                                                        item.percentage >= 60 ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-800 dark:text-blue-400' :
+                                                            'bg-orange-100 dark:bg-orange-500/20 text-orange-800 dark:text-orange-400'}
+                                                `}>
+                                                    {item.percentage.toFixed(2)}%
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-center">
+                                                <span className={`
+                                                    inline-flex items-center px-2 py-1 rounded text-xs font-medium capitalize
+                                                    ${item.status === 'Pass' ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10' : 'text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-500/10'}
+                                                `}>
+                                                    {item.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

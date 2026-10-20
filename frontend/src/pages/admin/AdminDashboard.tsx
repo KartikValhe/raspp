@@ -142,7 +142,7 @@ export const AdminDashboard: React.FC = () => {
     ];
 
     return (
-        <div className="h-full overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
+        <div className="min-h-full flex flex-col p-3 sm:p-6 space-y-4 sm:space-y-6">
 
             <PageHeader
                 icon={LayoutDashboard}

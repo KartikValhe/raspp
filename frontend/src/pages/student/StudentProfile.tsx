@@ -56,7 +56,7 @@ export const StudentProfile: React.FC = () => {
     };
 
     return (
-        <div className="h-full overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <div className="min-h-full p-4 sm:p-6 lg:p-8">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

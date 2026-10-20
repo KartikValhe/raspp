@@ -86,7 +86,7 @@ export const TeacherProfile: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="h-full overflow-y-auto p-8 space-y-8">
+            <div className="min-h-full p-8 space-y-8 flex items-center justify-center">
                 <div className="relative">
                     <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
                 </div>
@@ -107,7 +107,7 @@ export const TeacherProfile: React.FC = () => {
     }
 
     return (
-        <div className="space-y-8 max-w-7xl mx-auto pb-12">
+        <div className="min-h-full p-4 sm:p-8 space-y-6 sm:space-y-8 max-w-7xl mx-auto pb-12">
             {/* Immersive Header Banner */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
