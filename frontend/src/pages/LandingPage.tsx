@@ -109,59 +109,62 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* FIXED GLASS CAPSULE NAVBAR (Stays pinned at top, never scrolls away) */}
-            <div className="fixed top-3 inset-x-0 mx-auto z-50 max-w-6xl px-4 sm:px-6 pointer-events-none">
-                <header className="pointer-events-auto backdrop-blur-xl bg-white/85 dark:bg-slate-900/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-xl shadow-slate-900/5 dark:shadow-black/20 transition-all duration-300">
-                    <div className="h-16 px-4 sm:px-6 flex items-center justify-between gap-4">
+            <div className="fixed top-2 sm:top-3 inset-x-0 mx-auto z-50 max-w-6xl px-3 sm:px-6 pointer-events-none">
+                <header className="pointer-events-auto backdrop-blur-xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-white/10 rounded-2xl shadow-xl shadow-slate-900/5 dark:shadow-black/20 transition-all duration-300">
+                    <div className="h-14 sm:h-16 px-3.5 sm:px-6 flex items-center justify-between gap-2 sm:gap-4">
                         {/* Brand Logo */}
                         <div 
-                            className="flex items-center gap-2.5 cursor-pointer group" 
+                            className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group shrink-0" 
                             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                         >
-                            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-primary-500 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/25 group-hover:scale-105 transition-transform duration-200">
-                                <Sparkles size={18} />
+                            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-primary-500 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/25 group-hover:scale-105 transition-transform duration-200">
+                                <Sparkles size={16} />
                             </div>
                             <div>
-                                <span className="text-lg font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-1">
-                                    RASPP<span className="text-indigo-600 dark:text-cyan-400 font-extrabold text-sm">.ai</span>
+                                <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-1">
+                                    RASPP<span className="text-indigo-600 dark:text-cyan-400 font-extrabold text-xs sm:text-sm">.ai</span>
                                 </span>
-                                <span className="block text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest -mt-1">
+                                <span className="hidden sm:block text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest -mt-1">
                                     Academic Intelligence
                                 </span>
                             </div>
                         </div>
 
-                        {/* Navigation Links */}
-                        <nav className="hidden md:flex items-center gap-7 text-xs font-bold text-slate-600 dark:text-slate-300">
+                        {/* Desktop Navigation Links */}
+                        <nav className="hidden md:flex items-center gap-6 text-xs font-bold text-slate-600 dark:text-slate-300">
                             <a href="#showcase" className="hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors">Portals Preview</a>
                             <a href="#simulator" className="hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors">AI Simulator</a>
                             <a href="#demo" className="hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors">Instant Testbed</a>
                             <a href="#architecture" className="hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors">Architecture</a>
                             <a href="#faq" className="hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors">FAQ</a>
+                            <button onClick={() => navigate('/guide')} className="text-indigo-600 dark:text-cyan-400 hover:underline flex items-center gap-1">
+                                <span>User Guide</span>
+                            </button>
                         </nav>
 
                         {/* Actions */}
-                        <div className="flex items-center gap-2.5">
+                        <div className="flex items-center gap-1.5 sm:gap-2.5">
                             <button
                                 onClick={toggleTheme}
-                                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all"
+                                className="p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all shrink-0"
                                 aria-label="Toggle Theme"
                             >
-                                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                                {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
                             </button>
 
                             {isAuthenticated ? (
                                 <button
                                     onClick={() => navigate(getDashboardPath())}
-                                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-bold text-xs shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/35 transition-all hover:scale-[1.02]"
+                                    className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-bold text-xs shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/35 transition-all"
                                 >
-                                    <span>Launch Workspace</span>
-                                    <ArrowRight size={14} />
+                                    <span>Workspace</span>
+                                    <ArrowRight size={13} />
                                 </button>
                             ) : (
                                 <>
                                     <button
                                         onClick={() => navigate('/login')}
-                                        className="px-3.5 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
+                                        className="px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
                                     >
                                         Sign In
                                     </button>
@@ -178,7 +181,7 @@ export const LandingPage: React.FC = () => {
                             {/* Mobile Menu Toggle Button */}
                             <button
                                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                className="md:hidden p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                className="md:hidden p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                                 aria-label="Toggle Mobile Menu"
                             >
                                 {mobileMenuOpen ? <X size={17} /> : <Menu size={17} />}
@@ -194,43 +197,65 @@ export const LandingPage: React.FC = () => {
                                 animate={{ opacity: 1, height: 'auto' }}
                                 exit={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.2 }}
-                                className="md:hidden overflow-hidden border-t border-slate-200/70 dark:border-white/10 px-4 py-3 flex flex-col gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-200"
+                                className="md:hidden overflow-hidden border-t border-slate-200/70 dark:border-white/10 px-4 py-3.5 space-y-2 text-xs font-bold text-slate-700 dark:text-slate-200 bg-white/95 dark:bg-slate-900/95 rounded-b-2xl"
                             >
-                                <a
-                                    href="#showcase"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
-                                >
-                                    Portals Preview
-                                </a>
-                                <a
-                                    href="#simulator"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
-                                >
-                                    AI Simulator
-                                </a>
-                                <a
-                                    href="#demo"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
-                                >
-                                    Instant Testbed
-                                </a>
-                                <a
-                                    href="#architecture"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
-                                >
-                                    Architecture
-                                </a>
-                                <a
-                                    href="#faq"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-white/5 hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
-                                >
-                                    FAQ
-                                </a>
+                                <div className="grid grid-cols-2 gap-1.5 pb-2 border-b border-slate-200/60 dark:border-white/10">
+                                    <a
+                                        href="#showcase"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-white/[0.04] hover:bg-indigo-50 dark:hover:bg-white/10 text-center"
+                                    >
+                                        Portals Preview
+                                    </a>
+                                    <a
+                                        href="#simulator"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-white/[0.04] hover:bg-indigo-50 dark:hover:bg-white/10 text-center"
+                                    >
+                                        AI Simulator
+                                    </a>
+                                    <a
+                                        href="#demo"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-white/[0.04] hover:bg-indigo-50 dark:hover:bg-white/10 text-center"
+                                    >
+                                        Instant Testbed
+                                    </a>
+                                    <a
+                                        href="#faq"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-white/[0.04] hover:bg-indigo-50 dark:hover:bg-white/10 text-center"
+                                    >
+                                        FAQs
+                                    </a>
+                                </div>
+
+                                {/* Quick Access Actions in Mobile Drawer */}
+                                <div className="pt-1 flex flex-col gap-2">
+                                    <button
+                                        onClick={() => { setMobileMenuOpen(false); navigate('/guide'); }}
+                                        className="w-full py-2.5 px-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800/80 text-indigo-700 dark:text-indigo-300 font-bold flex items-center justify-center gap-2"
+                                    >
+                                        <BookOpen size={15} />
+                                        <span>System User Guide (Simple)</span>
+                                    </button>
+
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <button
+                                            onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}
+                                            className="w-full py-2.5 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white font-bold flex items-center justify-center"
+                                        >
+                                            Sign In
+                                        </button>
+                                        <button
+                                            onClick={() => { setMobileMenuOpen(false); navigate('/login?mode=register'); }}
+                                            className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 text-white font-bold flex items-center justify-center gap-1 shadow-md shadow-indigo-500/20"
+                                        >
+                                            <span>Get Started</span>
+                                            <ArrowRight size={13} />
+                                        </button>
+                                    </div>
+                                </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -238,77 +263,77 @@ export const LandingPage: React.FC = () => {
             </div>
 
             {/* HERO SECTION */}
-            <section className="relative pt-28 pb-16 sm:pt-36 sm:pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <section className="relative pt-24 pb-12 sm:pt-36 sm:pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="space-y-6 max-w-4xl mx-auto"
+                    className="space-y-4 sm:space-y-6 max-w-4xl mx-auto"
                 >
                     {/* Live Badge */}
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50/80 dark:bg-indigo-950/60 border border-indigo-200/80 dark:border-indigo-800/80 text-indigo-700 dark:text-indigo-300 text-xs font-bold shadow-sm backdrop-blur-md">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span>Ensemble ML Dual Pipeline • 95.2% Verified Accuracy</span>
-                        <ChevronRight size={13} className="text-indigo-400" />
+                    <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-full bg-indigo-50/90 dark:bg-indigo-950/70 border border-indigo-200/80 dark:border-indigo-800/80 text-indigo-700 dark:text-indigo-300 text-[11px] sm:text-xs font-bold shadow-xs backdrop-blur-md max-w-full">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                        <span className="truncate">Ensemble ML Dual Pipeline • 95.2% Verified Accuracy</span>
+                        <ChevronRight size={13} className="text-indigo-400 shrink-0 hidden sm:inline" />
                     </div>
 
                     {/* Headline */}
-                    <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15] text-slate-900 dark:text-white">
+                    <h1 className="text-2xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.2] sm:leading-[1.15] text-slate-900 dark:text-white">
                         Predict Academic Trajectories.{' '}
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-primary-500 to-cyan-500 dark:from-indigo-400 dark:via-cyan-300 dark:to-teal-300">
+                        <span className="block sm:inline text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-primary-500 to-cyan-500 dark:from-indigo-400 dark:via-cyan-300 dark:to-teal-300">
                             Accelerate Student Careers.
                         </span>
                     </h1>
 
                     {/* Subtitle */}
-                    <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
+                    <p className="text-xs sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed px-1 sm:px-0">
                         The comprehensive academic intelligence ecosystem for institutions. Detect at-risk students before examinations, streamline grading, and power campus placements with real-time predictive analytics.
                     </p>
 
-                    {/* Action Buttons */}
-                    <div className="pt-2 flex flex-wrap items-center justify-center gap-3.5">
+                    {/* Action Buttons - Stacked on mobile with 44px+ touch targets */}
+                    <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3.5 max-w-md sm:max-w-none mx-auto">
                         <a
                             href="#demo"
-                            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 via-primary-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-bold text-xs shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all hover:-translate-y-0.5"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-3 rounded-xl bg-gradient-to-r from-indigo-600 via-primary-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-bold text-xs sm:text-sm shadow-xl shadow-indigo-500/25 active:scale-98 transition-all"
                         >
-                            <PlayCircle size={17} />
+                            <PlayCircle size={18} />
                             <span>Launch Live Portals (1-Click)</span>
                         </a>
 
                         <a
                             href="#simulator"
-                            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 font-bold text-xs transition-all shadow-sm"
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-3 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 font-bold text-xs sm:text-sm transition-all shadow-xs active:scale-98"
                         >
                             <Sliders size={16} className="text-indigo-500" />
                             <span>Try AI Simulator</span>
                         </a>
 
                         <button
-                            onClick={() => navigate('/login?mode=register')}
-                            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs transition-all"
+                            onClick={() => navigate('/guide')}
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3.5 sm:py-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 dark:bg-slate-800/80 dark:hover:bg-slate-800 text-indigo-700 dark:text-indigo-300 font-bold text-xs sm:text-sm transition-all active:scale-98 border border-indigo-200/50 dark:border-white/5"
                         >
-                            <GraduationCap size={16} className="text-cyan-500" />
-                            <span>Student Registration</span>
+                            <BookOpen size={16} className="text-indigo-500" />
+                            <span>User Guide</span>
                         </button>
                     </div>
 
-                    {/* Live Metrics Ribbon */}
-                    <div className="pt-10 grid grid-cols-2 sm:grid-cols-4 gap-3.5 max-w-4xl mx-auto">
-                        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-white/10 shadow-sm backdrop-blur-sm">
-                            <div className="text-2xl font-black text-indigo-600 dark:text-indigo-400">95.2%</div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-0.5">Placement Accuracy</div>
+                    {/* Live Metrics Ribbon - Responsive grid */}
+                    <div className="pt-6 sm:pt-10 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3.5 max-w-4xl mx-auto">
+                        <div className="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-white/10 shadow-xs backdrop-blur-sm">
+                            <div className="text-xl sm:text-2xl font-black text-indigo-600 dark:text-indigo-400">95.2%</div>
+                            <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold mt-0.5">Placement Accuracy</div>
                         </div>
-                        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-white/10 shadow-sm backdrop-blur-sm">
-                            <div className="text-2xl font-black text-cyan-600 dark:text-cyan-400">&lt; 4 ms</div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-0.5">Dual-Cache Speed</div>
+                        <div className="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-white/10 shadow-xs backdrop-blur-sm">
+                            <div className="text-xl sm:text-2xl font-black text-cyan-600 dark:text-cyan-400">&lt; 4 ms</div>
+                            <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold mt-0.5">Dual-Cache Speed</div>
                         </div>
-                        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-white/10 shadow-sm backdrop-blur-sm">
-                            <div className="text-2xl font-black text-purple-600 dark:text-purple-400">4 Roles</div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-0.5">Dedicated Workspaces</div>
+                        <div className="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-white/10 shadow-xs backdrop-blur-sm">
+                            <div className="text-xl sm:text-2xl font-black text-purple-600 dark:text-purple-400">4 Roles</div>
+                            <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold mt-0.5">Workspaces</div>
                         </div>
-                        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-white/10 shadow-sm backdrop-blur-sm">
-                            <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400">Distributed</div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-0.5">TiDB Serverless SQL</div>
+                        <div className="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/70 border border-slate-200/80 dark:border-white/10 shadow-xs backdrop-blur-sm">
+                            <div className="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400">Distributed</div>
+                            <div className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-semibold mt-0.5">TiDB Serverless SQL</div>
                         </div>
                     </div>
                 </motion.div>
@@ -318,7 +343,7 @@ export const LandingPage: React.FC = () => {
             <section id="showcase" className="py-8 max-w-6xl mx-auto px-4 sm:px-6">
                 <div className="rounded-3xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-slate-900/80 shadow-2xl overflow-hidden backdrop-blur-xl">
                     {/* Browser Chrome Header */}
-                    <div className="px-5 py-3.5 bg-slate-100/80 dark:bg-slate-950/80 border-b border-slate-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-3">
+                    <div className="px-4 sm:px-5 py-3 sm:py-3.5 bg-slate-100/80 dark:bg-slate-950/80 border-b border-slate-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-2.5">
                         <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full bg-red-400/90" />
                             <div className="w-3 h-3 rounded-full bg-amber-400/90" />
@@ -326,32 +351,32 @@ export const LandingPage: React.FC = () => {
                             <span className="text-xs font-mono text-slate-400 ml-2 hidden sm:inline">https://raspp.ai/portals/live</span>
                         </div>
 
-                        {/* Interactive Tabs */}
-                        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-200/70 dark:bg-slate-800/80 text-xs font-bold">
+                        {/* Interactive Tabs with Horizontal Touch Scroll */}
+                        <div className="flex items-center gap-1 sm:gap-1.5 p-1 rounded-xl bg-slate-200/70 dark:bg-slate-800/80 text-xs font-bold overflow-x-auto scrollbar-none max-w-full justify-start sm:justify-center">
                             <button
                                 onClick={() => setActiveTab('student')}
-                                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${activeTab === 'student' ? 'bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                                className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${activeTab === 'student' ? 'bg-white dark:bg-indigo-600 text-indigo-600 dark:text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                             >
                                 <GraduationCap size={14} />
                                 <span>Student</span>
                             </button>
                             <button
                                 onClick={() => setActiveTab('placement')}
-                                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${activeTab === 'placement' ? 'bg-white dark:bg-purple-600 text-purple-600 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                                className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${activeTab === 'placement' ? 'bg-white dark:bg-purple-600 text-purple-600 dark:text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                             >
                                 <Briefcase size={14} />
                                 <span>Placement</span>
                             </button>
                             <button
                                 onClick={() => setActiveTab('teacher')}
-                                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${activeTab === 'teacher' ? 'bg-white dark:bg-emerald-600 text-emerald-600 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                                className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${activeTab === 'teacher' ? 'bg-white dark:bg-emerald-600 text-emerald-600 dark:text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                             >
                                 <BookOpen size={14} />
                                 <span>Teacher</span>
                             </button>
                             <button
                                 onClick={() => setActiveTab('admin')}
-                                className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${activeTab === 'admin' ? 'bg-white dark:bg-amber-600 text-amber-600 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+                                className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${activeTab === 'admin' ? 'bg-white dark:bg-amber-600 text-amber-600 dark:text-white shadow-xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                             >
                                 <ShieldCheck size={14} />
                                 <span>Admin</span>
@@ -384,7 +409,7 @@ export const LandingPage: React.FC = () => {
                                         </p>
                                         <button
                                             onClick={() => handleQuickLogin('student@example.com', 'student123', '/student/dashboard', 'student')}
-                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-500 shadow-md shadow-indigo-500/25 transition-all"
+                                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 text-white font-bold text-xs hover:bg-indigo-500 shadow-md shadow-indigo-500/25 transition-all active:scale-98"
                                         >
                                             <span>Launch Student Portal Live</span>
                                             <ArrowRight size={14} />
@@ -392,7 +417,7 @@ export const LandingPage: React.FC = () => {
                                     </div>
 
                                     {/* Mock UI Cards */}
-                                    <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                         <div className="p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/60 border border-slate-200/80 dark:border-white/5 space-y-3">
                                             <div className="flex items-center justify-between">
                                                 <span className="text-xs font-bold text-slate-500">Digital Student Card</span>
@@ -457,14 +482,14 @@ export const LandingPage: React.FC = () => {
                                         </p>
                                         <button
                                             onClick={() => handleQuickLogin('coordinator@example.com', 'coordinator123', '/placement/dashboard', 'placement_coordinator')}
-                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 text-white font-bold text-xs hover:bg-purple-500 shadow-md shadow-purple-500/25 transition-all"
+                                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-purple-600 text-white font-bold text-xs hover:bg-purple-500 shadow-md shadow-purple-500/25 transition-all active:scale-98"
                                         >
                                             <span>Launch Placement Portal Live</span>
                                             <ArrowRight size={14} />
                                         </button>
                                     </div>
 
-                                    <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                         <div className="p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/60 border border-slate-200/80 dark:border-white/5 space-y-2">
                                             <span className="text-xs font-bold text-slate-500">Live Campus Drive</span>
                                             <h4 className="font-bold text-sm text-slate-900 dark:text-white">Senior Software Engineer</h4>
@@ -505,14 +530,14 @@ export const LandingPage: React.FC = () => {
                                         </p>
                                         <button
                                             onClick={() => handleQuickLogin('teacher@example.com', 'teacher123', '/dashboard', 'teacher')}
-                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 shadow-md shadow-emerald-500/25 transition-all"
+                                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 shadow-md shadow-emerald-500/25 transition-all active:scale-98"
                                         >
                                             <span>Launch Teacher Portal Live</span>
                                             <ArrowRight size={14} />
                                         </button>
                                     </div>
 
-                                    <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                         <div className="p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/60 border border-slate-200/80 dark:border-white/5 space-y-2">
                                             <span className="text-xs font-bold text-slate-500">Class Gradebook</span>
                                             <h4 className="font-bold text-sm text-slate-900 dark:text-white">Database Management (CS601)</h4>
@@ -552,14 +577,14 @@ export const LandingPage: React.FC = () => {
                                         </p>
                                         <button
                                             onClick={() => handleQuickLogin('admin@example.com', 'admin123', '/dashboard', 'admin')}
-                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-600 text-white font-bold text-xs hover:bg-amber-500 shadow-md shadow-amber-500/25 transition-all"
+                                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-600 text-white font-bold text-xs hover:bg-amber-500 shadow-md shadow-amber-500/25 transition-all active:scale-98"
                                         >
                                             <span>Launch Admin Portal Live</span>
                                             <ArrowRight size={14} />
                                         </button>
                                     </div>
 
-                                    <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                         <div className="p-4 rounded-2xl bg-slate-100/70 dark:bg-slate-800/60 border border-slate-200/80 dark:border-white/5 space-y-2">
                                             <span className="text-xs font-bold text-slate-500">Institutional Health</span>
                                             <div className="flex items-center gap-2">
@@ -582,25 +607,25 @@ export const LandingPage: React.FC = () => {
             </section>
 
             {/* LIVE INTERACTIVE AI PREDICTOR SIMULATOR */}
-            <section id="simulator" className="py-20 max-w-6xl mx-auto px-4 sm:px-6">
-                <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-indigo-900/40 via-slate-900 to-slate-950 border border-indigo-500/30 shadow-2xl relative overflow-hidden backdrop-blur-xl">
+            <section id="simulator" className="py-12 sm:py-20 max-w-6xl mx-auto px-4 sm:px-6">
+                <div className="p-5 sm:p-12 rounded-3xl bg-gradient-to-br from-indigo-900/40 via-slate-900 to-slate-950 border border-indigo-500/30 shadow-2xl relative overflow-hidden backdrop-blur-xl">
                     <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
-                    <div className="text-center max-w-2xl mx-auto mb-10">
+                    <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
                         <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">
                             Interactive Sandbox
                         </span>
-                        <h2 className="text-2xl sm:text-3xl font-black text-white mt-1">
+                        <h2 className="text-xl sm:text-3xl font-black text-white mt-1">
                             Live AI Placement Probability Simulator
                         </h2>
-                        <p className="text-xs sm:text-sm text-slate-300 mt-2">
+                        <p className="text-xs sm:text-sm text-slate-300 mt-2 px-1 sm:px-0">
                             Adjust the student parameters below to see the Random Forest ML classifier calculate placement likelihood in real time.
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10 items-center">
                         {/* Sliders Control Panel */}
-                        <div className="space-y-6 bg-white/5 p-6 rounded-2xl border border-white/10">
+                        <div className="space-y-5 sm:space-y-6 bg-white/5 p-4 sm:p-6 rounded-2xl border border-white/10">
                             {/* CGPA Slider */}
                             <div>
                                 <div className="flex justify-between items-center text-xs font-bold text-white mb-2">
@@ -617,7 +642,7 @@ export const LandingPage: React.FC = () => {
                                     step="0.1"
                                     value={simCgpa}
                                     onChange={(e) => setSimCgpa(parseFloat(e.target.value))}
-                                    className="w-full accent-indigo-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
+                                    className="w-full accent-indigo-500 cursor-pointer h-2.5 sm:h-2 bg-slate-800 rounded-lg py-1"
                                 />
                                 <div className="flex justify-between text-[10px] text-slate-400 mt-1">
                                     <span>5.0</span>
@@ -642,7 +667,7 @@ export const LandingPage: React.FC = () => {
                                     step="1"
                                     value={simAttendance}
                                     onChange={(e) => setSimAttendance(parseInt(e.target.value))}
-                                    className="w-full accent-cyan-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
+                                    className="w-full accent-cyan-500 cursor-pointer h-2.5 sm:h-2 bg-slate-800 rounded-lg py-1"
                                 />
                                 <div className="flex justify-between text-[10px] text-slate-400 mt-1">
                                     <span>50%</span>
@@ -667,7 +692,7 @@ export const LandingPage: React.FC = () => {
                                     step="1"
                                     value={simProjects}
                                     onChange={(e) => setSimProjects(parseInt(e.target.value))}
-                                    className="w-full accent-purple-500 cursor-pointer h-2 bg-slate-800 rounded-lg"
+                                    className="w-full accent-purple-500 cursor-pointer h-2.5 sm:h-2 bg-slate-800 rounded-lg py-1"
                                 />
                                 <div className="flex justify-between text-[10px] text-slate-400 mt-1">
                                     <span>0</span>
@@ -678,12 +703,12 @@ export const LandingPage: React.FC = () => {
                         </div>
 
                         {/* Calculated Output Gauge */}
-                        <div className="bg-slate-900/80 p-8 rounded-2xl border border-white/10 text-center space-y-5">
+                        <div className="bg-slate-900/80 p-6 sm:p-8 rounded-2xl border border-white/10 text-center space-y-4 sm:space-y-5">
                             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
                                 Real-Time Prediction Outcome
                             </span>
 
-                            <div className="relative w-40 h-40 mx-auto flex items-center justify-center">
+                            <div className="relative w-36 h-36 sm:w-40 sm:h-40 mx-auto flex items-center justify-center">
                                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                                     <circle
                                         cx="50"
@@ -708,7 +733,7 @@ export const LandingPage: React.FC = () => {
                                     />
                                 </svg>
                                 <div className="absolute flex flex-col items-center">
-                                    <span className="text-3xl font-black text-white">{calculatedProbability}%</span>
+                                    <span className="text-2xl sm:text-3xl font-black text-white">{calculatedProbability}%</span>
                                     <span className="text-[10px] font-bold text-indigo-400 uppercase">Likelihood</span>
                                 </div>
                             </div>
@@ -719,7 +744,7 @@ export const LandingPage: React.FC = () => {
 
                             <button
                                 onClick={() => handleQuickLogin('student@example.com', 'student123', '/student/placement/prediction', 'student')}
-                                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 transition-all"
+                                className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-bold text-xs shadow-lg shadow-indigo-500/25 transition-all active:scale-98"
                             >
                                 Test With Full ML Model in Portal →
                             </button>
@@ -729,32 +754,32 @@ export const LandingPage: React.FC = () => {
             </section>
 
             {/* 1-CLICK INSTANT DEMO LAUNCHER SECTION */}
-            <section id="demo" className="py-16 bg-gradient-to-r from-indigo-700 via-primary-600 to-purple-800 text-white">
+            <section id="demo" className="py-12 sm:py-16 bg-gradient-to-r from-indigo-700 via-primary-600 to-purple-800 text-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center max-w-2xl mx-auto mb-10">
+                    <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-10">
                         <span className="text-xs font-black uppercase tracking-widest text-indigo-200">
                             Zero-Configuration Evaluator Sandbox
                         </span>
                         <h2 className="text-2xl sm:text-3xl font-black mt-1">
                             Experience Any Portal Instantly in 1-Click
                         </h2>
-                        <p className="text-xs sm:text-sm text-indigo-100 mt-2">
+                        <p className="text-xs sm:text-sm text-indigo-100 mt-2 px-1 sm:px-0">
                             No credentials to remember. Click any role below to authenticate directly into that workspace with full sample data.
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
                         {/* Student Demo */}
                         <div
                             onClick={() => handleQuickLogin('student@example.com', 'student123', '/student/dashboard', 'student')}
-                            className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-5 rounded-2xl border border-white/20 cursor-pointer transition-all hover:scale-[1.02] shadow-lg group relative overflow-hidden"
+                            className="bg-white/10 hover:bg-white/20 active:scale-[0.98] backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/20 cursor-pointer transition-all shadow-lg group relative overflow-hidden"
                         >
                             <div className="flex items-center justify-between mb-3">
                                 <div className="w-10 h-10 rounded-xl bg-blue-500 text-white flex items-center justify-center font-bold shadow-md">
                                     <GraduationCap size={20} />
                                 </div>
-                                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-white/20 text-white group-hover:bg-white group-hover:text-blue-600 transition-all flex items-center gap-1">
-                                    {loadingRole === 'student' ? 'Connecting...' : 'Launch →'}
+                                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-white/20 text-white group-hover:bg-white group-hover:text-blue-600 transition-all flex items-center gap-1">
+                                    {loadingRole === 'student' ? 'Connecting...' : '1-Click Launch →'}
                                 </span>
                             </div>
                             <h3 className="font-bold text-base text-white">Student Portal</h3>
@@ -765,14 +790,14 @@ export const LandingPage: React.FC = () => {
                         {/* Teacher Demo */}
                         <div
                             onClick={() => handleQuickLogin('teacher@example.com', 'teacher123', '/dashboard', 'teacher')}
-                            className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-5 rounded-2xl border border-white/20 cursor-pointer transition-all hover:scale-[1.02] shadow-lg group relative overflow-hidden"
+                            className="bg-white/10 hover:bg-white/20 active:scale-[0.98] backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/20 cursor-pointer transition-all shadow-lg group relative overflow-hidden"
                         >
                             <div className="flex items-center justify-between mb-3">
                                 <div className="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold shadow-md">
                                     <BookOpen size={20} />
                                 </div>
-                                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-white/20 text-white group-hover:bg-white group-hover:text-emerald-600 transition-all flex items-center gap-1">
-                                    {loadingRole === 'teacher' ? 'Connecting...' : 'Launch →'}
+                                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-white/20 text-white group-hover:bg-white group-hover:text-emerald-600 transition-all flex items-center gap-1">
+                                    {loadingRole === 'teacher' ? 'Connecting...' : '1-Click Launch →'}
                                 </span>
                             </div>
                             <h3 className="font-bold text-base text-white">Teacher Portal</h3>
@@ -783,14 +808,14 @@ export const LandingPage: React.FC = () => {
                         {/* Placement Demo */}
                         <div
                             onClick={() => handleQuickLogin('coordinator@example.com', 'coordinator123', '/placement/dashboard', 'placement_coordinator')}
-                            className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-5 rounded-2xl border border-white/20 cursor-pointer transition-all hover:scale-[1.02] shadow-lg group relative overflow-hidden"
+                            className="bg-white/10 hover:bg-white/20 active:scale-[0.98] backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/20 cursor-pointer transition-all shadow-lg group relative overflow-hidden"
                         >
                             <div className="flex items-center justify-between mb-3">
                                 <div className="w-10 h-10 rounded-xl bg-purple-500 text-white flex items-center justify-center font-bold shadow-md">
                                     <Briefcase size={20} />
                                 </div>
-                                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-white/20 text-white group-hover:bg-white group-hover:text-purple-600 transition-all flex items-center gap-1">
-                                    {loadingRole === 'placement_coordinator' ? 'Connecting...' : 'Launch →'}
+                                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-white/20 text-white group-hover:bg-white group-hover:text-purple-600 transition-all flex items-center gap-1">
+                                    {loadingRole === 'placement_coordinator' ? 'Connecting...' : '1-Click Launch →'}
                                 </span>
                             </div>
                             <h3 className="font-bold text-base text-white">Placement Portal</h3>
@@ -801,14 +826,14 @@ export const LandingPage: React.FC = () => {
                         {/* Admin Demo */}
                         <div
                             onClick={() => handleQuickLogin('admin@example.com', 'admin123', '/dashboard', 'admin')}
-                            className="bg-white/10 hover:bg-white/20 backdrop-blur-md p-5 rounded-2xl border border-white/20 cursor-pointer transition-all hover:scale-[1.02] shadow-lg group relative overflow-hidden"
+                            className="bg-white/10 hover:bg-white/20 active:scale-[0.98] backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/20 cursor-pointer transition-all shadow-lg group relative overflow-hidden"
                         >
                             <div className="flex items-center justify-between mb-3">
                                 <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold shadow-md">
                                     <ShieldCheck size={20} />
                                 </div>
-                                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-white/20 text-white group-hover:bg-white group-hover:text-amber-600 transition-all flex items-center gap-1">
-                                    {loadingRole === 'admin' ? 'Connecting...' : 'Launch →'}
+                                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-white/20 text-white group-hover:bg-white group-hover:text-amber-600 transition-all flex items-center gap-1">
+                                    {loadingRole === 'admin' ? 'Connecting...' : '1-Click Launch →'}
                                 </span>
                             </div>
                             <h3 className="font-bold text-base text-white">Admin Portal</h3>
@@ -820,21 +845,21 @@ export const LandingPage: React.FC = () => {
             </section>
 
             {/* TECHNICAL ARCHITECTURE & DEPLOYMENT */}
-            <section id="architecture" className="py-20 max-w-6xl mx-auto px-4 sm:px-6">
-                <div className="text-center max-w-2xl mx-auto mb-14">
+            <section id="architecture" className="py-12 sm:py-20 max-w-6xl mx-auto px-4 sm:px-6">
+                <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-14">
                     <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-cyan-400">
                         Production Architecture
                     </span>
                     <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1">
                         Engineered for High Reliability & Sub-5ms Caching
                     </h2>
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2">
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2 px-1 sm:px-0">
                         Modern cloud infrastructure built on distributed SQL, dual caching, and isolated ML inference.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-sm space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                    <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-xs space-y-3">
                         <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
                             <Server size={20} />
                         </div>
@@ -844,7 +869,7 @@ export const LandingPage: React.FC = () => {
                         </p>
                     </div>
 
-                    <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-sm space-y-3">
+                    <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-xs space-y-3">
                         <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-bold">
                             <Zap size={20} />
                         </div>
@@ -854,7 +879,7 @@ export const LandingPage: React.FC = () => {
                         </p>
                     </div>
 
-                    <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-sm space-y-3">
+                    <div className="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-xs space-y-3">
                         <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
                             <Brain size={20} />
                         </div>
@@ -867,8 +892,8 @@ export const LandingPage: React.FC = () => {
             </section>
 
             {/* FREQUENTLY ASKED QUESTIONS (Accordion) */}
-            <section id="faq" className="py-16 max-w-4xl mx-auto px-4 sm:px-6">
-                <div className="text-center mb-10">
+            <section id="faq" className="py-12 sm:py-16 max-w-4xl mx-auto px-4 sm:px-6">
+                <div className="text-center mb-8 sm:mb-10">
                     <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-cyan-400">
                         Got Questions?
                     </span>
@@ -881,11 +906,11 @@ export const LandingPage: React.FC = () => {
                     {faqs.map((faq, i) => (
                         <div
                             key={i}
-                            className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 overflow-hidden shadow-sm transition-all"
+                            className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 overflow-hidden shadow-xs transition-all"
                         >
                             <button
                                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                                className="w-full px-6 py-4 text-left flex items-center justify-between gap-4 font-bold text-xs sm:text-sm text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
+                                className="w-full px-4 sm:px-6 py-3.5 sm:py-4 text-left flex items-center justify-between gap-3 font-bold text-xs sm:text-sm text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-cyan-400 transition-colors"
                             >
                                 <span>{faq.q}</span>
                                 <ChevronDown
@@ -901,7 +926,7 @@ export const LandingPage: React.FC = () => {
                                         exit={{ height: 0, opacity: 0 }}
                                         transition={{ duration: 0.2 }}
                                     >
-                                        <div className="px-6 pb-4 pt-1 text-xs text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-white/5">
+                                        <div className="px-4 sm:px-6 pb-4 pt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-white/5">
                                             {faq.a}
                                         </div>
                                     </motion.div>
@@ -913,10 +938,10 @@ export const LandingPage: React.FC = () => {
             </section>
 
             {/* MODERN ENTERPRISE FOOTER */}
-            <footer className="border-t border-slate-200 dark:border-white/10 py-12 bg-white dark:bg-slate-950">
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <footer className="border-t border-slate-200 dark:border-white/10 py-8 sm:py-12 bg-white dark:bg-slate-950">
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-center sm:text-left">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shadow-md">
+                        <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shadow-md shrink-0">
                             <Sparkles size={16} />
                         </div>
                         <div>
@@ -930,7 +955,11 @@ export const LandingPage: React.FC = () => {
                         <span>All Systems Operational • Sub-4ms Caching Active</span>
                     </div>
 
-                    <div className="flex items-center gap-5 text-xs font-bold text-slate-600 dark:text-slate-400">
+                    <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-bold text-slate-600 dark:text-slate-400">
+                        <button onClick={() => navigate('/guide')} className="hover:text-indigo-600 dark:hover:text-cyan-400 flex items-center gap-1">
+                            <BookOpen size={13} />
+                            <span>User Guide</span>
+                        </button>
                         <button onClick={() => navigate('/login')} className="hover:text-indigo-600 dark:hover:text-cyan-400">Sign In</button>
                         <button onClick={() => navigate('/login?mode=register')} className="hover:text-indigo-600 dark:hover:text-cyan-400">New Registration</button>
                         <a href="https://github.com/KartikValhe/deploy" target="_blank" rel="noreferrer" className="hover:text-indigo-600 dark:hover:text-cyan-400">GitHub Repo</a>
