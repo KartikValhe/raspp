@@ -22,6 +22,8 @@ const resolveBaseUrl = (): string => {
 
 const api = axios.create({
     baseURL: resolveBaseUrl(),
+    // Fail fast on slow mobile/flaky connections instead of hanging forever
+    timeout: 15000,
 });
 
 api.interceptors.request.use((config) => {
@@ -31,5 +33,31 @@ api.interceptors.request.use((config) => {
     }
     return config;
 });
+
+// Auto-clear stale tokens on 401 to prevent stuck loading states
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            const url = error.config?.url || '';
+            // Only clear token for non-login endpoints (login 401 = wrong password)
+            if (!url.includes('/auth/login')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user_role');
+                localStorage.removeItem('can_modify');
+            }
+        } else if (error.response?.status === 403) {
+            const detail = error.response?.data?.detail;
+            if (typeof detail === 'string' && (detail.includes('Demo') || detail.includes('View-Only') || detail.includes('security'))) {
+                if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('raspp:demo-blocked', { 
+                        detail: { message: detail } 
+                    }));
+                }
+            }
+        }
+        return Promise.reject(error);
+    }
+);
 
 export default api;

@@ -39,7 +39,8 @@ def get_current_user(
             id=cached_user["id"],
             email=cached_user["email"],
             role=cached_user["role"],
-            is_active=cached_user["is_active"]
+            is_active=cached_user["is_active"],
+            can_modify=cached_user.get("can_modify", True),
         )
         return user
 
@@ -52,7 +53,8 @@ def get_current_user(
         "id": user.id,
         "email": user.email,
         "role": user.role,
-        "is_active": user.is_active
+        "is_active": user.is_active,
+        "can_modify": bool(getattr(user, "can_modify", True) if getattr(user, "can_modify", None) is not None else True),
     }, ttl=600)
     return user
 
@@ -63,11 +65,32 @@ def get_current_active_user(
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
+def check_write_permission(
+    current_user: models.User = Depends(get_current_active_user),
+) -> models.User:
+    """Blocks any user in Demo/View-Only mode (can_modify=False) from creating, updating, or deleting."""
+    if not getattr(current_user, "can_modify", True):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Demo / View-Only Mode: Modification permissions are restricted. You cannot create, update, or delete records in demo mode.",
+        )
+    return current_user
+
 def get_current_admin(
     current_user: models.User = Depends(get_current_active_user),
     ) -> models.User:
-    if current_user.role != "admin":
+    if current_user.role not in ("admin", "superadmin"):
         raise HTTPException(
             status_code=401, detail="The user doesn't have enough privileges"
+        )
+    return current_user
+
+def get_current_superadmin(
+    current_user: models.User = Depends(get_current_active_user),
+) -> models.User:
+    """Only superadmin role is allowed."""
+    if current_user.role != "superadmin":
+        raise HTTPException(
+            status_code=403, detail="Superadmin privileges required"
         )
     return current_user

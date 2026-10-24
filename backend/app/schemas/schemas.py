@@ -8,10 +8,12 @@ class Token(BaseModel):
     token_type: str
     role: Optional[str] = None
     email: Optional[str] = None
+    can_modify: Optional[bool] = True
 
 class TokenData(BaseModel):
     email: Optional[str] = None
     role: Optional[str] = None
+    can_modify: Optional[bool] = True
 
 # User Schemas
 class UserBase(BaseModel):
@@ -24,6 +26,7 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
     is_active: bool
+    can_modify: bool = True
     
     class Config:
         from_attributes = True

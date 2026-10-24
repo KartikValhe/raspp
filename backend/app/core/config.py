@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     GEMINI_API_KEY: str = ""
+    SUPERADMIN_SECRET_TOKEN: str = "raspp-superadmin-secret-change-me"  # Change this in .env!
     CORS_ORIGINS: Optional[str] = None
 
     # Redis Configuration

@@ -16,9 +16,10 @@ def login_access_token(
     db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Any:
     """
-    OAuth2 compatible token login, get an access token for future requests.
+    OAuth2 compatible token login — returns access token, role, and email.
+    Full user data is included in the response so the frontend does not need
+    a separate /users/me call before navigating (eliminates one round-trip).
     """
-    # Use ilike for case-insensitive comparison and strip whitespace
     clean_email = form_data.username.strip()
     user = db.query(models.User).filter(models.User.email.ilike(clean_email)).first()
     if not user or not security.verify_password(form_data.password, user.hashed_password):
@@ -27,17 +28,29 @@ def login_access_token(
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    elif not user.is_active:
+    if not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
-        
+
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    # Include full_name so the frontend doesn't need a separate /users/me call
+    full_name = None
+    if hasattr(user, 'student_profile') and user.student_profile:
+        full_name = user.student_profile.full_name
+    elif hasattr(user, 'teacher_profile') and user.teacher_profile:
+        full_name = user.teacher_profile.full_name
+
+    can_modify = bool(getattr(user, 'can_modify', True) if getattr(user, 'can_modify', None) is not None else True)
+
     return {
         "access_token": security.create_access_token(
-            data={"sub": user.email, "role": user.role}, expires_delta=access_token_expires
+            data={"sub": user.email, "role": user.role, "can_modify": can_modify},
+            expires_delta=access_token_expires
         ),
         "token_type": "bearer",
         "role": user.role,
         "email": user.email,
+        "full_name": full_name,
+        "can_modify": can_modify,
     }
 
 @router.get("/branches", response_model=List[schemas.Branch])

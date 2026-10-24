@@ -395,4 +395,47 @@
   .scrollbar-none::-webkit-scrollbar {
     display: none;
   }
+
+  /* ── Mobile touch performance ─────────────────────────────────────────
+     touch-action: manipulation removes the 300ms tap delay on mobile browsers
+     without needing a JS library. Applied globally to all interactive elements.
+  ─────────────────────────────────────────────────────────────────────── */
+  button,
+  a,
+  [role="button"],
+  input[type="submit"],
+  input[type="button"],
+  label {
+    touch-action: manipulation;
+  }
+
+  /* Minimum 44×44px touch targets for WCAG 2.5.5 / mobile usability */
+  button:not(.no-min-touch),
+  [role="button"]:not(.no-min-touch) {
+    min-height: 44px;
+  }
+
+  /* ── Respect user motion preferences (accessibility + low-end device perf) ──
+     Disables all CSS animations/transitions for users who have enabled
+     "Reduce Motion" on their OS — critical for battery-constrained mobile.
+  ─────────────────────────────────────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    .animate-blob,
+    .animate-spin,
+    .animate-pulse,
+    .animate-bounce,
+    .animate-ping,
+    .animate-pulse-soft {
+      animation: none !important;
+    }
+  }
 }

@@ -10,6 +10,7 @@ class User(Base):
     hashed_password = Column(String(255))
     role = Column(String(50))  # admin, teacher, student, placement_coordinator
     is_active = Column(Boolean, default=True)
+    can_modify = Column(Boolean, default=True)  # True = Full write access, False = Demo / View-only (can login and browse, cannot insert/update/delete)
 
     student_profile = relationship("Student", back_populates="user", uselist=False)
     teacher_profile = relationship("Teacher", back_populates="user", uselist=False)

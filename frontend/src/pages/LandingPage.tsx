@@ -34,7 +34,8 @@ export const LandingPage: React.FC = () => {
             });
 
             const userRole = role || res.data.role;
-            login(res.data.access_token, userRole);
+            const canModify = res.data.can_modify ?? true;
+            login(res.data.access_token, userRole, canModify);
             navigate(targetPath);
         } catch (e) {
             console.error('Quick login error:', e);

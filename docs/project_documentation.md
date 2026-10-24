@@ -1,3 +1,4 @@
+
 # Academic Project Documentation
 
 ## 1. Project Folder Structure

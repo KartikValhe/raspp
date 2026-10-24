@@ -137,7 +137,8 @@ export const LoginPage: React.FC = () => {
             });
 
             const role = response.data.role;
-            login(response.data.access_token, role);
+            const canModify = response.data.can_modify ?? true;
+            login(response.data.access_token, role, canModify);
 
             if (targetPath) {
                 navigate(targetPath);
@@ -150,7 +151,11 @@ export const LoginPage: React.FC = () => {
             }
         } catch (err: any) {
             console.error(err);
-            setError(err.response?.data?.detail || 'Invalid credentials. Please verify your email and password.');
+            if (!err.response) {
+                setError('Cannot connect to backend server. Please verify that the backend is running at http://127.0.0.1:8000.');
+            } else {
+                setError(err.response?.data?.detail || 'Invalid credentials. Please verify your email and password.');
+            }
         } finally {
             setLoading(false);
         }
@@ -275,11 +280,18 @@ export const LoginPage: React.FC = () => {
                             const Icon = portal.icon;
                             const isSelected = selectedPortal.id === portal.id;
                             return (
-                                <button
+                                <div
                                     key={portal.id}
-                                    type="button"
+                                    role="button"
+                                    tabIndex={0}
                                     onClick={() => handleSelectPortal(portal)}
-                                    className={`relative p-3 rounded-2xl border text-left transition-all ${
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            e.preventDefault();
+                                            handleSelectPortal(portal);
+                                        }
+                                    }}
+                                    className={`relative p-3 rounded-2xl border text-left transition-all cursor-pointer select-none ${
                                         isSelected
                                             ? `${portal.activeBorder} ${portal.activeBg} shadow-md`
                                             : 'border-slate-200 dark:border-slate-700/80 bg-slate-50/70 dark:bg-slate-800/40 hover:bg-slate-100/70 dark:hover:bg-slate-800/70'
@@ -312,7 +324,7 @@ export const LoginPage: React.FC = () => {
                                             <ChevronRight size={12} />
                                         </button>
                                     </div>
-                                </button>
+                                </div>
                             );
                         })}
                     </div>

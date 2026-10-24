@@ -3,7 +3,7 @@ import api from '../services/api';
 
 interface AuthContextType {
     user: any;
-    login: (token: string, explicitRole?: string) => void;
+    login: (token: string, explicitRole?: string, explicitCanModify?: boolean) => void;
     logout: () => void;
     isAuthenticated: boolean;
 }
@@ -28,11 +28,13 @@ const parseJwt = (token: string) => {
 const getInitialUser = () => {
     const token = localStorage.getItem('token');
     const storedRole = localStorage.getItem('user_role');
+    const storedCanModify = localStorage.getItem('can_modify');
     if (!token) return null;
     const decoded = parseJwt(token);
     return {
         email: decoded?.sub || '',
         role: storedRole || decoded?.role || 'student',
+        can_modify: storedCanModify !== null ? storedCanModify === 'true' : (decoded?.can_modify ?? true),
     };
 };
 
@@ -48,50 +50,66 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Validate token or fetch user profile
             api.get('/api/v1/users/me')
                 .then(response => {
-                    setUser(response.data);
+                    const serverCanModify = response.data.can_modify !== undefined ? response.data.can_modify : true;
+                    setUser({
+                        ...response.data,
+                        can_modify: serverCanModify,
+                    });
                     if (response.data.role) {
                         localStorage.setItem('user_role', response.data.role);
                     }
+                    localStorage.setItem('can_modify', String(serverCanModify));
                     setIsAuthenticated(true);
                 })
                 .catch((err) => {
-                    if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+                    // Only log out on 401 Unauthorized (expired/invalid token), NOT on 403 Forbidden (view-only demo mode)
+                    if (err.response && err.response.status === 401) {
                         logout();
                     }
                 });
         }
     }, []);
 
-    const login = (token: string, explicitRole?: string) => {
+    const login = (token: string, explicitRole?: string, explicitCanModify?: boolean) => {
         localStorage.setItem('token', token);
         setIsAuthenticated(true);
 
         const decoded = parseJwt(token);
         const resolvedRole = explicitRole || decoded?.role || 'student';
+        const resolvedCanModify = explicitCanModify !== undefined ? explicitCanModify : (decoded?.can_modify ?? true);
         localStorage.setItem('user_role', resolvedRole);
+        localStorage.setItem('can_modify', String(resolvedCanModify));
 
+        // Set user immediately from JWT / response — no extra round-trip needed
         const immediateUser = {
             email: decoded?.sub || '',
             role: resolvedRole,
+            can_modify: resolvedCanModify,
         };
         setUser(immediateUser);
 
-        // Fetch full profile from backend to enrich
+        // Background-fetch full profile to enrich additional fields (non-blocking)
         api.get('/api/v1/users/me')
             .then(res => {
-                setUser(res.data);
+                const serverCanModify = res.data.can_modify !== undefined ? res.data.can_modify : resolvedCanModify;
+                setUser({
+                    ...res.data,
+                    can_modify: serverCanModify,
+                });
                 if (res.data.role) {
                     localStorage.setItem('user_role', res.data.role);
                 }
+                localStorage.setItem('can_modify', String(serverCanModify));
             })
-            .catch(err => {
-                console.error("Profile fetch error:", err);
+            .catch(() => {
+                // Non-fatal — the immediateUser above is sufficient for routing
             });
     };
 
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user_role');
+        localStorage.removeItem('can_modify');
         setUser(null);
         setIsAuthenticated(false);
     };

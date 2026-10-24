@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { DemoModeBanner } from '../components/DemoModeBanner';
+
 export const StudentLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { user } = useAuth();
@@ -88,6 +90,9 @@ export const StudentLayout: React.FC<{ children: React.ReactNode }> = ({ childre
                         </div>
                     </div>
                 </header>
+
+                {/* Demo Mode Notification & Action Restriction Alert */}
+                <DemoModeBanner />
 
                 {/* Background ambient effects */}
                 <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">

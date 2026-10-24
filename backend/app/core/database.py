@@ -31,10 +31,11 @@ if ssl_ca_path:
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, 
-    pool_pre_ping=True,
+    pool_pre_ping=True,          # Detect stale connections before using them
     pool_size=10,
     max_overflow=20,
-    pool_recycle=3600,
+    pool_recycle=1800,           # 30 min: prevents stale TiDB connections (was 1hr)
+    pool_timeout=10,             # Fail fast instead of hanging for 30s (default)
     connect_args=connect_args
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

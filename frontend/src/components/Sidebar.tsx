@@ -169,8 +169,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
                         {initial}
                     </div>
                     <div className="flex-1 overflow-hidden">
-                        <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 truncate">{userName}</p>
-                        <p className="text-xs text-slate-400 dark:text-slate-500 capitalize">{user?.role}</p>
+                        <div className="flex items-center gap-1.5">
+                            <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 truncate">{userName}</p>
+                            {user?.can_modify === false && (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 shrink-0">
+                                    Demo
+                                </span>
+                            )}
+                        </div>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 capitalize">
+                            {user?.role} {user?.can_modify === false ? '• View Only' : ''}
+                        </p>
                     </div>
                 </div>
 

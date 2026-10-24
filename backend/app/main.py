@@ -24,8 +24,11 @@ from app.api.api_v1.api import api_router
 origins = [
     "http://localhost:5173",
     "http://localhost:5174",
+    "http://localhost:5175",
     "http://localhost:3000",
     "http://127.0.0.1:5173",
+    "http://127.0.0.1:5174",
+    "http://127.0.0.1:5175",
     "http://127.0.0.1:3000",
     "http://localhost",
     "http://127.0.0.1",
@@ -40,11 +43,51 @@ if settings.CORS_ORIGINS:
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_origin_regex=r"^https:\/\/.*\.vercel\.app$",
+    allow_origin_regex=r"^(https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?|https:\/\/.*\.vercel\.app)$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+from fastapi import Request
+from starlette.responses import JSONResponse
+from jose import jwt, JWTError
+
+SAFE_WRITE_PATHS = {
+    "/api/v1/auth/login",
+    "/api/v1/superadmin/login",
+    "/api/v1/chatbot/message",
+    "/api/v1/ml/predict",
+    "/api/v1/ml/bulk-predict",
+    "/api/v1/advisor",
+}
+
+@app.middleware("http")
+async def demo_mode_write_guard(request: Request, call_next):
+    """
+    Global protection: Blocks create, update, delete operations for users
+    in Demo / View-Only mode (can_modify=False), while allowing full viewing access.
+    """
+    if request.method in ("POST", "PUT", "PATCH", "DELETE"):
+        path = request.url.path
+        if not any(path.startswith(p) for p in SAFE_WRITE_PATHS):
+            auth_header = request.headers.get("Authorization")
+            if auth_header and auth_header.startswith("Bearer "):
+                token = auth_header.split(" ", 1)[1]
+                try:
+                    payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+                    can_modify = payload.get("can_modify")
+                    if can_modify is False:
+                        return JSONResponse(
+                            status_code=403,
+                            content={
+                                "detail": "Demo / View-Only Mode: Modification permissions are restricted. You cannot create, update, or delete records in demo mode."
+                            }
+                        )
+                except JWTError:
+                    pass
+
+    return await call_next(request)
 
 app.include_router(api_router, prefix="/api/v1")
 

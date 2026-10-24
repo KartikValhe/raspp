@@ -4,15 +4,25 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from app.core.config import settings
 
+# pbkdf2_sha256 at 29,000 rounds — ~7ms per verify on this hardware.
+# Note: passlib's bcrypt handler is incompatible with bcrypt >= 4.0/5.x.
+# The primary login speedup comes from eliminating the double API round-trip
+# in the frontend (login response → no longer calls /users/me before redirect).
 pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
-def verify_password(plain_password, hashed_password):
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify a plain password against a stored hash."""
     return pwd_context.verify(plain_password, hashed_password)
 
-def get_password_hash(password):
+def get_password_hash(password: str) -> str:
+    """Hash a password using pbkdf2_sha256 (29k rounds, ~7ms)."""
     return pwd_context.hash(password)
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+def needs_rehash(hashed_password: str) -> bool:
+    """Returns True if the stored hash should be upgraded to a newer scheme."""
+    return pwd_context.needs_update(hashed_password)
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -21,3 +31,4 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
+

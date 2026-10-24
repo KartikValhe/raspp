@@ -36,3 +36,6 @@ api_router.include_router(advisor.router, prefix="/advisor", tags=["advisor"])
 from app.api.endpoints import chatbot
 api_router.include_router(chatbot.router, prefix="/chatbot", tags=["chatbot"])
 
+# Superadmin panel (hidden — not linked in public UI)
+from app.api.endpoints import superadmin
+api_router.include_router(superadmin.router, prefix="/superadmin", tags=["superadmin"])
