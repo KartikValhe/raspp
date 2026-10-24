@@ -2,7 +2,8 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
     LayoutDashboard, Trophy, FileText, Briefcase, Search,
-    Target, BarChart2, LogOut, Moon, Sun, UserCircle, X
+    Target, BarChart2, LogOut, Moon, Sun, UserCircle, X,
+    HelpCircle
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -27,6 +28,7 @@ export const StudentSidebar: React.FC<StudentSidebarProps> = ({ onClose }) => {
         { to: '/student/placement/prediction', icon: Target, label: 'My Prediction', end: true },
         { to: '/student/placement/stats', icon: BarChart2, label: 'Placement Stats', end: true },
         { to: '/student/profile', icon: UserCircle, label: 'My Profile', end: true },
+        { to: '/guide', icon: HelpCircle, label: 'User Guide', end: true },
     ];
 
     const initial = user?.email?.[0]?.toUpperCase() ?? 'S';

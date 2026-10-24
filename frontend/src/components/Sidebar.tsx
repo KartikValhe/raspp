@@ -3,7 +3,8 @@ import { NavLink } from 'react-router-dom';
 import {
     LayoutDashboard, Users, GraduationCap, LogOut, BookOpen, Clock,
     TrendingUp, Award, Edit, UserCircle, Trophy, Moon, Sun,
-    Brain, Upload, Briefcase, FileText, Target, BarChart2, Search, X
+    Brain, Upload, Briefcase, FileText, Target, BarChart2, Search, X,
+    HelpCircle
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -74,6 +75,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
             { to: '/placement/jobs', icon: Briefcase, label: 'Job Management', end: true },
             { to: '/placement/records', icon: FileText, label: 'Placement Records', end: true },
         ] : []),
+
+        // User Guide accessible on all portals
+        { to: '/guide', icon: HelpCircle, label: 'User Guide', end: true },
     ];
 
     const initial = user?.email?.[0]?.toUpperCase() ?? 'U';

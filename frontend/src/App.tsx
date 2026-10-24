@@ -56,6 +56,9 @@ const PlacementRecords     = lazy(() => import('./pages/placement/PlacementRecor
 const SuperAdminLogin     = lazy(() => import('./pages/superadmin/SuperAdminLogin'));
 const SuperAdminDashboard = lazy(() => import('./pages/superadmin/SuperAdminDashboard'));
 
+// User Guide Page (accessible across all portals)
+const UserGuidePage       = lazy(() => import('./pages/UserGuidePage').then(m => ({ default: m.UserGuidePage })));
+
 // Minimal route-transition loading indicator (no heavy spinner component)
 const PageLoader = () => (
     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-900">
@@ -66,15 +69,16 @@ const PageLoader = () => (
     </div>
 );
 
-const ProtectedRoute: React.FC<{ children: React.ReactNode; layout?: 'standard' | 'student' }> = ({ children, layout = 'standard' }) => {
+const ProtectedRoute: React.FC<{ children: React.ReactNode; layout?: 'standard' | 'student' | 'auto' }> = ({ children, layout = 'auto' }) => {
   const { isAuthenticated, user } = useAuth();
 
   if (!isAuthenticated) return <Navigate to="/login" />;
 
-  // Simple role-based redirect for root path if needed, 
-  // but for now we rely on explicit navigation or sidebar links.
+  const resolvedLayout = layout === 'auto'
+    ? (user?.role === 'student' ? 'student' : 'standard')
+    : layout;
 
-  if (layout === 'student') {
+  if (resolvedLayout === 'student') {
     return <StudentLayout>{children}</StudentLayout>;
   }
 
@@ -100,6 +104,16 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* System-wide User Guide */}
+            <Route
+              path="/guide"
+              element={
+                <ProtectedRoute layout="auto">
+                  <UserGuidePage />
                 </ProtectedRoute>
               }
             />

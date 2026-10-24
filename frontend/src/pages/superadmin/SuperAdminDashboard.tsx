@@ -561,6 +561,20 @@ export default function SuperAdminDashboard() {
             <div style={{ fontSize: '12px', color: '#c4b5fd', fontWeight: 600, wordBreak: 'break-all' }}>{saEmail}</div>
             <div style={{ fontSize: '10px', color: '#7c3aed', fontWeight: 700, marginTop: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>⬡ Superadmin</div>
           </div>
+
+          <button
+            onClick={() => window.open('/guide', '_blank')}
+            style={{
+              width: '100%', padding: '9px',
+              background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.25)',
+              borderRadius: '8px', color: '#c4b5fd', fontWeight: 600, fontSize: '12px',
+              cursor: 'pointer', transition: 'all 0.15s', marginBottom: '8px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+            }}
+          >
+            <span>📖</span>
+            <span>Open User Guide</span>
+          </button>
           <button
             onClick={logout}
             style={{
