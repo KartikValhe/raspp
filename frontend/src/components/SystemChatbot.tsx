@@ -226,7 +226,7 @@ Ask any question, or tap a suggested topic below to get started!`,
     };
 
     return (
-        <aside aria-label="System AI Assistant Chatbot" className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
+        <aside aria-label="System AI Assistant Chatbot" className="fixed bottom-3 right-3 sm:bottom-4 sm:right-4 z-40">
             {/* Expanded Chatbot Modal */}
             <AnimatePresence>
                 {isOpen && (
@@ -450,27 +450,28 @@ Ask any question, or tap a suggested topic below to get started!`,
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsOpen(!isOpen)}
-                className="relative group flex items-center gap-2.5 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-full
+                className="relative group flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full
                            bg-gradient-to-r from-primary-600 via-indigo-600 to-accent-600
-                           text-white font-semibold text-xs sm:text-sm shadow-xl shadow-primary-600/35 hover:shadow-primary-600/50
+                           text-white font-semibold text-xs shadow-md shadow-primary-600/30 hover:shadow-primary-600/45
                            border border-white/20 transition-all duration-200 cursor-pointer"
                 aria-label="Toggle Gen AI System Assistant"
+                title="Ask AI Assistant"
             >
                 {/* Glowing ring animation */}
-                <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 opacity-40 blur group-hover:opacity-75 transition duration-300 -z-10" />
+                <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 opacity-30 blur group-hover:opacity-60 transition duration-300 -z-10" />
 
                 {isOpen ? (
-                    <X size={18} className="text-white" />
+                    <X size={15} className="text-white" />
                 ) : (
                     <>
-                        <div className="relative">
-                            <Sparkles size={17} className="text-amber-300 animate-pulse" />
+                        <div className="relative flex items-center justify-center">
+                            <Sparkles size={14} className="text-amber-300 animate-pulse" />
                             {hasUnread && (
-                                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full ring-2 ring-white" />
+                                <span className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white" />
                             )}
                         </div>
-                        <span className="tracking-wide font-medium">
-                            Ask AI Assistant
+                        <span className="tracking-tight font-medium text-[11px] sm:text-xs">
+                            Ask AI
                         </span>
                     </>
                 )}

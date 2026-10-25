@@ -12,13 +12,9 @@ cd /d "%~dp0"
 if not exist "backend\venv" (
     echo [*] Creating Python virtual environment in backend\venv...
     python -m venv backend\venv
+    echo [*] Installing backend dependencies into virtual environment...
+    call backend\venv\Scripts\pip.exe install -r backend\requirements.txt --quiet
 )
-
-echo [*] Activating virtual environment...
-call backend\venv\Scripts\activate.bat
-
-echo [*] Installing backend dependencies...
-pip install -r backend\requirements.txt --quiet
 
 :: 2. Frontend dependencies
 if not exist "frontend\node_modules" (
