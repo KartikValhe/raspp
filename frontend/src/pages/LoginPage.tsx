@@ -152,7 +152,13 @@ export const LoginPage: React.FC = () => {
         } catch (err: any) {
             console.error(err);
             if (!err.response) {
-                setError('Cannot connect to backend server. Please verify that the backend is running at http://127.0.0.1:8000.');
+                const isLocal = typeof window !== 'undefined' && 
+                    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+                if (isLocal) {
+                    setError('Cannot connect to local backend. Please make sure the backend is running at http://127.0.0.1:8000 (run .\\start.bat in PowerShell).');
+                } else {
+                    setError('Cannot connect to cloud backend. The free cloud server (Render) may be waking up from cold sleep (takes ~45-60s on first visit). Please wait a few seconds and tap Launch again.');
+                }
             } else {
                 setError(err.response?.data?.detail || 'Invalid credentials. Please verify your email and password.');
             }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const resolveBaseUrl = (): string => {
+export const resolveBaseUrl = (): string => {
     if (import.meta.env.VITE_API_URL) {
         return import.meta.env.VITE_API_URL;
     }
@@ -20,10 +20,13 @@ const resolveBaseUrl = (): string => {
     return 'http://127.0.0.1:8000';
 };
 
+const isLocalhost = typeof window !== 'undefined' && 
+    (window.location?.hostname === 'localhost' || window.location?.hostname === '127.0.0.1');
+
 const api = axios.create({
     baseURL: resolveBaseUrl(),
-    // Fail fast on slow mobile/flaky connections instead of hanging forever
-    timeout: 15000,
+    // Allow up to 60s for Render free-tier cold starts, 20s for local
+    timeout: isLocalhost ? 20000 : 60000,
 });
 
 api.interceptors.request.use((config) => {

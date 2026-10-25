@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { resolveBaseUrl } from '../../services/api';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface UserSummary {
@@ -26,19 +27,13 @@ interface SystemStats {
 interface Branch { id: number; name: string; code: string; }
 
 // ── API helper (uses sa_token, NOT regular token) ────────────────────────────
-const getBaseURL = () => {
-  if (typeof window !== 'undefined') {
-    const protocol = window.location.protocol;
-    const hostname = window.location.hostname;
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-      return 'http://localhost:8000';
-    }
-    return `${protocol}//${hostname}`;
-  }
-  return 'http://localhost:8000';
-};
+const isLocalhost = typeof window !== 'undefined' && 
+    (window.location?.hostname === 'localhost' || window.location?.hostname === '127.0.0.1');
 
-const saApi = axios.create({ baseURL: getBaseURL() });
+const saApi = axios.create({ 
+  baseURL: resolveBaseUrl(),
+  timeout: isLocalhost ? 20000 : 60000,
+});
 saApi.interceptors.request.use(config => {
   const token = localStorage.getItem('sa_token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
