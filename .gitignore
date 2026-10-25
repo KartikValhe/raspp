@@ -64,6 +64,4 @@ frontend/build/
 frontend/.next/
 frontend/.cache/
 
-docs/*
-!docs/*.md
-!docs/*.txt
+docs/
