@@ -420,7 +420,6 @@
      "Reduce Motion" on their OS — critical for battery-constrained mobile.
   ─────────────────────────────────────────────────────────────────────── */
   @media (prefers-reduced-motion: reduce) {
-
     *,
     *::before,
     *::after {

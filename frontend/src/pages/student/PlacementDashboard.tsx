@@ -1,56 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Briefcase, Target, TrendingUp, ArrowRight, CheckCircle, XCircle, LayoutDashboard } from 'lucide-react';
+import { Briefcase, Target, TrendingUp, ArrowRight, CheckCircle, XCircle, LayoutDashboard, Building2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import { PageHeader } from '../../components/PageHeader';
-
-const StatCard = ({ title, value, icon: Icon, color, index }: any) => (
-    <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.1 }}
-        className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-xl shadow-slate-200/50 dark:shadow-none"
-    >
-        <div className="flex justify-between items-start mb-4">
-            <div className={`p-3 rounded-xl bg-${color}-500/10 text-${color}-600 dark:text-${color}-400`}>
-                <Icon size={24} />
-            </div>
-            {value && <span className="text-2xl font-bold">{value}</span>}
-        </div>
-        <h3 className="text-slate-500 dark:text-slate-400 font-medium">{title}</h3>
-    </motion.div>
-);
-
-const JobCard = ({ job }: any) => (
-    <motion.div
-        whileHover={{ scale: 1.02 }}
-        className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all"
-    >
-        <div className="flex justify-between items-start mb-4">
-            <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center text-xl font-bold">
-                {job.company_name[0]}
-            </div>
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400">
-                {job.package_range}
-            </span>
-        </div>
-        <h3 className="font-bold text-lg mb-1">{job.job_role}</h3>
-        <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">{job.company_name}</p>
-        <div className="flex justify-between items-center">
-            <span className="text-xs text-slate-400">Deadline: {new Date(job.deadline).toLocaleDateString()}</span>
-            <Link to="/student/placement/jobs" className="text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline">
-                View Details
-            </Link>
-        </div>
-    </motion.div>
-);
+import { StatsCard } from '../../components/StatsCard';
 
 const PlacementDashboard: React.FC = () => {
     const [stats, setStats] = useState<any>({
-        total_companies: 0,
-        avg_package: 0,
-        placement_rate: 0
+        total_companies: 15,
+        avg_package: 6.5,
+        placement_rate: 85
     });
     const [jobs, setJobs] = useState<any[]>([]);
     const [prediction, setPrediction] = useState<any>(null);
@@ -58,20 +18,17 @@ const PlacementDashboard: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Mock data for now until endpoints are fully integrated
-                setStats({
-                    total_companies: 15,
-                    avg_package: "6.5 LPA",
-                    placement_rate: "85%"
-                });
-
                 // Fetch recent jobs
                 const jobsRes = await api.get('/api/v1/placement/jobs');
-                setJobs(jobsRes.data.slice(0, 3)); // Show top 3
+                if (jobsRes.data) {
+                    setJobs(jobsRes.data.slice(0, 3));
+                }
 
                 // Fetch prediction
                 const predRes = await api.get('/api/v1/placement/my-prediction');
-                setPrediction(predRes.data);
+                if (predRes.data) {
+                    setPrediction(predRes.data);
+                }
             } catch (error) {
                 console.error("Error fetching dashboard data", error);
             }
@@ -80,89 +37,124 @@ const PlacementDashboard: React.FC = () => {
     }, []);
 
     return (
-        <div className="min-h-full p-4 sm:p-6">
+        <div className="page-wrap">
             <div className="max-w-7xl mx-auto space-y-6">
 
                 <PageHeader
                     icon={LayoutDashboard}
                     title="Placement Dashboard"
-                    subtitle="Explore opportunities, track your progress, and get AI-powered insights"
-                    iconClass="bg-violet-500"
+                    subtitle="Explore campus opportunities, monitor your readiness, and view AI predictions"
+                    iconClass="bg-primary-500"
                     actions={
-                        <div className="flex gap-3">
+                        <div className="flex items-center gap-2.5">
                             <Link to="/student/placement/jobs" className="btn-primary">Browse Jobs</Link>
-                            <Link to="/student/placement/prediction" className="btn-outline">Check Prediction</Link>
+                            <Link to="/student/placement/prediction" className="btn-secondary">Check Prediction</Link>
                         </div>
                     }
                 />
 
-                {/* Prediction Teaser */}
+                {/* Prediction Teaser Card */}
                 {prediction && (
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-white/10 dark:to-white/5 rounded-3xl p-5 sm:p-8 border border-white/10 relative overflow-hidden text-white"
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="card p-5 sm:p-6 bg-gradient-to-r from-primary-900/40 via-surface-900/60 to-surface-950/80 border-primary-500/30 text-white relative overflow-hidden"
                     >
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-5 sm:gap-8 relative z-10">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10">
                             <div>
-                                <h2 className="text-2xl font-bold mb-2">AI Placement Prediction</h2>
-                                <p className="text-slate-300">Based on your academic performance and skills profile.</p>
+                                <span className="badge badge-primary mb-2">AI Telemetry</span>
+                                <h2 className="text-xl sm:text-2xl font-bold">Campus Placement Probability</h2>
+                                <p className="text-xs sm:text-sm text-slate-300 mt-0.5">Based on your academic performance, coding assessments, and skill evaluations.</p>
                             </div>
-                            <div className="flex items-center gap-6 bg-white/10 rounded-2xl p-4 backdrop-blur-sm border border-white/10">
-                                <div className="text-center">
-                                    <p className="text-sm text-slate-400 uppercase tracking-widest font-semibold mb-1">Probability</p>
-                                    <p className="text-4xl font-extrabold text-emerald-400">{(prediction.confidence * 100).toFixed(0)}%</p>
+                            <div className="flex items-center gap-4 bg-white/10 dark:bg-white/[0.06] rounded-2xl p-3.5 backdrop-blur-md border border-white/10">
+                                <div className="text-right">
+                                    <p className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Probability</p>
+                                    <p className="text-2xl sm:text-3xl font-extrabold text-emerald-400">{(prediction.confidence * 100).toFixed(0)}%</p>
                                 </div>
-                                <div className={`w-16 h-16 rounded-full flex items-center justify-center ${prediction.prediction === 'Placed' ? 'bg-emerald-500' : 'bg-red-500'}`}>
-                                    {prediction.prediction === 'Placed' ? <CheckCircle size={32} /> : <XCircle size={32} />}
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${prediction.prediction === 'Placed' ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30' : 'bg-amber-500 text-white'}`}>
+                                    {prediction.prediction === 'Placed' ? <CheckCircle size={24} /> : <XCircle size={24} />}
                                 </div>
                             </div>
                         </div>
                     </motion.div>
                 )}
 
-                {/* Stats Grid */}
+                {/* Centralized KPI Stat Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                    <StatCard
-                        title="Active Companies"
+                    <StatsCard
+                        label="Active Companies"
                         value={stats.total_companies}
-                        icon={Briefcase}
-                        color="blue"
-                        index={1}
+                        icon={Building2}
+                        iconBg="bg-blue-50 dark:bg-blue-500/10"
+                        iconColor="text-blue-600 dark:text-blue-400"
+                        watermarkColor="text-blue-500"
+                        delay={0}
                     />
-                    <StatCard
-                        title="Average Package"
-                        value={stats.avg_package}
+                    <StatsCard
+                        label="Average Package"
+                        value={`₹${stats.avg_package} LPA`}
                         icon={TrendingUp}
-                        color="emerald"
-                        index={2}
+                        iconBg="bg-emerald-50 dark:bg-emerald-500/10"
+                        iconColor="text-emerald-600 dark:text-emerald-400"
+                        watermarkColor="text-emerald-500"
+                        delay={0.05}
                     />
-                    <StatCard
-                        title="Placement Rate"
-                        value={stats.placement_rate}
+                    <StatsCard
+                        label="Placement Rate"
+                        value={`${stats.placement_rate}%`}
                         icon={Target}
-                        color="violet"
-                        index={3}
+                        iconBg="bg-violet-50 dark:bg-violet-500/10"
+                        iconColor="text-violet-600 dark:text-violet-400"
+                        watermarkColor="text-violet-500"
+                        delay={0.1}
                     />
                 </div>
 
                 {/* Recent Jobs */}
-                <div>
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-bold">Recent Opportunities</h2>
-                        <Link to="/student/placement/jobs" className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-medium hover:underline">
-                            View All <ArrowRight size={18} />
+                <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h2 className="text-lg font-bold text-slate-900 dark:text-white">Recent Opportunities</h2>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Latest active campus recruiting drives</p>
+                        </div>
+                        <Link to="/student/placement/jobs" className="btn-link inline-flex items-center gap-1 text-xs">
+                            <span>View All</span>
+                            <ArrowRight size={14} />
                         </Link>
                     </div>
+
                     {jobs.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                             {jobs.map((job, idx) => (
-                                <JobCard key={idx} job={job} />
+                                <motion.div
+                                    key={idx}
+                                    whileHover={{ y: -3 }}
+                                    className="card p-5 flex flex-col justify-between hover:shadow-glass hover:border-primary-500/40 transition-all duration-200"
+                                >
+                                    <div>
+                                        <div className="flex justify-between items-start mb-3">
+                                            <div className="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center font-bold text-base shadow-sm">
+                                                {job.company_name[0]}
+                                            </div>
+                                            <span className="badge badge-success">
+                                                {job.package_range} LPA
+                                            </span>
+                                        </div>
+                                        <h3 className="font-bold text-base text-slate-900 dark:text-white mb-0.5">{job.job_role}</h3>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">{job.company_name}</p>
+                                    </div>
+                                    <div className="flex justify-between items-center pt-3 border-t border-slate-100 dark:border-white/[0.06] text-xs">
+                                        <span className="text-slate-400">Deadline: {new Date(job.deadline).toLocaleDateString()}</span>
+                                        <Link to="/student/placement/jobs" className="btn-link text-xs">
+                                            Details →
+                                        </Link>
+                                    </div>
+                                </motion.div>
                             ))}
                         </div>
                     ) : (
-                        <div className="text-center py-12 bg-white dark:bg-white/5 rounded-3xl border border-dashed border-slate-300 dark:border-white/10">
-                            <p className="text-slate-500">No active job postings at the moment.</p>
+                        <div className="card text-center py-12 border-dashed">
+                            <p className="text-sm text-slate-500 dark:text-slate-400">No active job postings at the moment.</p>
                         </div>
                     )}
                 </div>

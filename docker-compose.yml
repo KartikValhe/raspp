@@ -23,7 +23,10 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - raspp-net
+      raspp-net:
+        aliases:
+          - backend
+          - raspp-backend
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 30s
