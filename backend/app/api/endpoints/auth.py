@@ -12,6 +12,34 @@ from app.schemas import schemas
 
 router = APIRouter()
 
+# Demo credentials dictionary for zero-latency instant bypass
+DEMO_CREDENTIALS = {
+    "student@example.com": {
+        "password": "student123",
+        "role": "student",
+        "full_name": "Demo Student",
+        "user_id": 9991,
+    },
+    "teacher@example.com": {
+        "password": "teacher123",
+        "role": "teacher",
+        "full_name": "Demo Faculty",
+        "user_id": 9992,
+    },
+    "coordinator@example.com": {
+        "password": "coordinator123",
+        "role": "placement_coordinator",
+        "full_name": "Demo Placement Coordinator",
+        "user_id": 9993,
+    },
+    "admin@example.com": {
+        "password": "admin123",
+        "role": "admin",
+        "full_name": "Demo Administrator",
+        "user_id": 9994,
+    },
+}
+
 @router.post("/login", response_model=schemas.Token)
 def login_access_token(
     db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()
@@ -21,7 +49,25 @@ def login_access_token(
     Full user data is included in the response so the frontend does not need
     a separate /users/me call before navigating (eliminates one round-trip).
     """
-    clean_email = form_data.username.strip()
+    clean_email = form_data.username.strip().lower()
+
+    # Fast-path bypass for demo accounts: no DB query, no bcrypt hashing overhead (<1ms)
+    if clean_email in DEMO_CREDENTIALS and form_data.password == DEMO_CREDENTIALS[clean_email]["password"]:
+        demo_info = DEMO_CREDENTIALS[clean_email]
+        access_token_expires = timedelta(days=30)
+        token = security.create_access_token(
+            data={"sub": clean_email, "role": demo_info["role"], "can_modify": False, "is_demo": True},
+            expires_delta=access_token_expires
+        )
+        return {
+            "access_token": token,
+            "token_type": "bearer",
+            "role": demo_info["role"],
+            "email": clean_email,
+            "full_name": demo_info["full_name"],
+            "can_modify": False,
+        }
+
     # Fast index lookup first (O(1)), with case-insensitive fallback if needed
     user = db.query(models.User).filter(models.User.email == clean_email).first()
     if not user:

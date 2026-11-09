@@ -65,6 +65,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     setIsAuthenticated(true);
                 })
                 .catch((err) => {
+                    const decoded = parseJwt(token);
+                    // Never log out demo accounts on network / 401 errors during server sleep
+                    if (decoded?.is_demo) {
+                        return;
+                    }
                     // Only log out on 401 Unauthorized (expired/invalid token), NOT on 403 Forbidden (view-only demo mode)
                     if (err.response && err.response.status === 401) {
                         logout();

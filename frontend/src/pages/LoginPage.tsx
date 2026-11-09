@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import api, { prewarmBackend } from '../services/api';
+import { getDemoAccount, createDemoToken } from '../services/demoAuth';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     User, Lock, ArrowRight, Loader2, Sparkles, Moon, Sun,
@@ -162,6 +163,18 @@ export const LoginPage: React.FC = () => {
     // Helper for direct login
     const performLogin = async (loginEmail: string, loginPass: string, targetPath?: string) => {
         setError('');
+
+        // ── Fast-path Instant Demo Login (0ms latency, bypasses backend cold start) ──
+        const demoAccount = getDemoAccount(loginEmail, loginPass);
+        if (demoAccount) {
+            const demoToken = createDemoToken(demoAccount);
+            login(demoToken, demoAccount.role, false);
+            prewarmBackend(); // Wake up backend in background quietly for future queries
+            const destination = targetPath || demoAccount.targetPath;
+            navigate(destination);
+            return;
+        }
+
         setLoading(true);
         try {
             const params = new URLSearchParams();
@@ -188,7 +201,7 @@ export const LoginPage: React.FC = () => {
         } catch (err: any) {
             console.error(err);
             if (err.code === 'ECONNABORTED' || !err.response) {
-                const isLocal = typeof window !== 'undefined' && 
+                const isLocal = typeof window !== 'undefined' &&
                     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
                 if (isLocal) {
                     setError('Cannot connect to local backend. Please make sure the backend is running at http://127.0.0.1:8000 (run .\\start.bat in PowerShell).');
@@ -271,11 +284,10 @@ export const LoginPage: React.FC = () => {
                                     <div
                                         key={portal.id}
                                         onClick={() => handleSelectPortal(portal)}
-                                        className={`p-2.5 rounded-xl border cursor-pointer transition-all ${
-                                            isCurrent
-                                                ? `${portal.activeBg} ${portal.activeBorder} shadow-xs`
-                                                : 'bg-white/70 dark:bg-slate-800/60 border-slate-200/60 dark:border-slate-700/60 hover:border-slate-300'
-                                        }`}
+                                        className={`p-2.5 rounded-xl border cursor-pointer transition-all ${isCurrent
+                                            ? `${portal.activeBg} ${portal.activeBorder} shadow-xs`
+                                            : 'bg-white/70 dark:bg-slate-800/60 border-slate-200/60 dark:border-slate-700/60 hover:border-slate-300'
+                                            }`}
                                     >
                                         <div className="flex items-center gap-1.5 mb-0.5 font-bold text-xs">
                                             <Icon className={portal.color} size={15} />
@@ -333,11 +345,10 @@ export const LoginPage: React.FC = () => {
                                             handleSelectPortal(portal);
                                         }
                                     }}
-                                    className={`relative p-2.5 rounded-xl border text-left transition-all cursor-pointer select-none ${
-                                        isSelected
-                                            ? `${portal.activeBorder} ${portal.activeBg} shadow-xs`
-                                            : 'border-slate-200 dark:border-slate-700/80 bg-slate-50/70 dark:bg-slate-800/40 hover:bg-slate-100/70 dark:hover:bg-slate-800/70'
-                                    }`}
+                                    className={`relative p-2.5 rounded-xl border text-left transition-all cursor-pointer select-none ${isSelected
+                                        ? `${portal.activeBorder} ${portal.activeBg} shadow-xs`
+                                        : 'border-slate-200 dark:border-slate-700/80 bg-slate-50/70 dark:bg-slate-800/40 hover:bg-slate-100/70 dark:hover:bg-slate-800/70'
+                                        }`}
                                 >
                                     <div className="flex items-center justify-between gap-1 mb-1">
                                         <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${portal.badgeBg}`}>
