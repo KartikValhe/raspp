@@ -25,8 +25,8 @@ const isLocalhost = typeof window !== 'undefined' &&
 
 const api = axios.create({
     baseURL: resolveBaseUrl(),
-    // Allow up to 60s for Render free-tier cold starts, 20s for local
-    timeout: isLocalhost ? 20000 : 60000,
+    // Allow up to 120s for Render free-tier cold starts (takes ~60-110s on first request), 20s for local
+    timeout: isLocalhost ? 20000 : 120000,
 });
 
 api.interceptors.request.use((config) => {
@@ -37,19 +37,29 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-// Auto-clear stale tokens on 401 to prevent stuck loading states
+// Auto-clear stale tokens on 401 and auto-retry wake-up errors (502/503/network during cold start)
 api.interceptors.response.use(
-    (response) => response,
-    (error) => {
+    (response) => {
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('raspp:server-ready'));
+        }
+        return response;
+    },
+    async (error) => {
+        const config = error.config;
+
         if (error.response?.status === 401) {
-            const url = error.config?.url || '';
+            const url = config?.url || '';
             // Only clear token for non-login endpoints (login 401 = wrong password)
             if (!url.includes('/auth/login')) {
                 localStorage.removeItem('token');
                 localStorage.removeItem('user_role');
                 localStorage.removeItem('can_modify');
             }
-        } else if (error.response?.status === 403) {
+            return Promise.reject(error);
+        }
+
+        if (error.response?.status === 403) {
             const detail = error.response?.data?.detail;
             if (typeof detail === 'string' && (detail.includes('Demo') || detail.includes('View-Only') || detail.includes('security'))) {
                 if (typeof window !== 'undefined') {
@@ -58,9 +68,46 @@ api.interceptors.response.use(
                     }));
                 }
             }
+            return Promise.reject(error);
         }
+
+        // Automatic retry for Render free-tier wake-up blips (502/503/504 or network timeout while waking)
+        const isWakeUpError = !error.response || [502, 503, 504].includes(error.response?.status);
+        const isEligibleRequest = config && !config.__isRetry && (
+            config.method === 'get' || 
+            (typeof config.url === 'string' && config.url.includes('/auth/login'))
+        );
+
+        if (isWakeUpError && isEligibleRequest) {
+            config.__retryCount = (config.__retryCount || 0) + 1;
+            if (config.__retryCount <= 2) {
+                if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('raspp:server-waking', { 
+                        detail: { 
+                            retryCount: config.__retryCount,
+                            message: 'Server is waking up (Render free tier sleeps when idle)...' 
+                        } 
+                    }));
+                }
+                // Wait 2.5s before retrying
+                await new Promise((resolve) => setTimeout(resolve, 2500));
+                return api(config);
+            }
+        }
+
         return Promise.reject(error);
     }
 );
 
-export default api;
+let prewarmPromise: Promise<any> | null = null;
+export const prewarmBackend = (): Promise<any> => {
+    if (!prewarmPromise) {
+        prewarmPromise = api.get('/health').catch(() => {
+            // Reset on error so subsequent actions can re-probe
+            prewarmPromise = null;
+        });
+    }
+    return prewarmPromise;
+};
+
+export defau

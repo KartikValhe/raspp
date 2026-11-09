@@ -11,12 +11,28 @@ app = FastAPI(
     version="1.0.0"
 )
 
+import os
+import threading
+
 @app.on_event("startup")
 def startup_db_check():
-    try:
-        Base.metadata.create_all(bind=engine)
-    except Exception as e:
-        print(f"Notice: Database startup check: {e}")
+    """
+    Run DB table creation in a non-blocking background thread so Uvicorn
+    and FastAPI can bind and accept health checks / incoming HTTP requests
+    immediately (<100ms) without waiting for high-latency cross-region TiDB Cloud round-trips.
+    """
+    def _async_db_init():
+        try:
+            Base.metadata.create_all(bind=engine)
+            print("Notice: Background DB metadata verification completed.")
+        except Exception as e:
+            print(f"Notice: Database startup check: {e}")
+
+    if os.getenv("INIT_DB", "").lower() in ("true", "1"):
+        _async_db_init()
+    else:
+        init_thread = threading.Thread(target=_async_db_init, daemon=True)
+        init_thread.start()
 
 from app.api.api_v1.api import api_router
 
@@ -47,6 +63,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    max_age=86400,
 )
 
 from fastapi import Request

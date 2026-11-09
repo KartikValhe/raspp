@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import api from '../services/api';
+import api, { prewarmBackend } from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     User, Lock, ArrowRight, Loader2, Sparkles, Moon, Sun,
@@ -108,12 +108,48 @@ export const LoginPage: React.FC = () => {
     const [password, setPassword] = useState(initialPortal.pass);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [wakeUpSeconds, setWakeUpSeconds] = useState(0);
+    const [wakeUpNotice, setWakeUpNotice] = useState<string | null>(null);
     const [focusedField, setFocusedField] = useState<string | null>(null);
     const [showPassword, setShowPassword] = useState(false);
 
     const { login } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
+
+    // Automatically pre-warm cloud backend when user lands on Login page
+    useEffect(() => {
+        prewarmBackend();
+
+        const handleWaking = (e: any) => {
+            setWakeUpNotice(e.detail?.message || 'Server is waking up (Render free tier sleeps when idle)...');
+        };
+        const handleReady = () => {
+            setWakeUpNotice(null);
+        };
+        window.addEventListener('raspp:server-waking', handleWaking);
+        window.addEventListener('raspp:server-ready', handleReady);
+        return () => {
+            window.removeEventListener('raspp:server-waking', handleWaking);
+            window.removeEventListener('raspp:server-ready', handleReady);
+        };
+    }, []);
+
+    // Live wake-up timer while authenticating
+    useEffect(() => {
+        let timer: any = null;
+        if (loading) {
+            setWakeUpSeconds(0);
+            timer = setInterval(() => {
+                setWakeUpSeconds(s => s + 1);
+            }, 1000);
+        } else {
+            setWakeUpSeconds(0);
+        }
+        return () => {
+            if (timer) clearInterval(timer);
+        };
+    }, [loading]);
 
     // Select a portal and auto-populate its credentials
     const handleSelectPortal = (portal: PortalOption) => {
@@ -151,13 +187,13 @@ export const LoginPage: React.FC = () => {
             }
         } catch (err: any) {
             console.error(err);
-            if (!err.response) {
+            if (err.code === 'ECONNABORTED' || !err.response) {
                 const isLocal = typeof window !== 'undefined' && 
                     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
                 if (isLocal) {
                     setError('Cannot connect to local backend. Please make sure the backend is running at http://127.0.0.1:8000 (run .\\start.bat in PowerShell).');
                 } else {
-                    setError('Cannot connect to cloud backend. The free cloud server (Render) may be waking up from cold sleep (takes ~45-60s on first visit). Please wait a few seconds and tap Launch again.');
+                    setError('The cloud server (Render free tier) was sleeping and is currently spinning up (~45-60s on first visit). The server is waking up now — please tap Launch again to enter!');
                 }
             } else {
                 setError(err.response?.data?.detail || 'Invalid credentials. Please verify your email and password.');
@@ -323,11 +359,21 @@ export const LoginPage: React.FC = () => {
                                         <span className="text-[9px] font-medium text-slate-400">Quick login</span>
                                         <button
                                             type="button"
+                                            disabled={loading}
                                             onClick={(e) => handleDirectLaunch(portal, e)}
-                                            className="inline-flex items-center gap-0.5 text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                                            className="inline-flex items-center gap-0.5 text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer disabled:opacity-60"
                                         >
-                                            <span>Launch</span>
-                                            <ChevronRight size={11} />
+                                            {loading && isSelected ? (
+                                                <span className="flex items-center gap-1 text-blue-500">
+                                                    <Loader2 size={10} className="animate-spin" />
+                                                    <span>{wakeUpSeconds >= 4 ? `${wakeUpSeconds}s` : 'Entering...'}</span>
+                                                </span>
+                                            ) : (
+                                                <>
+                                                    <span>Launch</span>
+                                                    <ChevronRight size={11} />
+                                                </>
+                                            )}
                                         </button>
                                     </div>
                                 </div>
@@ -346,6 +392,27 @@ export const LoginPage: React.FC = () => {
                             >
                                 <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0"></span>
                                 <span>{error}</span>
+                            </motion.div>
+                        )}
+                        {loading && wakeUpSeconds >= 3 && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -4 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -4 }}
+                                className="p-2.5 rounded-xl text-[11px] font-medium bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50 flex items-start gap-2 shadow-xs"
+                            >
+                                <Loader2 className="animate-spin text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" size={14} />
+                                <div className="flex-1">
+                                    <div className="font-bold flex items-center justify-between">
+                                        <span>{wakeUpNotice || 'Connecting to Cloud Backend...'}</span>
+                                        <span className="font-mono text-[10px] bg-amber-200/60 dark:bg-amber-800/60 px-1.5 py-0.2 rounded-full">{wakeUpSeconds}s</span>
+                                    </div>
+                                    <p className="text-[10px] text-amber-700 dark:text-amber-300 mt-0.5 leading-snug">
+                                        {wakeUpSeconds >= 8
+                                            ? 'Render free instance is waking from sleep (takes ~45-60s on first visit). Please leave this open, login will complete automatically!'
+                                            : 'Connecting to Render and TiDB Cloud database...'}
+                                    </p>
+                                </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -412,7 +479,11 @@ export const LoginPage: React.FC = () => {
                                 {loading ? (
                                     <>
                                         <Loader2 className="animate-spin" size={16} />
-                                        <span>Logging in to {selectedPortal.title}...</span>
+                                        <span>
+                                            {wakeUpSeconds >= 4
+                                                ? `Waking up server (${wakeUpSeconds}s)...`
+                                                : `Logging in to ${selectedPortal.title}...`}
+                                        </span>
                                     </>
                                 ) : (
                                     <>

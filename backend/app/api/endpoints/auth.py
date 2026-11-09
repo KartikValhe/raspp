@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.core import security
 from app.core.config import settings
 from app.core.database import get_db
+from app.core.redis import redis_cache
 from app.models import models
 from app.schemas import schemas
 
@@ -21,7 +22,11 @@ def login_access_token(
     a separate /users/me call before navigating (eliminates one round-trip).
     """
     clean_email = form_data.username.strip()
-    user = db.query(models.User).filter(models.User.email.ilike(clean_email)).first()
+    # Fast index lookup first (O(1)), with case-insensitive fallback if needed
+    user = db.query(models.User).filter(models.User.email == clean_email).first()
+    if not user:
+        user = db.query(models.User).filter(models.User.email.ilike(clean_email)).first()
+
     if not user or not security.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -32,14 +37,23 @@ def login_access_token(
         raise HTTPException(status_code=400, detail="Inactive user")
 
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    # Include full_name so the frontend doesn't need a separate /users/me call
+    # Only query student/teacher profile based on role to avoid unnecessary remote DB roundtrips
     full_name = None
-    if hasattr(user, 'student_profile') and user.student_profile:
+    if user.role == "student" and hasattr(user, 'student_profile') and user.student_profile:
         full_name = user.student_profile.full_name
-    elif hasattr(user, 'teacher_profile') and user.teacher_profile:
+    elif user.role == "teacher" and hasattr(user, 'teacher_profile') and user.teacher_profile:
         full_name = user.teacher_profile.full_name
 
     can_modify = bool(getattr(user, 'can_modify', True) if getattr(user, 'can_modify', None) is not None else True)
+
+    # Cache user for zero-latency subsequent API authorizations
+    redis_cache.set(f"auth:user:{user.email}", {
+        "id": user.id,
+        "email": user.email,
+        "role": user.role,
+        "is_active": user.is_active,
+        "can_modify": can_modify,
+    }, ttl=600)
 
     return {
         "access_token": security.create_access_token(

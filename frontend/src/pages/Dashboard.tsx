@@ -7,30 +7,38 @@ import { Loader2 } from 'lucide-react';
 
 export const Dashboard: React.FC = () => {
     const { user } = useAuth();
+    const storedRole = typeof window !== 'undefined' ? localStorage.getItem('user_role') : null;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-    // If user state is still loading from token, show spinner
-    if (!user) {
-        return (
-            <div className="min-h-[70vh] flex flex-col items-center justify-center gap-3">
-                <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-                <span className="text-sm font-semibold text-slate-500">Loading your portal...</span>
-            </div>
-        );
+    // Resolve role from state first, with immediate localStorage fallback so the screen never hangs
+    const effectiveRole = user?.role || storedRole;
+
+    if (!token && !user) {
+        return <Navigate to="/login" replace />;
     }
 
     // Role-based rendering
-    if (user.role === 'student') {
+    if (effectiveRole === 'student') {
         return <Navigate to="/student/dashboard" replace />;
     }
 
-    if (user.role === 'placement_coordinator') {
+    if (effectiveRole === 'placement_coordinator') {
         return <Navigate to="/placement/dashboard" replace />;
     }
 
-    if (user.role === 'admin') {
+    if (effectiveRole === 'admin') {
         return <AdminDashboard />;
     }
 
-    // Teacher
-    return <TeacherDashboard />;
+    if (effectiveRole === 'teacher') {
+        return <TeacherDashboard />;
+    }
+
+    // Temporary fallback only while resolving first token payload (maximum 1-2 frames)
+    return (
+        <div className="min-h-[70vh] flex flex-col items-center justify-center gap-3">
+            <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+            <span className="text-sm font-semibold text-slate-500">Loading your portal...</span>
+        </div>
+    );
 };

@@ -26,6 +26,10 @@ if not ssl_ca_path and "tidbcloud.com" in settings.DB_HOST:
     elif os.path.exists("/etc/ssl/certs/ca-certificates.crt"):
         ssl_ca_path = "/etc/ssl/certs/ca-certificates.crt"
 
+# Robust connect args for TiDB Cloud / MySQL
+connect_args["connection_timeout"] = 10
+connect_args["buffered"] = True
+
 if ssl_ca_path:
     connect_args["ssl_ca"] = ssl_ca_path
 
@@ -34,8 +38,8 @@ engine = create_engine(
     pool_pre_ping=True,          # Detect stale connections before using them
     pool_size=10,
     max_overflow=20,
-    pool_recycle=1800,           # 30 min: prevents stale TiDB connections (was 1hr)
-    pool_timeout=10,             # Fail fast instead of hanging for 30s (default)
+    pool_recycle=240,            # 4 min: recycles connections BEFORE TiDB Cloud drops idle ones (~5 min)
+    pool_timeout=30,             # Wait up to 30s instead of failing fast after 10s
     connect_args=connect_args
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

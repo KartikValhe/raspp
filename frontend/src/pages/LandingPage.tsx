@@ -1,8 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import api from '../services/api';
+import api, { prewarmBackend } from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Sparkles, ArrowRight, GraduationCap, Briefcase, ShieldCheck,
@@ -21,6 +21,28 @@ export const LandingPage: React.FC = () => {
 
     // ─── Quick Demo Login State ──────────────────────────────────────────
     const [loadingRole, setLoadingRole] = useState<string | null>(null);
+    const [quickSeconds, setQuickSeconds] = useState(0);
+
+    // Pre-warm backend when landing page loads
+    useEffect(() => {
+        prewarmBackend();
+    }, []);
+
+    // Live counter when clicking quick demo login
+    useEffect(() => {
+        let timer: any = null;
+        if (loadingRole) {
+            setQuickSeconds(0);
+            timer = setInterval(() => {
+                setQuickSeconds(s => s + 1);
+            }, 1000);
+        } else {
+            setQuickSeconds(0);
+        }
+        return () => {
+            if (timer) clearInterval(timer);
+        };
+    }, [loadingRole]);
 
     const handleQuickLogin = async (demoEmail: string, demoPass: string, targetPath: string, role: string) => {
         setLoadingRole(role);
@@ -39,7 +61,7 @@ export const LandingPage: React.FC = () => {
             navigate(targetPath);
         } catch (e) {
             console.error('Quick login error:', e);
-            navigate(`/login`);
+            navigate(`/login?portal=${role}`);
         } finally {
             setLoadingRole(null);
         }
@@ -768,6 +790,29 @@ export const LandingPage: React.FC = () => {
                         </p>
                     </div>
 
+                    {/* Server Wake-up Alert during Cold Start */}
+                    <AnimatePresence>
+                        {loadingRole && quickSeconds >= 3 && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -8 }}
+                                className="max-w-xl mx-auto mb-6 p-3 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 text-white text-xs flex items-center gap-3 shadow-lg"
+                            >
+                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin shrink-0" />
+                                <div className="flex-1">
+                                    <div className="font-bold flex items-center justify-between">
+                                        <span>Waking up cloud server (Render free tier sleeps when idle)...</span>
+                                        <span className="font-mono bg-white/30 px-2 py-0.5 rounded-full text-[11px]">{quickSeconds}s</span>
+                                    </div>
+                                    <p className="text-[11px] text-indigo-100 mt-0.5">
+                                        First request takes ~45-60s to boot the instance. Please hold on, you will be redirected automatically!
+                                    </p>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
                         {/* Student Demo */}
                         <div
@@ -779,7 +824,7 @@ export const LandingPage: React.FC = () => {
                                     <GraduationCap size={20} />
                                 </div>
                                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-white/20 text-white group-hover:bg-white group-hover:text-blue-600 transition-all flex items-center gap-1">
-                                    {loadingRole === 'student' ? 'Connecting...' : '1-Click Launch →'}
+                                    {loadingRole === 'student' ? (quickSeconds >= 4 ? `Waking up (${quickSeconds}s)...` : 'Connecting...') : '1-Click Launch →'}
                                 </span>
                             </div>
                             <h3 className="font-bold text-base text-white">Student Portal</h3>
@@ -797,7 +842,7 @@ export const LandingPage: React.FC = () => {
                                     <BookOpen size={20} />
                                 </div>
                                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-white/20 text-white group-hover:bg-white group-hover:text-emerald-600 transition-all flex items-center gap-1">
-                                    {loadingRole === 'teacher' ? 'Connecting...' : '1-Click Launch →'}
+                                    {loadingRole === 'teacher' ? (quickSeconds >= 4 ? `Waking up (${quickSeconds}s)...` : 'Connecting...') : '1-Click Launch →'}
                                 </span>
                             </div>
                             <h3 className="font-bold text-base text-white">Teacher Portal</h3>
@@ -815,7 +860,7 @@ export const LandingPage: React.FC = () => {
                                     <Briefcase size={20} />
                                 </div>
                                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-white/20 text-white group-hover:bg-white group-hover:text-purple-600 transition-all flex items-center gap-1">
-                                    {loadingRole === 'placement_coordinator' ? 'Connecting...' : '1-Click Launch →'}
+                                    {loadingRole === 'placement_coordinator' ? (quickSeconds >= 4 ? `Waking up (${quickSeconds}s)...` : 'Connecting...') : '1-Click Launch →'}
                                 </span>
                             </div>
                             <h3 className="font-bold text-base text-white">Placement Portal</h3>
@@ -833,7 +878,7 @@ export const LandingPage: React.FC = () => {
                                     <ShieldCheck size={20} />
                                 </div>
                                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-white/20 text-white group-hover:bg-white group-hover:text-amber-600 transition-all flex items-center gap-1">
-                                    {loadingRole === 'admin' ? 'Connecting...' : '1-Click Launch →'}
+                                    {loadingRole === 'admin' ? (quickSeconds >= 4 ? `Waking up (${quickSeconds}s)...` : 'Connecting...') : '1-Click Launch →'}
                                 </span>
                             </div>
                             <h3 className="font-bold text-base text-white">Admin Portal</h3>

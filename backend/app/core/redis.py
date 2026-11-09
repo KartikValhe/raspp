@@ -5,7 +5,10 @@ import logging
 import time
 from datetime import date, datetime
 from typing import Any, Dict, Optional, Tuple
-import redis
+try:
+    import redis
+except ImportError:
+    redis = None
 from app.core.config import settings
 
 logger = logging.getLogger("redis_cache")
@@ -21,7 +24,7 @@ class CustomJSONEncoder(json.JSONEncoder):
 
 class RedisClient:
     def __init__(self):
-        self._client: Optional[redis.Redis] = None
+        self._client: Optional[Any] = None
         self._is_connected = False
         self._last_attempt = 0.0
         self._logged_warning = False
@@ -30,7 +33,7 @@ class RedisClient:
         self._init_connection()
 
     def _init_connection(self):
-        if not settings.REDIS_ENABLED:
+        if not settings.REDIS_ENABLED or redis is None:
             return
 
         now = time.time()
@@ -60,7 +63,7 @@ class RedisClient:
                 self._logged_warning = True
 
     @property
-    def client(self) -> Optional[redis.Redis]:
+    def client(self) -> Optional[Any]:
         return self._client if self._is_connected else None
 
     # --- In-Memory Helpers ---

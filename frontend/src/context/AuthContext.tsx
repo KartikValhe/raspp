@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import api from '../services/api';
+import api, { prewarmBackend } from '../services/api';
 
 interface AuthContextType {
     user: any;
@@ -45,6 +45,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('token'));
 
     useEffect(() => {
+        // Automatically pre-warm backend (Render free tier) on initial app load
+        prewarmBackend();
+
         const token = localStorage.getItem('token');
         if (token) {
             // Validate token or fetch user profile
