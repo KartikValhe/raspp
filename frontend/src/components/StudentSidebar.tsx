@@ -42,23 +42,23 @@ export const StudentSidebar: React.FC<StudentSidebarProps> = ({ onClose }) => {
             className="sidebar-root"
         >
             {/* Brand */}
-            <div className="px-4 py-4 border-b border-slate-200 dark:border-white/[0.07] flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-xl bg-primary-500 flex items-center justify-center shadow-primary">
+            <div className="px-4 py-3.5 border-b border-slate-200 dark:border-white/[0.07] flex items-center justify-between gap-2 shrink-0">
+                <div className="flex items-center gap-2.5 min-w-0 flex-1 overflow-hidden">
+                    <div className="w-8 h-8 rounded-xl bg-primary-500 flex items-center justify-center shadow-primary shrink-0">
                         <LayoutDashboard size={16} className="text-white" />
                     </div>
-                    <div>
-                        <p className="text-md font-bold text-gradient-dark leading-tight">RASPP</p>
-                        <p className="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                            Student Portal
+                    <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold text-gradient-dark leading-tight truncate">RASPP</p>
+                        <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-wider truncate">
+                            Student Hub
                         </p>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 shrink-0">
                     <button
                         onClick={toggleTheme}
-                        className="btn-ghost w-8 h-8 p-0 rounded-lg flex items-center justify-center"
+                        className="no-min-touch w-7 h-7 p-0 rounded-lg flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.08] transition-colors"
                         aria-label="Toggle Theme"
                     >
                         {theme === 'dark'
@@ -69,10 +69,10 @@ export const StudentSidebar: React.FC<StudentSidebarProps> = ({ onClose }) => {
                     {onClose && (
                         <button
                             onClick={onClose}
-                            className="btn-ghost w-8 h-8 p-0 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white"
+                            className="no-min-touch w-7 h-7 p-0 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.08]"
                             aria-label="Close Navigation Menu"
                         >
-                            <X size={17} />
+                            <X size={16} />
                         </button>
                     )}
                 </div>

@@ -64,9 +64,12 @@ def read_student_me(
     # 1. Search by user_id
     student = db.query(models.Student).options(joinedload(models.Student.branch)).filter(models.Student.user_id == current_user.id).first()
     
-    # 2. Search by email fallback
+    # 2. Search by email fallback (fast exact match first, then ilike)
     if not student and current_user.email:
-        student = db.query(models.Student).options(joinedload(models.Student.branch)).filter(models.Student.email.ilike(current_user.email.strip())).first()
+        clean_email = current_user.email.strip()
+        student = db.query(models.Student).options(joinedload(models.Student.branch)).filter(models.Student.email == clean_email).first()
+        if not student:
+            student = db.query(models.Student).options(joinedload(models.Student.branch)).filter(models.Student.email.ilike(clean_email)).first()
         if student:
             student.user_id = current_user.id
             db.commit()

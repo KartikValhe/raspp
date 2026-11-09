@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, FileText, CheckCircle, AlertCircle, RefreshCw, Download } from 'lucide-react';
 import api from '../../services/api';
+import { PageHeader } from '../../components/PageHeader';
 
 const BulkPlacementPrediction: React.FC = () => {
     const [file, setFile] = useState<File | null>(null);
@@ -72,20 +73,31 @@ const BulkPlacementPrediction: React.FC = () => {
     };
 
     return (
-        <div className="p-8 min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white">
-            <div className="max-w-7xl mx-auto space-y-8">
-                <div>
-                    <h1 className="text-3xl font-bold mb-2">Bulk Placement Prediction</h1>
-                    <p className="text-slate-500 dark:text-slate-400">Upload student data to predict placement probabilities.</p>
-                </div>
+        <div className="page-wrap">
+            <div className="max-w-7xl mx-auto space-y-6">
+                <PageHeader
+                    icon={Upload}
+                    title="Bulk Placement Prediction"
+                    subtitle="Upload batch student CSV data to forecast placement probability with machine learning"
+                    iconClass="bg-primary-500"
+                    actions={
+                        <button
+                            onClick={downloadSample}
+                            className="btn-secondary"
+                        >
+                            <Download size={16} />
+                            <span>Sample CSV</span>
+                        </button>
+                    }
+                />
 
                 {/* Upload Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-1 space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="lg:col-span-1 space-y-5">
                         <div
-                            className={`border-3 border-dashed rounded-3xl p-8 text-center transition-all ${dragActive
-                                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/10'
-                                : 'border-slate-300 dark:border-white/10 hover:border-blue-400 dark:hover:border-blue-400/50'
+                            className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all ${dragActive
+                                ? 'border-primary-500 bg-primary-50/50 dark:bg-primary-500/10'
+                                : 'border-slate-300 dark:border-white/10 hover:border-primary-400 dark:hover:border-primary-400/50 card'
                                 }`}
                             onDragEnter={handleDrag}
                             onDragLeave={handleDrag}
@@ -100,30 +112,30 @@ const BulkPlacementPrediction: React.FC = () => {
                                 onChange={handleChange}
                             />
 
-                            <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                                <Upload size={32} />
+                            <div className="w-14 h-14 bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-primary">
+                                <Upload size={26} />
                             </div>
 
                             {file ? (
-                                <div className="space-y-4">
-                                    <div className="flex items-center justify-center gap-2 text-emerald-600 dark:text-emerald-400 font-medium">
-                                        <FileText size={20} />
+                                <div className="space-y-3">
+                                    <div className="flex items-center justify-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold text-sm">
+                                        <FileText size={18} />
                                         <span className="truncate max-w-[200px]">{file.name}</span>
                                     </div>
                                     <button
                                         onClick={() => setFile(null)}
-                                        className="text-sm text-red-500 hover:text-red-600 dark:hover:text-red-400 underline"
+                                        className="btn-link text-xs text-danger-500 hover:text-danger-600"
                                     >
                                         Remove file
                                     </button>
                                 </div>
                             ) : (
                                 <div className="space-y-2">
-                                    <h3 className="text-lg font-semibold">Drag & Drop CSV</h3>
-                                    <p className="text-sm text-slate-500 dark:text-slate-400">or</p>
+                                    <h3 className="text-base font-bold text-slate-800 dark:text-white">Drag & Drop Student CSV</h3>
+                                    <p className="text-xs text-slate-400">or click to browse from device</p>
                                     <label
                                         htmlFor="csv-upload"
-                                        className="inline-block px-6 py-2 bg-slate-900 dark:bg-white text-white dark:text-black rounded-xl font-medium cursor-pointer hover:opacity-90 transition-opacity"
+                                        className="btn-secondary mt-2 inline-flex"
                                     >
                                         Browse Files
                                     </label>
@@ -131,38 +143,26 @@ const BulkPlacementPrediction: React.FC = () => {
                             )}
                         </div>
 
-                        <div className="flex justify-between items-center text-sm">
-                            <button
-                                onClick={downloadSample}
-                                className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline"
-                            >
-                                <Download size={16} />
-                                Download Sample CSV
-                            </button>
-                        </div>
-
                         <button
                             onClick={handleUpload}
                             disabled={!file || uploading}
-                            className={`w-full py-4 rounded-xl flex items-center justify-center gap-2 font-bold text-lg shadow-lg transition-all ${!file || uploading
-                                ? 'bg-slate-200 dark:bg-white/10 text-slate-400 cursor-not-allowed'
-                                : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-blue-500/30 transform hover:-translate-y-1'
-                                }`}
+                            className="btn-primary w-full py-3 text-base justify-center shadow-primary"
                         >
                             {uploading ? (
                                 <>
-                                    <RefreshCw className="animate-spin" />
-                                    Processing...
+                                    <RefreshCw className="animate-spin" size={18} />
+                                    <span>Processing Telemetry...</span>
                                 </>
                             ) : (
                                 <>
-                                    Run Predictions
+                                    <Upload size={18} />
+                                    <span>Run Batch Predictions</span>
                                 </>
                             )}
                         </button>
 
                         {error && (
-                            <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl flex items-start gap-3 text-sm">
+                            <div className="p-4 bg-danger-50 dark:bg-danger-500/10 text-danger-600 dark:text-danger-400 border border-danger-200 dark:border-danger-500/20 rounded-xl flex items-start gap-3 text-sm">
                                 <AlertCircle className="shrink-0 mt-0.5" size={18} />
                                 <p>{error}</p>
                             </div>
@@ -173,16 +173,16 @@ const BulkPlacementPrediction: React.FC = () => {
                     <div className="lg:col-span-2">
                         {results ? (
                             <motion.div
-                                initial={{ opacity: 0, x: 20 }}
+                                initial={{ opacity: 0, x: 16 }}
                                 animate={{ opacity: 1, x: 0 }}
-                                className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl overflow-hidden shadow-xl"
+                                className="table-container"
                             >
-                                <div className="p-6 border-b border-slate-200 dark:border-white/10 flex justify-between items-center bg-slate-50 dark:bg-white/5">
-                                    <h2 className="text-xl font-bold flex items-center gap-2">
-                                        <CheckCircle className="text-emerald-500" />
+                                <div className="p-5 border-b border-slate-200 dark:border-white/[0.07] flex justify-between items-center bg-slate-50 dark:bg-white/[0.02]">
+                                    <h2 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                        <CheckCircle className="text-emerald-500" size={18} />
                                         Prediction Results
                                     </h2>
-                                    <span className="px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400 rounded-full text-sm font-medium">
+                                    <span className="badge badge-primary">
                                         {results.length} Students Processed
                                     </span>
                                 </div>
@@ -190,28 +190,24 @@ const BulkPlacementPrediction: React.FC = () => {
                                 {/* Mobile Cards View (< md) */}
                                 <div className="md:hidden p-4 space-y-3">
                                     {results.map((result, idx) => (
-                                        <div key={idx} className="bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-4 shadow-sm space-y-2.5">
+                                        <div key={idx} className="bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.06] rounded-xl p-4 shadow-xs space-y-2.5">
                                             <div className="flex items-start justify-between gap-2">
                                                 <div>
-                                                    <h4 className="font-semibold text-slate-900 dark:text-white text-base leading-snug">
+                                                    <h4 className="font-semibold text-slate-900 dark:text-white text-sm leading-snug">
                                                         {result.name}
                                                     </h4>
-                                                    <p className="text-xs text-slate-500 font-mono">{result.student_id}</p>
+                                                    <p className="text-xs text-slate-400 font-mono">{result.student_id}</p>
                                                 </div>
-                                                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold shrink-0 ${result.prediction === 'Placed'
-                                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400'
-                                                    : 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
-                                                    }`}>
+                                                <span className={`badge ${result.prediction === 'Placed' ? 'badge-success' : 'badge-danger'}`}>
                                                     {result.prediction}
                                                 </span>
                                             </div>
                                             <div className="pt-2 border-t border-slate-200/60 dark:border-white/5 flex items-center justify-between">
-                                                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Confidence</span>
+                                                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Confidence</span>
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-20 h-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
                                                         <div
-                                                            className={`h-full rounded-full ${result.prediction === 'Placed' ? 'bg-emerald-500' : 'bg-red-500'
-                                                                }`}
+                                                            className={`h-full rounded-full ${result.prediction === 'Placed' ? 'bg-emerald-500' : 'bg-danger-500'}`}
                                                             style={{ width: `${(result.confidence * 100)}%` }}
                                                         />
                                                     </div>
@@ -224,38 +220,34 @@ const BulkPlacementPrediction: React.FC = () => {
 
                                 {/* Desktop Table (>= md) */}
                                 <div className="hidden md:block overflow-x-auto">
-                                    <table className="w-full text-left text-sm">
-                                        <thead className="bg-slate-50 dark:bg-black/20 text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">
+                                    <table className="table-base">
+                                        <thead>
                                             <tr>
-                                                <th className="px-6 py-4">Student ID</th>
-                                                <th className="px-6 py-4">Name</th>
-                                                <th className="px-6 py-4">Prediction</th>
-                                                <th className="px-6 py-4">Confidence</th>
+                                                <th className="table-th">Student ID</th>
+                                                <th className="table-th">Name</th>
+                                                <th className="table-th">Prediction</th>
+                                                <th className="table-th">Confidence</th>
                                             </tr>
                                         </thead>
-                                        <tbody className="divide-y divide-slate-100 dark:divide-white/5">
+                                        <tbody className="divide-y divide-slate-100 dark:divide-white/[0.04]">
                                             {results.map((result, idx) => (
-                                                <tr key={idx} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
-                                                    <td className="px-6 py-4 font-mono text-slate-500 dark:text-slate-400">{result.student_id}</td>
-                                                    <td className="px-6 py-4 font-medium">{result.name}</td>
-                                                    <td className="px-6 py-4">
-                                                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${result.prediction === 'Placed'
-                                                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400'
-                                                            : 'bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-400'
-                                                            }`}>
+                                                <tr key={idx} className="table-tr">
+                                                    <td className="table-td font-mono text-xs text-slate-500 dark:text-slate-400">{result.student_id}</td>
+                                                    <td className="table-td font-medium text-slate-900 dark:text-white">{result.name}</td>
+                                                    <td className="table-td">
+                                                        <span className={`badge ${result.prediction === 'Placed' ? 'badge-success' : 'badge-danger'}`}>
                                                             {result.prediction}
                                                         </span>
                                                     </td>
-                                                    <td className="px-6 py-4">
+                                                    <td className="table-td">
                                                         <div className="flex items-center gap-2">
-                                                            <div className="w-16 h-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
+                                                            <div className="w-20 h-2 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
                                                                 <div
-                                                                    className={`h-full rounded-full ${result.prediction === 'Placed' ? 'bg-emerald-500' : 'bg-red-500'
-                                                                        }`}
+                                                                    className={`h-full rounded-full ${result.prediction === 'Placed' ? 'bg-emerald-500' : 'bg-danger-500'}`}
                                                                     style={{ width: `${(result.confidence * 100)}%` }}
                                                                 />
                                                             </div>
-                                                            <span className="text-xs text-slate-500">{(result.confidence * 100).toFixed(0)}%</span>
+                                                            <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">{(result.confidence * 100).toFixed(0)}%</span>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -265,10 +257,10 @@ const BulkPlacementPrediction: React.FC = () => {
                                 </div>
                             </motion.div>
                         ) : (
-                            <div className="h-full flex flex-col items-center justify-center p-12 text-center text-slate-400 border-2 border-dashed border-slate-200 dark:border-white/5 rounded-3xl bg-slate-50/50 dark:bg-white/5">
-                                <FileText size={48} className="mb-4 opacity-50" />
-                                <h3 className="text-xl font-semibold mb-2">No Results Yet</h3>
-                                <p>Upload a CSV file and run predictions to see the analysis here.</p>
+                            <div className="h-full flex flex-col items-center justify-center p-12 text-center text-slate-400 border-2 border-dashed border-slate-200 dark:border-white/5 rounded-2xl card min-h-[300px]">
+                                <FileText size={44} className="mb-3 opacity-40 text-slate-400" />
+                                <h3 className="text-base font-semibold mb-1 text-slate-700 dark:text-slate-300">No Telemetry Output Yet</h3>
+                                <p className="text-xs text-slate-500">Upload a CSV file and run batch prediction to evaluate cohort placement readiness.</p>
                             </div>
                         )}
                     </div>

@@ -32,7 +32,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     return (
         <div className="flex h-screen h-[100dvh] max-h-[100dvh] bg-surface-50 dark:bg-[#0a0a0c] overflow-hidden selection:bg-primary-500/30 transition-colors duration-300">
             {/* Desktop Sidebar (visible on md screens and wider) */}
-            <aside className="hidden md:flex h-full shrink-0">
+            <aside className="hidden md:flex h-full shrink-0 overflow-hidden z-20">
                 <Sidebar />
             </aside>
 

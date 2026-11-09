@@ -19,6 +19,7 @@ import {
 import { Link } from 'react-router-dom';
 import api from '../../services/api';
 import { PageHeader } from '../../components/PageHeader';
+import { StatsCard } from '../../components/StatsCard';
 
 interface PlacementStats {
     total_students: number;
@@ -92,49 +93,6 @@ const RECENT_ACTIVITIES = [
     },
 ];
 
-const StatCard = ({ title, value, icon: Icon, color, trend }: any) => (
-    <motion.div
-        whileHover={{ y: -4 }}
-        className="bg-white dark:bg-black/40 backdrop-blur-xl p-6 rounded-2xl border border-slate-200 dark:border-white/10 shadow-lg"
-    >
-        <div className="flex justify-between items-start">
-            <div>
-                <p className="text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1">{title}</p>
-                <h3 className="text-3xl font-extrabold text-slate-800 dark:text-white">{value}</h3>
-            </div>
-            <div className={`p-3 rounded-xl bg-${color}-500/10 text-${color}-500 dark:text-${color}-400 shrink-0`}>
-                <Icon size={24} />
-            </div>
-        </div>
-        {trend && (
-            <div className="mt-4 flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
-                <ArrowUpRight size={14} />
-                <span>{trend} vs last season</span>
-            </div>
-        )}
-    </motion.div>
-);
-
-const QuickActionCard = ({ title, description, icon: Icon, to, color }: any) => (
-    <Link to={to}>
-        <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="group h-full p-6 rounded-2xl bg-gradient-to-br from-white to-slate-50 dark:from-white/5 dark:to-white/0 border border-slate-200 dark:border-white/10 hover:border-blue-500/50 dark:hover:border-blue-400/50 transition-all duration-300 shadow-sm"
-        >
-            <div className={`w-12 h-12 rounded-xl bg-${color}-500/10 text-${color}-600 dark:text-${color}-400 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                <Icon size={24} />
-            </div>
-            <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">{title}</h3>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mb-4 leading-relaxed">{description}</p>
-            <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 text-sm font-semibold">
-                <span>Open Section</span>
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </div>
-        </motion.div>
-    </Link>
-);
-
 const CoordinatorDashboard: React.FC = () => {
     const [stats, setStats] = useState<PlacementStats>(SYNTHETIC_DEFAULT_STATS);
 
@@ -154,138 +112,185 @@ const CoordinatorDashboard: React.FC = () => {
     };
 
     return (
-        <div className="min-h-full p-4 sm:p-6 space-y-6">
+        <div className="min-h-full flex flex-col p-4 sm:p-6 space-y-5 sm:space-y-6">
             <PageHeader
-                icon={LayoutDashboard}
+                icon={Briefcase}
                 title="Placement Coordinator Hub"
                 subtitle="Track campus recruitment telemetry, recruiter partnerships & student offer history"
                 iconClass="bg-primary-500"
                 actions={
                     <div className="text-right hidden sm:block">
-                        <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Active Session</p>
-                        <p className="text-base font-bold text-slate-800 dark:text-white">2025-2026 Drive</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wider font-semibold">Active Drive</p>
+                        <p className="text-sm font-bold text-slate-800 dark:text-white">2025-2026 Season</p>
                     </div>
                 }
             />
 
-            {/* Core KPI Stat Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-                <StatCard
-                    title="Placement Rate"
+            {/* Core KPI Stat Cards using Centralized StatsCard Theme */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                <StatsCard
+                    label="Placement Rate"
                     value={`${stats.placement_percentage.toFixed(1)}%`}
                     icon={TrendingUp}
-                    color="emerald"
-                    trend="+12.4%"
+                    trend={{ value: 12.4, isPositive: true }}
+                    iconBg="bg-emerald-50 dark:bg-emerald-500/10"
+                    iconColor="text-emerald-600 dark:text-emerald-400"
+                    watermarkColor="text-emerald-500"
+                    delay={0}
                 />
-                <StatCard
-                    title="Average CTC"
+                <StatsCard
+                    label="Average CTC"
                     value={`₹${stats.average_package.toFixed(2)} LPA`}
                     icon={Briefcase}
-                    color="blue"
-                    trend="+2.1 LPA"
+                    trend={{ value: 8.5, isPositive: true }}
+                    iconBg="bg-violet-50 dark:bg-violet-500/10"
+                    iconColor="text-violet-600 dark:text-violet-400"
+                    watermarkColor="text-violet-500"
+                    delay={0.05}
                 />
-                <StatCard
-                    title="Highest CTC Offered"
+                <StatsCard
+                    label="Highest CTC Offered"
                     value={`₹${stats.highest_package.toFixed(1)} LPA`}
                     icon={Building2}
-                    color="amber"
-                    trend="Record High"
+                    trend={{ value: 18.0, isPositive: true }}
+                    iconBg="bg-amber-50 dark:bg-amber-500/10"
+                    iconColor="text-amber-600 dark:text-amber-400"
+                    watermarkColor="text-amber-500"
+                    delay={0.1}
                 />
-                <StatCard
-                    title="Total Students Placed"
+                <StatsCard
+                    label="Total Students Placed"
                     value={`${stats.total_placed} / ${stats.total_students}`}
                     icon={Users}
-                    color="indigo"
-                    trend="52 Companies"
+                    trend={{ value: 14.2, isPositive: true }}
+                    iconBg="bg-blue-50 dark:bg-blue-500/10"
+                    iconColor="text-blue-600 dark:text-blue-400"
+                    watermarkColor="text-blue-500"
+                    delay={0.15}
                 />
             </div>
 
-            {/* Quick Actions (Bulk Predictions removed as requested) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-                <QuickActionCard
-                    title="Job Listings & Drive Management"
-                    description="Create new campus opportunities, configure eligibility thresholds, manage application deadlines, and monitor student applicants."
-                    icon={Briefcase}
-                    to="/placement/jobs"
-                    color="blue"
-                />
-                <QuickActionCard
-                    title="Placement Records & Archives"
-                    description="Browse verified placement records, review salary distributions by department, and inspect downloadable official offer letters."
-                    icon={FileText}
-                    to="/placement/records"
-                    color="emerald"
-                />
+            {/* Quick Actions using Centralized Card Theme */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <Link to="/placement/jobs" className="group">
+                    <motion.div
+                        whileHover={{ y: -3 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="card p-5 sm:p-6 h-full flex flex-col justify-between transition-all duration-200 hover:shadow-glass hover:border-primary-500/40"
+                    >
+                        <div>
+                            <div className="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-3">
+                                <Briefcase size={20} />
+                            </div>
+                            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">
+                                Job Listings & Drive Management
+                            </h3>
+                            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                                Create new campus opportunities, configure eligibility thresholds, manage application deadlines, and monitor student applicants.
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-xs font-semibold text-primary-600 dark:text-primary-400 mt-4 group-hover:translate-x-1 transition-transform">
+                            <span>Manage Listings</span>
+                            <ArrowRight size={13} />
+                        </div>
+                    </motion.div>
+                </Link>
+
+                <Link to="/placement/records" className="group">
+                    <motion.div
+                        whileHover={{ y: -3 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="card p-5 sm:p-6 h-full flex flex-col justify-between transition-all duration-200 hover:shadow-glass hover:border-emerald-500/40"
+                    >
+                        <div>
+                            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3">
+                                <FileText size={20} />
+                            </div>
+                            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">
+                                Placement Records & Archives
+                            </h3>
+                            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                                Browse verified placement records, review salary distributions by department, and inspect downloadable official offer letters.
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 mt-4 group-hover:translate-x-1 transition-transform">
+                            <span>View Records</span>
+                            <ArrowRight size={13} />
+                        </div>
+                    </motion.div>
+                </Link>
             </div>
 
             {/* Top Recruiters & Department Placement Breakdown Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                 {/* Top Recruiting Partners Card */}
-                <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-6 shadow-sm">
-                    <div className="flex items-center justify-between mb-5">
-                        <div className="flex items-center gap-2.5">
-                            <div className="p-2 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-xl">
-                                <Award size={20} />
+                <div className="card p-5 sm:p-6 flex flex-col justify-between">
+                    <div>
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-2.5">
+                                <div className="p-2 bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400 rounded-xl">
+                                    <Award size={18} />
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-slate-900 dark:text-white text-base">Top Recruiting Partners</h3>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400">Highest package campus recruitment offers</p>
+                                </div>
                             </div>
-                            <div>
-                                <h3 className="font-bold text-slate-900 dark:text-white text-base">Top Recruiting Partners</h3>
-                                <p className="text-xs text-slate-500 dark:text-slate-400">Highest package campus recruitment offers</p>
-                            </div>
+                            <span className="badge badge-success text-[10px]">
+                                Verified Offers
+                            </span>
                         </div>
-                        <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400">
-                            Verified Offers
-                        </span>
-                    </div>
 
-                    <div className="divide-y divide-slate-100 dark:divide-white/5">
-                        {TOP_RECRUITERS.map((recruiter, idx) => (
-                            <div key={idx} className="py-3 flex items-center justify-between gap-3">
-                                <div className="min-w-0">
-                                    <div className="flex items-center gap-2">
-                                        <h4 className="font-semibold text-slate-900 dark:text-white text-sm truncate">{recruiter.name}</h4>
-                                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300">
-                                            {recruiter.tier}
-                                        </span>
+                        <div className="divide-y divide-slate-100 dark:divide-white/[0.06]">
+                            {TOP_RECRUITERS.map((recruiter, idx) => (
+                                <div key={idx} className="py-2.5 flex items-center justify-between gap-3">
+                                    <div className="min-w-0">
+                                        <div className="flex items-center gap-2">
+                                            <h4 className="font-semibold text-slate-900 dark:text-white text-sm truncate">{recruiter.name}</h4>
+                                            <span className="badge badge-neutral text-[9px] px-1.5 py-0">
+                                                {recruiter.tier}
+                                            </span>
+                                        </div>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{recruiter.role} • {recruiter.hired} Hired</p>
                                     </div>
-                                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{recruiter.role} • {recruiter.hired} Students Hired</p>
+                                    <div className="text-right shrink-0">
+                                        <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm block">{recruiter.package}</span>
+                                        <span className="text-[10px] text-slate-400 font-medium">Full-Time</span>
+                                    </div>
                                 </div>
-                                <div className="text-right shrink-0">
-                                    <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm block">{recruiter.package}</span>
-                                    <span className="text-[11px] text-slate-400">Full-Time</span>
-                                </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                {/* Department-Wise Placement Performance */}
-                <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+                {/* Department-Wise Placement Performance Card */}
+                <div className="card p-5 sm:p-6 flex flex-col justify-between">
                     <div>
-                        <div className="flex items-center justify-between mb-5">
+                        <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-2.5">
-                                <div className="p-2 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-xl">
-                                    <BarChart3 size={20} />
+                                <div className="p-2 bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-xl">
+                                    <BarChart3 size={18} />
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-slate-900 dark:text-white text-base">Department Placement Rates</h3>
                                     <p className="text-xs text-slate-500 dark:text-slate-400">Batch of 2025-2026 performance</p>
                                 </div>
                             </div>
-                            <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-500/20 dark:text-purple-400">
+                            <span className="badge badge-primary text-[10px]">
                                 5 Branches
                             </span>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-3.5">
                             {DEPARTMENT_STATS.map((dept, idx) => (
-                                <div key={idx} className="space-y-1.5">
+                                <div key={idx} className="space-y-1">
                                     <div className="flex justify-between items-center text-xs">
                                         <span className="font-semibold text-slate-800 dark:text-slate-200">{dept.branch}</span>
                                         <span className="font-bold text-slate-900 dark:text-white">
                                             {dept.rate}% <span className="text-slate-400 font-normal">({dept.placed}/{dept.total})</span>
                                         </span>
                                     </div>
-                                    <div className="w-full h-2 bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden">
+                                    <div className="w-full h-2 bg-slate-100 dark:bg-white/[0.06] rounded-full overflow-hidden">
                                         <div
                                             className={`h-full rounded-full ${dept.color}`}
                                             style={{ width: `${dept.rate}%` }}
@@ -296,44 +301,44 @@ const CoordinatorDashboard: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="pt-5 mt-5 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                        <span>Institution Cumulative Pass-to-Placement: <strong className="text-slate-800 dark:text-white">85.2%</strong></span>
-                        <Link to="/placement/records" className="text-blue-600 dark:text-blue-400 font-semibold hover:underline">
+                    <div className="pt-4 mt-4 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                        <span>Institution Placement Rate: <strong className="text-slate-800 dark:text-white font-semibold">85.2%</strong></span>
+                        <Link to="/placement/records" className="text-primary-600 dark:text-primary-400 font-semibold hover:underline">
                             View All Records →
                         </Link>
                     </div>
                 </div>
             </div>
 
-            {/* Live Placement Drive Activities Timeline */}
-            <div className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-sm">
-                <div className="flex justify-between items-center mb-6">
+            {/* Recent Placement Activities Card */}
+            <div className="card p-5 sm:p-6">
+                <div className="flex justify-between items-center mb-5">
                     <div>
-                        <h2 className="text-lg font-bold text-slate-900 dark:text-white">Recent Placement Activities</h2>
+                        <h2 className="text-base font-bold text-slate-900 dark:text-white">Recent Placement Activities</h2>
                         <p className="text-xs text-slate-500 dark:text-slate-400">Real-time drive updates, shortlist announcements and offer releases</p>
                     </div>
                     <Link
                         to="/placement/jobs"
-                        className="text-blue-600 dark:text-blue-400 text-xs font-semibold hover:underline"
+                        className="text-primary-600 dark:text-primary-400 text-xs font-semibold hover:underline"
                     >
                         Manage All Jobs →
                     </Link>
                 </div>
 
-                <div className="space-y-3.5">
+                <div className="space-y-2.5">
                     {RECENT_ACTIVITIES.map((act, i) => (
                         <div
                             key={i}
-                            className="flex items-center gap-4 p-3.5 rounded-2xl bg-slate-50/60 dark:bg-white/5 border border-slate-100 dark:border-white/5 transition-colors"
+                            className="flex items-center gap-3 p-3 rounded-xl bg-slate-50/70 dark:bg-white/[0.03] border border-slate-100 dark:border-white/[0.05] transition-colors"
                         >
-                            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                                <Calendar size={18} />
+                            <div className="w-9 h-9 rounded-xl bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center shrink-0">
+                                <Calendar size={17} />
                             </div>
                             <div className="flex-1 min-w-0">
-                                <h4 className="font-semibold text-slate-900 dark:text-white text-sm truncate">{act.title}</h4>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{act.subtitle} • {act.time}</p>
+                                <h4 className="font-semibold text-slate-900 dark:text-white text-xs sm:text-sm truncate">{act.title}</h4>
+                                <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{act.subtitle} • {act.time}</p>
                             </div>
-                            <span className={`px-2.5 py-1 rounded-full text-xs font-bold shrink-0 ${act.statusColor}`}>
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${act.statusColor}`}>
                                 {act.status}
                             </span>
                         </div>
