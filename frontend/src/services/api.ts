@@ -110,4 +110,4 @@ export const prewarmBackend = (): Promise<any> => {
     return prewarmPromise;
 };
 
-export defau
+export default api;
